@@ -242,6 +242,16 @@ class _ContactPageState extends State<ContactPage> {
                     icon: FontAwesomeIcons.twitter,
                     url: 'https://x.com/YasinAl99967413',
                   ),
+                  const SizedBox(width: 24),
+                  _SocialIcon(
+                    icon: FontAwesomeIcons.whatsapp,
+                    url: 'https://wa.me/01308985262',
+                  ),
+                  const SizedBox(width: 24),
+                  _SocialIcon(
+                    icon: FontAwesomeIcons.facebook,
+                    url: 'https://www.facebook.com/yasinarafat02',
+                  ),
                 ],
               ).animate().fadeIn(delay: 800.ms).scale(),
             ],
