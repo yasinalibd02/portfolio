@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:go_router/go_router.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -50,6 +51,23 @@ class HomePage extends StatelessWidget {
                 ),
                 child: const Text('View My Projects'),
               ).animate().fadeIn(delay: 700.ms).slideY(begin: 0.3, end: 0),
+              const SizedBox(height: 16),
+              OutlinedButton(
+                onPressed: () {
+                  launchUrl(Uri.parse('assets/resume.pdf'));
+                },
+                style: OutlinedButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 32,
+                    vertical: 20,
+                  ),
+                  side: BorderSide(
+                    color: Theme.of(context).colorScheme.primary,
+                  ),
+                  textStyle: const TextStyle(fontSize: 18),
+                ),
+                child: const Text('Download Resume'),
+              ).animate().fadeIn(delay: 900.ms).slideY(begin: 0.3, end: 0),
               const SizedBox(height: 64),
             ],
           ),
