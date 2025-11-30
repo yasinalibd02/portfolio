@@ -1,0 +1,46 @@
+[
+    {
+        "title": "Portfolio Website",
+        "description": "A responsive portfolio website built with Flutter Web, featuring a modern UI, dark mode, and animations.",
+        "imageUrl": "https://picsum.photos/id/1/400/200",
+        "githubUrl": "https://github.com/yasinali/portfolio",
+        "tags": [
+            "Flutter",
+            "Dart",
+            "Web"
+        ]
+    },
+    {
+        "title": "E-commerce App",
+        "description": "A full-featured e-commerce mobile application with product listing, cart, and payment integration.",
+        "imageUrl": "https://picsum.photos/id/2/400/200",
+        "githubUrl": "https://github.com/yasinali/ecommerce",
+        "tags": [
+            "Flutter",
+            "Firebase",
+            "Stripe"
+        ]
+    },
+    {
+        "title": "Task Manager",
+        "description": "A productivity tool to manage daily tasks with reminders and categorization.",
+        "imageUrl": "https://picsum.photos/id/3/400/200",
+        "githubUrl": "https://github.com/yasinali/taskmanager",
+        "tags": [
+            "Flutter",
+            "SQLite",
+            "Provider"
+        ]
+    },
+    {
+        "title": "Weather App",
+        "description": "Real-time weather updates using OpenWeatherMap API with beautiful visualizations.",
+        "imageUrl": "https://picsum.photos/id/4/400/200",
+        "githubUrl": "https://github.com/yasinali/weather",
+        "tags": [
+            "Flutter",
+            "API",
+            "Bloc"
+        ]
+    }
+]
