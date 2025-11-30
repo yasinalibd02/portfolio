@@ -13,7 +13,7 @@ class AboutPage extends StatelessWidget {
       'Git',
       'REST APIs',
       'UI/UX Design',
-      'Web Development',
+      "Figma",
       'Mobile Development',
     ];
 
@@ -33,9 +33,18 @@ class AboutPage extends StatelessWidget {
               ).animate().fadeIn().slideX(),
               const SizedBox(height: 24),
               Text(
-                "I am a software engineer with a strong focus on cross-platform development using Flutter. I love solving complex problems and creating intuitive user experiences. When I'm not coding, you can find me exploring new technologies or contributing to open-source projects.",
+                """
+I am a Software Engineer specializing in cross-platform mobile app development using Flutter. With 3+ years of professional experience, I have developed 50+ high-quality applications across diverse industries such as fintech, e-commerce, healthcare, crypto, transportation, and car rental.
+
+I have also handled direct communication with clients, understanding their requirements, providing technical guidance, and delivering solutions that match their business goals.
+
+Throughout my career, I have successfully deployed 100+ apps to the Google Play Store and Apple App Store, working on everything from UI/UX and state management to API integration, performance optimization, and app deployment.
+
+I focus on building clean, scalable, and reliable mobile applications that ensure smooth and impactful user experiences.
+""",
                 style: Theme.of(context).textTheme.bodyLarge,
               ).animate().fadeIn(delay: 200.ms),
+
               const SizedBox(height: 48),
               Text(
                 'Skills',

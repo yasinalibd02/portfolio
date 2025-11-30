@@ -8,7 +8,7 @@ class ProjectCard extends StatefulWidget {
     required this.title,
     required this.description,
     required this.imageUrl,
-    required this.githubUrl,
+    required this.link,
     required this.tags,
     super.key,
   });
@@ -16,7 +16,7 @@ class ProjectCard extends StatefulWidget {
   final String title;
   final String description;
   final String imageUrl;
-  final String githubUrl;
+  final String link;
   final List<String> tags;
 
   @override
@@ -48,7 +48,7 @@ class _ProjectCardState extends State<ProjectCard> {
                 aspectRatio: 16 / 9,
                 child: Image.network(
                   widget.imageUrl,
-                  fit: BoxFit.cover,
+                  fit: BoxFit.contain,
                   errorBuilder: (context, error, stackTrace) {
                     return Container(
                       color: Colors.grey[300],
@@ -106,17 +106,21 @@ class _ProjectCardState extends State<ProjectCard> {
                       }).toList(),
                     ),
                     const SizedBox(height: 16),
+
                     Align(
                       alignment: Alignment.centerRight,
                       child: IconButton(
-                        icon: const FaIcon(FontAwesomeIcons.github),
+                        icon: const FaIcon(
+                          FontAwesomeIcons.arrowUpRightFromSquare,
+                          size: 20,
+                        ),
                         onPressed: () async {
-                          final uri = Uri.parse(widget.githubUrl);
+                          final uri = Uri.parse(widget.link);
                           if (await canLaunchUrl(uri)) {
                             await launchUrl(uri);
                           }
                         },
-                        tooltip: 'View on GitHub',
+                        tooltip: 'View Project',
                       ),
                     ),
                   ],

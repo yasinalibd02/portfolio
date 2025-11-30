@@ -18,8 +18,8 @@ class HomePage extends StatelessWidget {
               const SizedBox(height: 64),
               const CircleAvatar(
                 radius: 80,
-                backgroundImage: NetworkImage(
-                  'https://picsum.photos/200',
+                backgroundImage: AssetImage(
+                  'assets/images/profile.png',
                 ), // Placeholder
               ).animate().scale(duration: 600.ms, curve: Curves.easeOutBack),
               const SizedBox(height: 32),

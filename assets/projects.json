@@ -1,46 +1,77 @@
 [
     {
-        "title": "Portfolio Website",
-        "description": "A responsive portfolio website built with Flutter Web, featuring a modern UI, dark mode, and animations.",
-        "imageUrl": "https://picsum.photos/id/1/400/200",
-        "githubUrl": "https://github.com/yasinali/portfolio",
+        "title": "QRPay Pro - Digital Payment Solution",
+        "description": "An all-in-one digital payment ecosystem with User, Merchant, and Agent apps. Features QR code payments, money transfers, mobile top-ups, and seamless payment gateway integration. Built for global scalability.",
+        "imageUrl": "assets/images/qrpay.webp",
+        "link": "https://codecanyon.net/item/qrpay-pro-complete-qrpay-solution-with-all-addons-bundle/56101909",
         "tags": [
             "Flutter",
             "Dart",
-            "Web"
+            "Kotlin",
+            "Firebase"
         ]
     },
     {
-        "title": "E-commerce App",
-        "description": "A full-featured e-commerce mobile application with product listing, cart, and payment integration.",
-        "imageUrl": "https://picsum.photos/id/2/400/200",
-        "githubUrl": "https://github.com/yasinali/ecommerce",
+        "title": "adMart - Online Grocery Shopping",
+        "description": "adMart is a powerful, full-featured online grocery and pharmacy eCommerce platform designed for fast launches, seamless delivery, and scalable business growth. Built with Flutter and Laravel, it offers a complete package including a user-friendly mobile app, robust admin dashboard, and dedicated delivery panel — all optimized for performance and usability",
+        "imageUrl": "assets/images/admart.webp",
+        "link": "https://codecanyon.net/item/admart-online-grocery-shopping-ecommerce-pharmacy-solutions/59832532",
+        "tags": [
+            "Flutter",
+            "Dart",
+            "Kotlin",
+            "Swift"
+        ]
+    },
+    {
+        "title": "Crypinvest - Crypto Investment Platform",
+        "description": "A comprehensive cryptocurrency investment solution featuring a secure wallet, support for 20+ cryptocurrencies, personalized investment plans, and a multi-level referral system. Includes Android & iOS apps and a robust Admin Panel.",
+        "imageUrl": "assets/images/crypinvest.webp",
+        "link": "https://codecanyon.net/item/crypinvest-cryptocurrency-investment-platform-full-solution/47446877",
+        "tags": [
+            "Flutter",
+            "Dart",
+            "Kotlin",
+            "Swift",
+            "Java"
+        ]
+    },
+    {
+        "title": "StripCard - Virtual Credit Card Solution",
+        "description": "A secure virtual credit card platform allowing users to create and manage virtual cards for online transactions. Supports multiple payment gateways, KYC verification, and real-time statements.",
+        "imageUrl": "assets/images/stripcard.webp",
+        "link": "https://codecanyon.net/item/stripcard-virtual-credit-card-solution/47909310",
         "tags": [
             "Flutter",
             "Firebase",
-            "Stripe"
+            "Dart",
+            "Kotlin",
+            "Swift"
         ]
     },
     {
-        "title": "Task Manager",
-        "description": "A productivity tool to manage daily tasks with reminders and categorization.",
-        "imageUrl": "https://picsum.photos/id/3/400/200",
-        "githubUrl": "https://github.com/yasinali/taskmanager",
+        "title": "ADoctor - Doctor Appointment Booking",
+        "description": "A complete doctor appointment booking system connecting patients with doctors. Features include appointment scheduling, home service booking, health packages, and a comprehensive admin panel for clinic management.",
+        "imageUrl": "assets/images/adoctor.webp",
+        "link": "https://codecanyon.net/item/adoctor-hospital-doctor-booking-android-and-ios-app-website-admin-panel/47212127",
         "tags": [
             "Flutter",
-            "SQLite",
-            "Provider"
+            "Kotlin",
+            "Swift",
+            "Dart"
         ]
     },
     {
-        "title": "Weather App",
-        "description": "Real-time weather updates using OpenWeatherMap API with beautiful visualizations.",
-        "imageUrl": "https://picsum.photos/id/4/400/200",
-        "githubUrl": "https://github.com/yasinali/weather",
+        "title": "AdFund - Fundraising Platform",
+        "description": "A crowdfunding and fundraising platform empowering users to create campaigns and accept donations. Features include campaign tracking, donation history, and secure wallet management.",
+        "imageUrl": "assets/images/adfund.webp",
+        "link": "https://codecanyon.net/item/adfund-fund-raising-platform-website-androidios-app-admin-panel/45306012",
         "tags": [
             "Flutter",
-            "API",
-            "Bloc"
+            "Dart",
+            "Kotlin",
+            "Swift",
+            "Java"
         ]
     }
 ]

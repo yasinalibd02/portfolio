@@ -84,11 +84,15 @@ class _ProjectsPageState extends State<ProjectsPage> {
                       itemBuilder: (context, index) {
                         final project = _projects[index];
                         return ProjectCard(
-                          title: project['title'],
-                          description: project['description'],
-                          imageUrl: project['imageUrl'],
-                          githubUrl: project['githubUrl'],
-                          tags: List<String>.from(project['tags']),
+                          title: project['title'] ?? 'Untitled',
+                          description: project['description'] ?? '',
+                          imageUrl: project['imageUrl'] ?? '',
+                          link: project['link'],
+                          tags:
+                              (project['tags'] as List<dynamic>?)
+                                  ?.map((e) => e.toString())
+                                  .toList() ??
+                              [],
                         ).animate().fadeIn(delay: (100 * index).ms).scale();
                       },
                     );

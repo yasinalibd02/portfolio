@@ -1,7 +1,12 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:http/http.dart' as http;
 import 'package:url_launcher/url_launcher.dart';
+
+// TODO: Replace with your actual Webhook URL (Discord, Formspree, etc.)
+const String kContactWebhookUrl = '';
 
 class ContactPage extends StatefulWidget {
   const ContactPage({super.key});
@@ -15,6 +20,7 @@ class _ContactPageState extends State<ContactPage> {
   final _nameController = TextEditingController();
   final _emailController = TextEditingController();
   final _messageController = TextEditingController();
+  bool _isSending = false;
 
   @override
   void dispose() {
@@ -25,25 +31,95 @@ class _ContactPageState extends State<ContactPage> {
   }
 
   Future<void> _submitForm() async {
-    if (_formKey.currentState!.validate()) {
-      final Uri emailLaunchUri = Uri(
-        scheme: 'mailto',
-        path: 'yasin@example.com', // Replace with actual email
-        query: encodeQueryParameters(<String, String>{
-          'subject': 'Portfolio Contact: ${_nameController.text}',
-          'body':
-              'From: ${_emailController.text}\n\n${_messageController.text}',
-        }),
-      );
+    if (!_formKey.currentState!.validate()) return;
 
-      if (await canLaunchUrl(emailLaunchUri)) {
-        await launchUrl(emailLaunchUri);
-      } else {
-        if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Could not launch email client.')),
-          );
+    setState(() {
+      _isSending = true;
+    });
+
+    try {
+      if (kContactWebhookUrl.isNotEmpty) {
+        // Send to Webhook
+        final response = await http.post(
+          Uri.parse(kContactWebhookUrl),
+          headers: {'Content-Type': 'application/json'},
+          body: jsonEncode({
+            // Discord Webhook format (adjust if using another service)
+            'content': 'New Contact Form Submission!',
+            'embeds': [
+              {
+                'title': 'Portfolio Contact',
+                'fields': [
+                  {
+                    'name': 'Name',
+                    'value': _nameController.text,
+                    'inline': true,
+                  },
+                  {
+                    'name': 'Email',
+                    'value': _emailController.text,
+                    'inline': true,
+                  },
+                  {'name': 'Message', 'value': _messageController.text},
+                ],
+                'color': 5814783, // Purple color
+              },
+            ],
+            // Generic JSON format for other services
+            'name': _nameController.text,
+            'email': _emailController.text,
+            'message': _messageController.text,
+          }),
+        );
+
+        if (response.statusCode >= 200 && response.statusCode < 300) {
+          if (mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text('Message sent successfully!'),
+                backgroundColor: Colors.green,
+              ),
+            );
+            _formKey.currentState!.reset();
+            _nameController.clear();
+            _emailController.clear();
+            _messageController.clear();
+          }
+        } else {
+          throw Exception('Failed to send message: ${response.statusCode}');
         }
+      } else {
+        // Fallback to Mailto
+        final Uri emailLaunchUri = Uri(
+          scheme: 'mailto',
+          path: 'yasin@example.com', // Replace with actual email
+          query: encodeQueryParameters(<String, String>{
+            'subject': 'Portfolio Contact: ${_nameController.text}',
+            'body':
+                'From: ${_emailController.text}\n\n${_messageController.text}',
+          }),
+        );
+
+        if (await canLaunchUrl(emailLaunchUri)) {
+          await launchUrl(emailLaunchUri);
+        } else {
+          throw Exception('Could not launch email client');
+        }
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Error sending message: $e'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isSending = false;
+        });
       }
     }
   }
@@ -133,8 +209,16 @@ class _ContactPageState extends State<ContactPage> {
                       width: double.infinity,
                       height: 50,
                       child: ElevatedButton(
-                        onPressed: _submitForm,
-                        child: const Text('Send Message'),
+                        onPressed: _isSending ? null : _submitForm,
+                        child: _isSending
+                            ? const SizedBox(
+                                height: 24,
+                                width: 24,
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2,
+                                ),
+                              )
+                            : const Text('Send Message'),
                       ),
                     ).animate().fadeIn(delay: 600.ms),
                   ],
@@ -146,17 +230,17 @@ class _ContactPageState extends State<ContactPage> {
                 children: [
                   _SocialIcon(
                     icon: FontAwesomeIcons.github,
-                    url: 'https://github.com/yasinali',
+                    url: 'https://github.com/yasinalibd02',
                   ),
                   const SizedBox(width: 24),
                   _SocialIcon(
                     icon: FontAwesomeIcons.linkedin,
-                    url: 'https://linkedin.com/in/yasinali',
+                    url: 'https://www.linkedin.com/in/yasinalibd02',
                   ),
                   const SizedBox(width: 24),
                   _SocialIcon(
                     icon: FontAwesomeIcons.twitter,
-                    url: 'https://twitter.com/yasinali',
+                    url: 'https://x.com/YasinAl99967413',
                   ),
                 ],
               ).animate().fadeIn(delay: 800.ms).scale(),
