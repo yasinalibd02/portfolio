@@ -12,7 +12,7 @@ class ScaffoldWithNavbar extends StatelessWidget {
     final isMobile = width < 600;
 
     return Scaffold(
-      appBar: isMobile ? AppBar(title: const Text('Yasin Portfolio')) : null,
+      appBar: isMobile ? AppBar(title: const Text('Yasin Ali')) : null,
       drawer: isMobile
           ? Drawer(
               child: ListView(
@@ -70,7 +70,7 @@ class _DesktopNavbar extends StatelessWidget {
       child: Row(
         children: [
           Text(
-            'Yasin Portfolio',
+            "Yasin Ali",
             style: Theme.of(
               context,
             ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),

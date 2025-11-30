@@ -1,4 +1,4 @@
-# Yasin Portfolio
+# Yasin Ali
 
 A responsive portfolio website built with Flutter Web.
 
