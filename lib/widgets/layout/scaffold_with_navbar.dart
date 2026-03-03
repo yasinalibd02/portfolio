@@ -70,7 +70,7 @@ class _DesktopNavbar extends StatelessWidget {
       child: Row(
         children: [
           Text(
-            "Yasin Ali",
+            "MD Yasin Ali",
             style: Theme.of(
               context,
             ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),

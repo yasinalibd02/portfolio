@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:go_router/go_router.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:web/web.dart' as web;
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -54,7 +54,10 @@ class HomePage extends StatelessWidget {
               const SizedBox(height: 16),
               OutlinedButton(
                 onPressed: () {
-                  launchUrl(Uri.parse('assets/resume.pdf'));
+                  final anchor = web.HTMLAnchorElement()
+                    ..href = 'assets/resume.pdf'
+                    ..download = 'Yasin_Ali_Resume.pdf';
+                  anchor.click();
                 },
                 style: OutlinedButton.styleFrom(
                   padding: const EdgeInsets.symmetric(

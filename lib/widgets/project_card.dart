@@ -46,7 +46,7 @@ class _ProjectCardState extends State<ProjectCard> {
             children: [
               AspectRatio(
                 aspectRatio: 16 / 9,
-                child: Image.network(
+                child: Image.asset(
                   widget.imageUrl,
                   fit: BoxFit.contain,
                   errorBuilder: (context, error, stackTrace) {
