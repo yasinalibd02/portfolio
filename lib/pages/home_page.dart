@@ -55,7 +55,7 @@ class HomePage extends StatelessWidget {
               OutlinedButton(
                 onPressed: () {
                   final anchor = web.HTMLAnchorElement()
-                    ..href = 'assets/resume.pdf'
+                    ..href = 'Yasin_Ali_Resume.pdf'
                     ..download = 'Yasin_Ali_Resume.pdf';
                   anchor.click();
                 },
