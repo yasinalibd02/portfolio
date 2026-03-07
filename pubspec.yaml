@@ -9,7 +9,7 @@ version: 1.0.0+1
 environment:
   sdk: ^3.10.0
 
-
+ 
 dependencies:
   flutter:
     sdk: flutter
@@ -58,4 +58,5 @@ flutter:
     - assets/projects.json
     - assets/images/
     - assets/resume.pdf
+    - assets/MD_Yasin_Ali_Resume.pdf
 
