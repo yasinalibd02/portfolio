@@ -25,6 +25,38 @@ class BlogPage extends StatelessWidget {
 
   static final _posts = [
     const BlogPost(
+      title: 'Building for the Future: Scalability in Flutter Apps',
+      date: 'April 22, 2026',
+      category: 'Scalability',
+      readTime: '7 min read',
+      summary:
+          'Many developers overlook futuristic thinking when building apps. Discover why a feature-first approach using Clean Architecture, BLoC, and GetIt is essential for long-term scalability.',
+      content:
+          '''A common mistake I see when developers build applications is failing to think futuristically. They optimize for shipping fast today, resulting in a monolithic codebase that becomes unmaintainable tomorrow. True scalability requires deliberate architectural choices from day one.
+
+To future-proof your Flutter applications, adopt a Feature-First Clean Architecture. Instead of grouping files by type (e.g., all models together, all screens together), group them by feature. This creates isolated modules that are easier to maintain, test, and even extract into separate packages if needed.
+
+For state management, BLoC (Business Logic Component) stands out for complex apps. It provides predictable, event-driven state transitions that scale effortlessly as your app's logic grows.
+
+Finally, pair this with GetIt for Dependency Injection. GetIt decouples your classes by providing a central service locator, making it incredibly easy to swap out implementations (like a mock repository for testing) without changing your core logic. This trio—Feature-First Clean Architecture, BLoC, and GetIt—is the ultimate formula for a robust, scalable app.''',
+    ),
+    const BlogPost(
+      title: 'Architectural Patterns: MVC, MVVM & Clean Architecture',
+      date: 'April 20, 2026',
+      category: 'Architecture',
+      readTime: '6 min read',
+      summary:
+          'A comparative look at MVC, MVVM, and Clean Architecture, and how choosing the right pattern sets the foundation for a maintainable app.',
+      content:
+          '''When building Flutter applications, selecting the right architectural pattern is critical. Over time, I've worked extensively with MVC, MVVM, and Clean Architecture.
+          
+MVC (Model-View-Controller) is often the starting point. It separates logic from UI, but as apps grow, Controllers tend to become massive "God objects."
+
+MVVM (Model-View-ViewModel) solves this by introducing ViewModels and reactive state management. In Flutter, this pairs beautifully with Providers or ValueNotifiers, allowing the UI to react to state changes without tightly coupling logic.
+
+However, for enterprise-scale applications, Clean Architecture is the gold standard. It enforces strict separation of concerns into Presentation, Domain, and Data layers. While it introduces more boilerplate, it ensures your business logic remains independent of the UI and frameworks, making your app highly testable and scalable.''',
+    ),
+    const BlogPost(
       title: '3 Years of Flutter: Lessons Learned',
       date: 'November 28, 2025',
       category: 'Flutter',

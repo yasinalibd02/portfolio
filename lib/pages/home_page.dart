@@ -16,6 +16,7 @@ class HomePage extends StatelessWidget {
       child: Column(
         children: [
           _HeroSection(isMobile: isMobile),
+          const _PublishedAppsSection(),
           _TechStackMarquee(),
           _StatsBar(),
           _FooterStrip(),
@@ -39,6 +40,7 @@ class _HeroSection extends StatelessWidget {
         // Mesh gradient blobs
         _GlowBlob(dx: 0.1, dy: 0.3, size: 380),
         _GlowBlob(dx: 0.85, dy: 0.6, size: 280),
+        _GlowBlob(dx: 0.5, dy: 0.1, size: 200, color: const Color(0xFF0088FF)),
 
         // Content
         Container(
@@ -95,7 +97,8 @@ class _HeroSection extends StatelessWidget {
                   )
                   .animate()
                   .fadeIn(delay: 300.ms, duration: 700.ms)
-                  .slideY(begin: 0.2, end: 0),
+                  .slideY(begin: 0.2, end: 0)
+                  .shimmer(delay: 1000.ms, duration: 2000.ms, color: Colors.white24),
 
               SizedBox(height: isMobile ? 12 : 16),
 
@@ -162,8 +165,9 @@ class _HeroSection extends StatelessWidget {
 
 // Glow blob in background
 class _GlowBlob extends StatelessWidget {
-  const _GlowBlob({required this.dx, required this.dy, required this.size});
+  const _GlowBlob({required this.dx, required this.dy, required this.size, this.color});
   final double dx, dy, size;
+  final Color? color;
 
   @override
   Widget build(BuildContext context) {
@@ -178,10 +182,13 @@ class _GlowBlob extends StatelessWidget {
         decoration: BoxDecoration(
           shape: BoxShape.circle,
           gradient: RadialGradient(
-            colors: [AppColors.accent.withOpacity(0.15), Colors.transparent],
+            colors: [(color ?? AppColors.accent).withOpacity(0.15), Colors.transparent],
           ),
         ),
-      ),
+      )
+      .animate(onPlay: (controller) => controller.repeat(reverse: true))
+      .scale(begin: const Offset(1.0, 1.0), end: const Offset(1.15, 1.15), duration: 4.seconds, curve: Curves.easeInOut)
+      .slide(begin: const Offset(-0.02, -0.02), end: const Offset(0.02, 0.02), duration: 5.seconds, curve: Curves.easeInOut),
     );
   }
 }
@@ -538,6 +545,224 @@ class _SocialIconState extends State<_SocialIcon> {
             widget.icon,
             size: 16,
             color: _h ? AppColors.accent : AppColors.textSecondary,
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+// ──────────────────────────────────────────────────────────
+// PUBLISHED APPS
+// ──────────────────────────────────────────────────────────
+class _PublishedAppsSection extends StatelessWidget {
+  const _PublishedAppsSection();
+
+  static const _apps = [
+    (
+      name: 'AppDevs - FinTech Software',
+      category: 'Finance',
+      icon: FontAwesomeIcons.googlePlay,
+      store: 'Play Store',
+      url: 'https://play.google.com/store/apps/details?id=net.appdevs',
+    ),
+    (
+      name: 'QRPay - Money Transfer',
+      category: 'Finance',
+      icon: FontAwesomeIcons.googlePlay,
+      store: 'Play Store',
+      url: 'https://play.google.com/store/apps/details?id=net.appdevs.qrpayuser',
+    ),
+    (
+      name: 'MMeldaPay',
+      category: 'Finance',
+      icon: FontAwesomeIcons.apple,
+      store: 'App Store',
+      url: 'https://apps.apple.com/gb/app/mmeldpay-agent/id6755371498',
+    ),
+    (
+      name: 'SenPay',
+      category: 'Finance',
+      icon: FontAwesomeIcons.apple,
+      store: 'App Store',
+      url: 'https://apps.apple.com/us/app/senpay-user/id6746039031',
+    ),
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    final isMobile = MediaQuery.sizeOf(context).width < 700;
+
+    return Container(
+      width: double.infinity,
+      padding: EdgeInsets.symmetric(
+        horizontal: isMobile ? 24 : 80,
+        vertical: 60,
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Container(
+                width: 20,
+                height: 2,
+                color: AppColors.accent,
+                margin: const EdgeInsets.only(right: 10),
+              ),
+              const Text(
+                'LIVE ON STORES',
+                style: TextStyle(
+                  color: AppColors.accent,
+                  fontSize: 11,
+                  fontWeight: FontWeight.w700,
+                  letterSpacing: 2,
+                ),
+              ),
+            ],
+          ).animate().fadeIn().slideX(),
+          const SizedBox(height: 24),
+          Wrap(
+            spacing: 20,
+            runSpacing: 20,
+            children: _apps.indexed.map((e) {
+              final (i, app) = e;
+              return _PublishedAppCard(
+                name: app.name,
+                category: app.category,
+                icon: app.icon,
+                store: app.store,
+                url: app.url,
+              ).animate().fadeIn(delay: (i * 100).ms).slideY(begin: 0.1, end: 0);
+            }).toList(),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _PublishedAppCard extends StatefulWidget {
+  const _PublishedAppCard({
+    required this.name,
+    required this.category,
+    required this.icon,
+    required this.store,
+    required this.url,
+  });
+
+  final String name, category, store, url;
+  final IconData icon;
+
+  @override
+  State<_PublishedAppCard> createState() => _PublishedAppCardState();
+}
+
+class _PublishedAppCardState extends State<_PublishedAppCard> {
+  bool _h = false;
+
+  @override
+  Widget build(BuildContext context) {
+    final isMobile = MediaQuery.sizeOf(context).width < 700;
+    final w = isMobile ? double.infinity : 340.0;
+
+    return MouseRegion(
+      onEnter: (_) => setState(() => _h = true),
+      onExit: (_) => setState(() => _h = false),
+      cursor: SystemMouseCursors.click,
+      child: GestureDetector(
+        onTap: () async {
+          final uri = Uri.parse(widget.url);
+          if (await canLaunchUrl(uri)) await launchUrl(uri);
+        },
+        child: AnimatedContainer(
+          duration: 250.ms,
+          width: w,
+          padding: const EdgeInsets.all(24),
+          decoration: BoxDecoration(
+            color: _h ? AppColors.surfaceHover : AppColors.surfaceCard,
+            borderRadius: BorderRadius.circular(20),
+            border: Border.all(
+              color: _h ? AppColors.accent.withOpacity(0.4) : AppColors.border,
+            ),
+            boxShadow: _h
+                ? [
+                    BoxShadow(
+                      color: AppColors.accent.withOpacity(0.08),
+                      blurRadius: 24,
+                      offset: const Offset(0, 8),
+                    )
+                  ]
+                : [],
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      color: AppColors.background,
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(color: AppColors.border),
+                    ),
+                    child: FaIcon(
+                      widget.icon,
+                      color: widget.store == 'Play Store' 
+                          ? AppColors.accent 
+                          : AppColors.textPrimary,
+                      size: 24,
+                    ),
+                  ),
+                  const Spacer(),
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                    decoration: BoxDecoration(
+                      color: AppColors.accent.withOpacity(0.1),
+                      borderRadius: BorderRadius.circular(50),
+                    ),
+                    child: Text(
+                      widget.category,
+                      style: const TextStyle(
+                        color: AppColors.accent,
+                        fontSize: 10,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 20),
+              Text(
+                widget.name,
+                style: TextStyle(
+                  color: _h ? AppColors.accent : AppColors.textPrimary,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w700,
+                ),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+              const SizedBox(height: 6),
+              Row(
+                children: [
+                  Text(
+                    'Available on ${widget.store}',
+                    style: const TextStyle(
+                      color: AppColors.textMuted,
+                      fontSize: 13,
+                    ),
+                  ),
+                  const Spacer(),
+                  Icon(
+                    Icons.arrow_forward_rounded,
+                    color: _h ? AppColors.accent : AppColors.textMuted,
+                    size: 16,
+                  ),
+                ],
+              ),
+            ],
           ),
         ),
       ),
