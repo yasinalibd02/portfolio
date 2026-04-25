@@ -25,6 +25,7 @@ dependencies:
   http: ^1.6.0
   url_strategy: ^0.3.0
   flutter_launcher_icons: ^0.14.4
+  web: ^1.1.1
 
 dev_dependencies:
   flutter_test:
