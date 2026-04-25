@@ -573,13 +573,7 @@ class _PublishedAppsSection extends StatelessWidget {
       store: 'Play Store',
       url: 'https://play.google.com/store/apps/details?id=net.appdevs.qrpayuser',
     ),
-    (
-      name: 'MMeldaPay',
-      category: 'Finance',
-      icon: FontAwesomeIcons.apple,
-      store: 'App Store',
-      url: 'https://apps.apple.com/gb/app/mmeldpay-agent/id6755371498',
-    ),
+
     (
       name: 'SenPay',
       category: 'Finance',
@@ -672,6 +666,15 @@ class _PublishedAppCardState extends State<_PublishedAppCard> {
       cursor: SystemMouseCursors.click,
       child: GestureDetector(
         onTap: () async {
+          if (widget.url.isEmpty) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text('App is coming soon on the store!'),
+                behavior: SnackBarBehavior.floating,
+              ),
+            );
+            return;
+          }
           final uri = Uri.parse(widget.url);
           if (await canLaunchUrl(uri)) await launchUrl(uri);
         },
