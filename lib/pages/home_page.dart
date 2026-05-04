@@ -100,7 +100,11 @@ class _HeroSection extends StatelessWidget {
                   .animate()
                   .fadeIn(delay: 300.ms, duration: 700.ms)
                   .slideY(begin: 0.2, end: 0)
-                  .shimmer(delay: 1000.ms, duration: 2000.ms, color: Colors.white24),
+                  .shimmer(
+                    delay: 1000.ms,
+                    duration: 2000.ms,
+                    color: Colors.white24,
+                  ),
 
               SizedBox(height: isMobile ? 12 : 16),
 
@@ -167,7 +171,12 @@ class _HeroSection extends StatelessWidget {
 
 // Glow blob in background
 class _GlowBlob extends StatelessWidget {
-  const _GlowBlob({required this.dx, required this.dy, required this.size, this.color});
+  const _GlowBlob({
+    required this.dx,
+    required this.dy,
+    required this.size,
+    this.color,
+  });
   final double dx, dy, size;
   final Color? color;
 
@@ -178,19 +187,33 @@ class _GlowBlob extends StatelessWidget {
     return Positioned(
       left: dx * w - size / 2,
       top: dy * h - size / 2,
-      child: Container(
-        width: size,
-        height: size,
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          gradient: RadialGradient(
-            colors: [(color ?? AppColors.accent).withOpacity(0.15), Colors.transparent],
-          ),
-        ),
-      )
-      .animate(onPlay: (controller) => controller.repeat(reverse: true))
-      .scale(begin: const Offset(1.0, 1.0), end: const Offset(1.15, 1.15), duration: 4.seconds, curve: Curves.easeInOut)
-      .slide(begin: const Offset(-0.02, -0.02), end: const Offset(0.02, 0.02), duration: 5.seconds, curve: Curves.easeInOut),
+      child:
+          Container(
+                width: size,
+                height: size,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  gradient: RadialGradient(
+                    colors: [
+                      (color ?? AppColors.accent).withOpacity(0.15),
+                      Colors.transparent,
+                    ],
+                  ),
+                ),
+              )
+              .animate(onPlay: (controller) => controller.repeat(reverse: true))
+              .scale(
+                begin: const Offset(1.0, 1.0),
+                end: const Offset(1.15, 1.15),
+                duration: 4.seconds,
+                curve: Curves.easeInOut,
+              )
+              .slide(
+                begin: const Offset(-0.02, -0.02),
+                end: const Offset(0.02, 0.02),
+                duration: 5.seconds,
+                curve: Curves.easeInOut,
+              ),
     );
   }
 }
@@ -573,7 +596,8 @@ class _PublishedAppsSection extends StatelessWidget {
       category: 'Finance',
       icon: FontAwesomeIcons.googlePlay,
       store: 'Play Store',
-      url: 'https://play.google.com/store/apps/details?id=net.appdevs.qrpayuser',
+      url:
+          'https://play.google.com/store/apps/details?id=net.appdevs.qrpayuser',
     ),
 
     (
@@ -624,12 +648,15 @@ class _PublishedAppsSection extends StatelessWidget {
             children: _apps.indexed.map((e) {
               final (i, app) = e;
               return _PublishedAppCard(
-                name: app.name,
-                category: app.category,
-                icon: app.icon,
-                store: app.store,
-                url: app.url,
-              ).animate().fadeIn(delay: (i * 100).ms).slideY(begin: 0.1, end: 0);
+                    name: app.name,
+                    category: app.category,
+                    icon: app.icon,
+                    store: app.store,
+                    url: app.url,
+                  )
+                  .animate()
+                  .fadeIn(delay: (i * 100).ms)
+                  .slideY(begin: 0.1, end: 0);
             }).toList(),
           ),
         ],
@@ -696,7 +723,7 @@ class _PublishedAppCardState extends State<_PublishedAppCard> {
                       color: AppColors.accent.withOpacity(0.08),
                       blurRadius: 24,
                       offset: const Offset(0, 8),
-                    )
+                    ),
                   ]
                 : [],
           ),
@@ -714,15 +741,18 @@ class _PublishedAppCardState extends State<_PublishedAppCard> {
                     ),
                     child: FaIcon(
                       widget.icon,
-                      color: widget.store == 'Play Store' 
-                          ? AppColors.accent 
+                      color: widget.store == 'Play Store'
+                          ? AppColors.accent
                           : AppColors.textPrimary,
                       size: 24,
                     ),
                   ),
                   const Spacer(),
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 10,
+                      vertical: 4,
+                    ),
                     decoration: BoxDecoration(
                       color: AppColors.accent.withOpacity(0.1),
                       borderRadius: BorderRadius.circular(50),
@@ -1016,7 +1046,7 @@ class _AboutSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isMobile = MediaQuery.sizeOf(context).width < 800;
-    
+
     return Container(
       padding: EdgeInsets.symmetric(
         horizontal: isMobile ? 24 : 80,
@@ -1056,10 +1086,7 @@ class _AboutSection extends StatelessWidget {
       ),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(24),
-        child: Image.asset(
-          'assets/images/desc.jpeg',
-          fit: BoxFit.cover,
-        ),
+        child: Image.asset('assets/images/desc.jpeg', fit: BoxFit.cover),
       ),
     ).animate().fadeIn(duration: 800.ms).slideX(begin: -0.2);
   }
@@ -1127,11 +1154,11 @@ class _SkillsSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isMobile = MediaQuery.sizeOf(context).width < 700;
-    
+
     final skills = [
       ('Flutter / Dart', 0.95),
       ('Firebase / Backend', 0.85),
-      ('State Management (BLoC)', 0.90),
+      ('State Management (GetX)', 0.90),
       ('UI / UX Design', 0.80),
       ('REST APIs & GraphQL', 0.85),
       ('CI/CD & DevOps', 0.70),
@@ -1168,8 +1195,10 @@ class _SkillsSection extends StatelessWidget {
           LayoutBuilder(
             builder: (context, constraints) {
               final crossAxisCount = isMobile ? 1 : 2;
-              final childWidth = (constraints.maxWidth - (crossAxisCount - 1) * 40) / crossAxisCount;
-              
+              final childWidth =
+                  (constraints.maxWidth - (crossAxisCount - 1) * 40) /
+                  crossAxisCount;
+
               return Wrap(
                 spacing: 40,
                 runSpacing: 32,
