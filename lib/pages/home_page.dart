@@ -16,6 +16,8 @@ class HomePage extends StatelessWidget {
       child: Column(
         children: [
           _HeroSection(isMobile: isMobile),
+          _AboutSection(),
+          _SkillsSection(),
           const _PublishedAppsSection(),
           _TechStackMarquee(),
           _StatsBar(),
@@ -299,7 +301,7 @@ class _AvatarRing extends StatelessWidget {
         padding: const EdgeInsets.all(3),
         child: CircleAvatar(
           radius: size / 2,
-          backgroundImage: const AssetImage('assets/images/profile.png'),
+          backgroundImage: const AssetImage('assets/images/profile.jpeg'),
         ),
       ),
     );
@@ -1003,6 +1005,275 @@ class _FooterStrip extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+}
+
+// ──────────────────────────────────────────────────────────
+// ABOUT SECTION
+// ──────────────────────────────────────────────────────────
+class _AboutSection extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    final isMobile = MediaQuery.sizeOf(context).width < 800;
+    
+    return Container(
+      padding: EdgeInsets.symmetric(
+        horizontal: isMobile ? 24 : 80,
+        vertical: 60,
+      ),
+      child: isMobile
+          ? Column(
+              children: [
+                _buildImage(context),
+                const SizedBox(height: 40),
+                _buildText(context),
+              ],
+            )
+          : Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Expanded(child: _buildImage(context)),
+                const SizedBox(width: 80),
+                Expanded(child: _buildText(context)),
+              ],
+            ),
+    );
+  }
+
+  Widget _buildImage(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(24),
+        border: Border.all(color: AppColors.border),
+        boxShadow: [
+          BoxShadow(
+            color: AppColors.accent.withOpacity(0.1),
+            blurRadius: 40,
+            offset: const Offset(0, 20),
+          ),
+        ],
+      ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(24),
+        child: Image.asset(
+          'assets/images/desc.jpeg',
+          fit: BoxFit.cover,
+        ),
+      ),
+    ).animate().fadeIn(duration: 800.ms).slideX(begin: -0.2);
+  }
+
+  Widget _buildText(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            Container(
+              width: 20,
+              height: 2,
+              color: AppColors.accent,
+              margin: const EdgeInsets.only(right: 10),
+            ),
+            const Text(
+              'ABOUT ME',
+              style: TextStyle(
+                color: AppColors.accent,
+                fontSize: 11,
+                fontWeight: FontWeight.w700,
+                letterSpacing: 2,
+              ),
+            ),
+          ],
+        ).animate().fadeIn().slideX(),
+        const SizedBox(height: 24),
+        const Text(
+          "I'm a passionate Flutter Developer dedicated to crafting exceptional cross-platform experiences.",
+          style: TextStyle(
+            color: AppColors.textPrimary,
+            fontSize: 28,
+            fontWeight: FontWeight.w800,
+            height: 1.2,
+          ),
+        ).animate().fadeIn(delay: 200.ms).slideY(begin: 0.1),
+        const SizedBox(height: 24),
+        const Text(
+          "With over 3 years of professional experience, I have developed and deployed a wide array of mobile applications ranging from FinTech solutions to robust enterprise software. My journey involves a constant pursuit of learning and embracing modern architectural patterns like BLoC and Clean Architecture to ensure scalable and maintainable codebases.",
+          style: TextStyle(
+            color: AppColors.textSecondary,
+            fontSize: 16,
+            height: 1.7,
+          ),
+        ).animate().fadeIn(delay: 300.ms).slideY(begin: 0.1),
+        const SizedBox(height: 20),
+        const Text(
+          "I believe in the power of beautiful UI and smooth UX. When I'm not coding, I'm exploring new design trends or contributing to the tech community.",
+          style: TextStyle(
+            color: AppColors.textSecondary,
+            fontSize: 16,
+            height: 1.7,
+          ),
+        ).animate().fadeIn(delay: 400.ms).slideY(begin: 0.1),
+      ],
+    );
+  }
+}
+
+// ──────────────────────────────────────────────────────────
+// SKILLS SECTION
+// ──────────────────────────────────────────────────────────
+class _SkillsSection extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    final isMobile = MediaQuery.sizeOf(context).width < 700;
+    
+    final skills = [
+      ('Flutter / Dart', 0.95),
+      ('Firebase / Backend', 0.85),
+      ('State Management (BLoC)', 0.90),
+      ('UI / UX Design', 0.80),
+      ('REST APIs & GraphQL', 0.85),
+      ('CI/CD & DevOps', 0.70),
+    ];
+
+    return Container(
+      padding: EdgeInsets.symmetric(
+        horizontal: isMobile ? 24 : 80,
+        vertical: 60,
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Container(
+                width: 20,
+                height: 2,
+                color: AppColors.accent,
+                margin: const EdgeInsets.only(right: 10),
+              ),
+              const Text(
+                'MY SKILLS',
+                style: TextStyle(
+                  color: AppColors.accent,
+                  fontSize: 11,
+                  fontWeight: FontWeight.w700,
+                  letterSpacing: 2,
+                ),
+              ),
+            ],
+          ).animate().fadeIn().slideX(),
+          const SizedBox(height: 40),
+          LayoutBuilder(
+            builder: (context, constraints) {
+              final crossAxisCount = isMobile ? 1 : 2;
+              final childWidth = (constraints.maxWidth - (crossAxisCount - 1) * 40) / crossAxisCount;
+              
+              return Wrap(
+                spacing: 40,
+                runSpacing: 32,
+                children: skills.indexed.map((e) {
+                  final (i, skill) = e;
+                  return SizedBox(
+                    width: childWidth,
+                    child: _SkillBar(
+                      title: skill.$1,
+                      percentage: skill.$2,
+                      delay: i * 100,
+                    ),
+                  );
+                }).toList(),
+              );
+            },
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _SkillBar extends StatelessWidget {
+  const _SkillBar({
+    required this.title,
+    required this.percentage,
+    required this.delay,
+  });
+
+  final String title;
+  final double percentage;
+  final int delay;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              title,
+              style: const TextStyle(
+                color: AppColors.textPrimary,
+                fontSize: 15,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            Text(
+              '${(percentage * 100).toInt()}%',
+              style: const TextStyle(
+                color: AppColors.accent,
+                fontSize: 14,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+          ],
+        ).animate().fadeIn(delay: delay.ms).slideY(begin: 0.2, end: 0),
+        const SizedBox(height: 12),
+        Container(
+          height: 8,
+          width: double.infinity,
+          decoration: BoxDecoration(
+            color: AppColors.surfaceCard,
+            borderRadius: BorderRadius.circular(4),
+          ),
+          child: LayoutBuilder(
+            builder: (context, constraints) {
+              return Stack(
+                children: [
+                  AnimatedContainer(
+                    duration: 1000.ms,
+                    curve: Curves.easeOutCubic,
+                    width: constraints.maxWidth * percentage,
+                    height: 8,
+                    decoration: BoxDecoration(
+                      gradient: const LinearGradient(
+                        colors: [AppColors.accentDark, AppColors.accent],
+                      ),
+                      borderRadius: BorderRadius.circular(4),
+                      boxShadow: [
+                        BoxShadow(
+                          color: AppColors.accent.withOpacity(0.4),
+                          blurRadius: 8,
+                          offset: const Offset(0, 2),
+                        ),
+                      ],
+                    ),
+                  ).animate().scaleX(
+                    begin: 0,
+                    end: 1,
+                    alignment: Alignment.centerLeft,
+                    delay: delay.ms + 200.ms,
+                    duration: 800.ms,
+                    curve: Curves.easeOutCubic,
+                  ),
+                ],
+              );
+            },
+          ),
+        ),
+      ],
     );
   }
 }
