@@ -18,6 +18,8 @@ class HomePage extends StatelessWidget {
           _HeroSection(isMobile: isMobile),
           _AboutSection(),
           _SkillsSection(),
+          _ServicesSection(),
+          _CareerJourneySection(),
           const _PublishedAppsSection(),
           _TechStackMarquee(),
           _StatsBar(),
@@ -1303,6 +1305,472 @@ class _SkillBar extends StatelessWidget {
           ),
         ),
       ],
+    );
+  }
+}
+
+// ──────────────────────────────────────────────────────────
+// SERVICES SECTION
+// ──────────────────────────────────────────────────────────
+class _ServicesSection extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    final isMobile = MediaQuery.sizeOf(context).width < 800;
+    
+    final services = [
+      (
+        icon: Icons.phone_android_rounded,
+        title: 'Mobile App\nDevelopment',
+        desc: 'We build high-performance mobile apps using Flutter and Native technologies. From concept to deployment, we handle the entire lifecycle.',
+        points: ['iOS & Android Support', 'Custom UI/UX Design', 'API Integration']
+      ),
+      (
+        icon: Icons.computer_rounded,
+        title: 'Web\nDevelopment',
+        desc: 'Creating robust web applications with the latest frameworks like React, Next.js, and Flutter Web. SEO optimized and varying from landing pages to complex SaaS platforms.',
+        points: ['Responsive Design', 'SEO Optimization', 'CMS Integration']
+      ),
+      (
+        icon: Icons.design_services_rounded,
+        title: 'UI/UX\nDesign',
+        desc: 'We craft intuitive and beautiful interfaces that users love. Our process involves user research, wireframing, and high-fidelity prototyping.',
+        points: ['User Research', 'Wireframing & Prototyping', 'Design Systems']
+      ),
+    ];
+
+    return Container(
+      padding: EdgeInsets.symmetric(
+        horizontal: isMobile ? 24 : 80,
+        vertical: 60,
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          LayoutBuilder(
+            builder: (context, constraints) {
+              if (isMobile) {
+                return Column(
+                  children: services.indexed.map((e) {
+                    return Padding(
+                      padding: const EdgeInsets.only(bottom: 24),
+                      child: _ServiceCard(
+                        icon: e.$2.icon,
+                        title: e.$2.title,
+                        desc: e.$2.desc,
+                        points: e.$2.points,
+                        delay: e.$1 * 100,
+                      ),
+                    );
+                  }).toList(),
+                );
+              }
+              return Row(
+                children: services.indexed.map((e) {
+                  return Expanded(
+                    child: Padding(
+                      padding: EdgeInsets.only(
+                        right: e.$1 < services.length - 1 ? 24 : 0,
+                      ),
+                      child: _ServiceCard(
+                        icon: e.$2.icon,
+                        title: e.$2.title,
+                        desc: e.$2.desc,
+                        points: e.$2.points,
+                        delay: e.$1 * 100,
+                      ),
+                    ),
+                  );
+                }).toList(),
+              );
+            },
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _ServiceCard extends StatefulWidget {
+  const _ServiceCard({
+    required this.icon,
+    required this.title,
+    required this.desc,
+    required this.points,
+    required this.delay,
+  });
+
+  final IconData icon;
+  final String title;
+  final String desc;
+  final List<String> points;
+  final int delay;
+
+  @override
+  State<_ServiceCard> createState() => _ServiceCardState();
+}
+
+class _ServiceCardState extends State<_ServiceCard> {
+  bool _h = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return MouseRegion(
+      onEnter: (_) => setState(() => _h = true),
+      onExit: (_) => setState(() => _h = false),
+      child: AnimatedContainer(
+        duration: 300.ms,
+        padding: const EdgeInsets.all(32),
+        decoration: BoxDecoration(
+          color: _h ? AppColors.surfaceHover : AppColors.surfaceCard,
+          borderRadius: BorderRadius.circular(24),
+          border: Border.all(
+            color: _h ? AppColors.accent.withOpacity(0.4) : AppColors.border,
+          ),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: AppColors.background,
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: AppColors.border),
+              ),
+              child: Icon(widget.icon, color: AppColors.textPrimary, size: 24),
+            ),
+            const SizedBox(height: 32),
+            Text(
+              widget.title,
+              style: const TextStyle(
+                color: AppColors.textPrimary,
+                fontSize: 22,
+                fontWeight: FontWeight.w800,
+                height: 1.2,
+              ),
+            ),
+            const SizedBox(height: 20),
+            Text(
+              widget.desc,
+              style: const TextStyle(
+                color: AppColors.textSecondary,
+                fontSize: 14,
+                height: 1.6,
+              ),
+            ),
+            const SizedBox(height: 32),
+            ...widget.points.map((p) => Padding(
+                  padding: const EdgeInsets.only(bottom: 12),
+                  child: Row(
+                    children: [
+                      Container(
+                        width: 6,
+                        height: 6,
+                        decoration: const BoxDecoration(
+                          color: AppColors.accent,
+                          shape: BoxShape.circle,
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: Text(
+                          p,
+                          style: const TextStyle(
+                            color: AppColors.textSecondary,
+                            fontSize: 13,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                )),
+            const SizedBox(height: 32),
+            const Divider(color: AppColors.border),
+            const SizedBox(height: 24),
+            Row(
+              children: [
+                Text(
+                  'Start Project',
+                  style: TextStyle(
+                    color: _h ? AppColors.accent : AppColors.textPrimary,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+                const SizedBox(width: 8),
+                Container(
+                  padding: const EdgeInsets.all(6),
+                  decoration: BoxDecoration(
+                    color: AppColors.background,
+                    shape: BoxShape.circle,
+                    border: Border.all(color: AppColors.border),
+                  ),
+                  child: Icon(
+                    Icons.arrow_forward_rounded,
+                    color: _h ? AppColors.accent : AppColors.textPrimary,
+                    size: 14,
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ).animate().fadeIn(delay: widget.delay.ms).slideY(begin: 0.1, end: 0),
+    );
+  }
+}
+
+// ──────────────────────────────────────────────────────────
+// CAREER JOURNEY SECTION
+// ──────────────────────────────────────────────────────────
+class _CareerJourneySection extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    final isMobile = MediaQuery.sizeOf(context).width < 800;
+    
+    final roles = [
+      (
+        period: 'JAN 2025 - MAR 2026',
+        title: 'Senior Software Developer (Flutter) & Team Lead',
+        company: 'AppDevs',
+        location: 'Dhaka, Bangladesh',
+        desc: 'Leading Flutter teams and building scalable fintech applications.',
+      ),
+      (
+        period: 'FEB 2023 - JAN 2025',
+        title: 'Software Developer (Flutter)',
+        company: 'AppDevs',
+        location: 'Dhaka, Bangladesh',
+        desc: 'Built fintech and payment-based Flutter applications.',
+      ),
+      (
+        period: 'NOV 2022 - JAN 2023',
+        title: 'Junior Software Developer (Flutter)',
+        company: 'AppDevs',
+        location: 'Dhaka, Bangladesh',
+        desc: 'Contributed to fintech applications.',
+      ),
+    ];
+
+    return Container(
+      padding: EdgeInsets.symmetric(
+        horizontal: isMobile ? 24 : 80,
+        vertical: 60,
+      ),
+      child: Column(
+        children: [
+          const Text(
+            'Career Journey',
+            style: TextStyle(
+              color: AppColors.textPrimary,
+              fontSize: 36,
+              fontWeight: FontWeight.w800,
+            ),
+          ).animate().fadeIn().slideY(),
+          const SizedBox(height: 12),
+          Container(
+            width: 60,
+            height: 4,
+            decoration: BoxDecoration(
+              gradient: const LinearGradient(
+                colors: [AppColors.accentDark, AppColors.accent],
+              ),
+              borderRadius: BorderRadius.circular(4),
+            ),
+          ).animate().scaleX(delay: 200.ms),
+          const SizedBox(height: 60),
+          Stack(
+            children: [
+              // Center Line
+              if (!isMobile)
+                Positioned(
+                  left: MediaQuery.sizeOf(context).width / 2 - 80, // Adjust for horizontal padding 80
+                  top: 0,
+                  bottom: 0,
+                  child: Container(
+                    width: 1,
+                    color: AppColors.border,
+                  ),
+                ),
+              
+              // Mobile Line
+              if (isMobile)
+                Positioned(
+                  left: 16,
+                  top: 0,
+                  bottom: 0,
+                  child: Container(
+                    width: 1,
+                    color: AppColors.border,
+                  ),
+                ),
+
+              Column(
+                children: roles.indexed.map((e) {
+                  final (i, role) = e;
+                  final isLeft = i % 2 == 0;
+
+                  if (isMobile) {
+                    return Padding(
+                      padding: const EdgeInsets.only(bottom: 32, left: 40),
+                      child: Stack(
+                        clipBehavior: Clip.none,
+                        children: [
+                          Positioned(
+                            left: -30,
+                            top: 24,
+                            child: _TimelineDot(),
+                          ),
+                          _JourneyCard(role: role, isLeft: false),
+                        ],
+                      ),
+                    );
+                  }
+
+                  return Padding(
+                    padding: const EdgeInsets.only(bottom: 40),
+                    child: Row(
+                      mainAxisAlignment: isLeft ? MainAxisAlignment.start : MainAxisAlignment.end,
+                      children: [
+                        if (isLeft) ...[
+                          Expanded(
+                            child: Align(
+                              alignment: Alignment.centerRight,
+                              child: Padding(
+                                padding: const EdgeInsets.only(right: 40),
+                                child: _JourneyCard(role: role, isLeft: true),
+                              ),
+                            ),
+                          ),
+                          _TimelineDot(),
+                          const Expanded(child: SizedBox()),
+                        ] else ...[
+                          const Expanded(child: SizedBox()),
+                          _TimelineDot(),
+                          Expanded(
+                            child: Align(
+                              alignment: Alignment.centerLeft,
+                              child: Padding(
+                                padding: const EdgeInsets.only(left: 40),
+                                child: _JourneyCard(role: role, isLeft: false),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ],
+                    ),
+                  );
+                }).toList(),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _TimelineDot extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 12,
+      height: 12,
+      decoration: BoxDecoration(
+        color: AppColors.background,
+        shape: BoxShape.circle,
+        border: Border.all(color: AppColors.accent, width: 2),
+        boxShadow: [
+          BoxShadow(
+            color: AppColors.accent.withOpacity(0.5),
+            blurRadius: 8,
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _JourneyCard extends StatefulWidget {
+  const _JourneyCard({required this.role, required this.isLeft});
+  final dynamic role;
+  final bool isLeft;
+
+  @override
+  State<_JourneyCard> createState() => _JourneyCardState();
+}
+
+class _JourneyCardState extends State<_JourneyCard> {
+  bool _h = false;
+
+  @override
+  Widget build(BuildContext context) {
+    final r = widget.role;
+    return MouseRegion(
+      onEnter: (_) => setState(() => _h = true),
+      onExit: (_) => setState(() => _h = false),
+      child: AnimatedContainer(
+        duration: 300.ms,
+        width: 480,
+        padding: const EdgeInsets.all(32),
+        decoration: BoxDecoration(
+          color: _h ? AppColors.surfaceHover : AppColors.surfaceCard,
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(
+            color: _h ? AppColors.accent.withOpacity(0.4) : AppColors.border,
+          ),
+        ),
+        child: Column(
+          crossAxisAlignment: widget.isLeft ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+          children: [
+            Text(
+              r.period,
+              style: const TextStyle(
+                color: AppColors.accent,
+                fontSize: 12,
+                fontWeight: FontWeight.w800,
+                letterSpacing: 1.5,
+              ),
+            ),
+            const SizedBox(height: 16),
+            Text(
+              r.title,
+              textAlign: widget.isLeft ? TextAlign.right : TextAlign.left,
+              style: const TextStyle(
+                color: AppColors.textPrimary,
+                fontSize: 20,
+                fontWeight: FontWeight.w700,
+                height: 1.3,
+              ),
+            ),
+            const SizedBox(height: 12),
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Icon(Icons.business_rounded, color: AppColors.textMuted, size: 14),
+                const SizedBox(width: 8),
+                Text(
+                  '${r.company}  ·  ${r.location}',
+                  style: const TextStyle(
+                    color: AppColors.textMuted,
+                    fontSize: 13,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 24),
+            Text(
+              r.desc,
+              textAlign: widget.isLeft ? TextAlign.right : TextAlign.left,
+              style: const TextStyle(
+                color: AppColors.textSecondary,
+                fontSize: 14,
+                height: 1.6,
+              ),
+            ),
+          ],
+        ),
+      ).animate().fadeIn().slideX(begin: widget.isLeft ? -0.1 : 0.1),
     );
   }
 }
