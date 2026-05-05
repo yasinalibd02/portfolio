@@ -1088,7 +1088,7 @@ class _AboutSection extends StatelessWidget {
       ),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(24),
-        child: Image.asset('assets/images/desc.jpeg', fit: BoxFit.cover),
+        child: Image.asset('assets/images/profile.jpeg', fit: BoxFit.cover),
       ),
     ).animate().fadeIn(duration: 800.ms).slideX(begin: -0.2);
   }

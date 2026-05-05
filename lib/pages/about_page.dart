@@ -149,7 +149,7 @@ class _ProfilePhoto extends StatelessWidget {
       ),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(20),
-        child: Image.asset('assets/images/profile.png', fit: BoxFit.cover),
+        child: Image.asset('assets/images/profile.jpeg', fit: BoxFit.cover),
       ),
     ).animate().fadeIn(duration: 800.ms).scale(begin: const Offset(0.95, 0.95));
   }
