@@ -1100,22 +1100,21 @@ class _HeroSocialBtnState extends State<_HeroSocialBtn> {
             transform: Matrix4.identity()..translate(0.0, _hovered ? -3.0 : 0.0),
             decoration: BoxDecoration(
               color: _hovered
-                  ? widget.hoverColor.withOpacity(dark ? 0.20 : 0.12)
+                  ? widget.hoverColor.withOpacity(dark ? 0.20 : 0.10)
                   : (dark
                       ? const Color(0xFF161A23)
-                      : Colors.white.withOpacity(0.9)),
+                      : Colors.white),
               borderRadius: BorderRadius.circular(50),
               border: Border.all(
                 color: _hovered
-                    ? widget.hoverColor.withOpacity(0.65)
-                    : (dark ? const Color(0xFF262C3A) : const Color(0xFFE2E8F0)),
-                width: 1.2,
+                    ? widget.hoverColor
+                    : (dark ? AppColors.accent.withOpacity(0.70) : AppColors.accent),
+                width: 1.5,
               ),
               boxShadow: [
                 BoxShadow(
-                  color: _hovered
-                      ? widget.hoverColor.withOpacity(0.3)
-                      : Colors.black.withOpacity(dark ? 0.2 : 0.04),
+                  color: (_hovered ? widget.hoverColor : AppColors.accent)
+                      .withOpacity(_hovered ? 0.35 : 0.12),
                   blurRadius: _hovered ? 14 : 6,
                   offset: const Offset(0, 3),
                 ),
@@ -1125,7 +1124,7 @@ class _HeroSocialBtnState extends State<_HeroSocialBtn> {
               child: FaIcon(
                 widget.icon,
                 size: 17,
-                color: _hovered ? widget.hoverColor : AppColors.textSecondary,
+                color: _hovered ? widget.hoverColor : AppColors.accent,
               ),
             ),
           ),

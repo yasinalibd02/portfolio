@@ -105,9 +105,25 @@ class _ScaffoldWithNavbarState extends State<ScaffoldWithNavbar> {
                       BoxShadow(color: AppColors.accentGlow, blurRadius: 16),
                     ],
                   ),
-                  child: const CircleAvatar(
-                    radius: 30,
-                    backgroundImage: AssetImage('assets/images/profile.png'),
+                  child: ClipOval(
+                    child: Image.asset(
+                      'assets/images/profile.png',
+                      width: 60,
+                      height: 60,
+                      fit: BoxFit.cover,
+                      errorBuilder: (context, error, stackTrace) => Container(
+                        color: AppColors.accent,
+                        alignment: Alignment.center,
+                        child: Text(
+                          'YA',
+                          style: GoogleFonts.spaceGrotesk(
+                            color: Colors.white,
+                            fontWeight: FontWeight.w800,
+                            fontSize: 18,
+                          ),
+                        ),
+                      ),
+                    ),
                   ),
                 ),
                 const SizedBox(height: 14),
@@ -365,9 +381,25 @@ class _LogoWidget extends StatelessWidget {
             ),
             boxShadow: [BoxShadow(color: AppColors.accentGlow, blurRadius: 10)],
           ),
-          child: const CircleAvatar(
-            radius: 16,
-            backgroundImage: AssetImage('assets/images/profile.png'),
+          child: ClipOval(
+            child: Image.asset(
+              'assets/images/profile.png',
+              width: 33,
+              height: 33,
+              fit: BoxFit.cover,
+              errorBuilder: (context, error, stackTrace) => Container(
+                color: AppColors.accent,
+                alignment: Alignment.center,
+                child: Text(
+                  'YA',
+                  style: GoogleFonts.spaceGrotesk(
+                    color: Colors.white,
+                    fontWeight: FontWeight.w800,
+                    fontSize: 12,
+                  ),
+                ),
+              ),
+            ),
           ),
         ),
         const SizedBox(width: 11),
