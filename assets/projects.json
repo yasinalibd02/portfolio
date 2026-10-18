@@ -1,77 +1,194 @@
 [
     {
-        "title": "QRPay Pro - Digital Payment Solution",
-        "description": "An all-in-one digital payment ecosystem with User, Merchant, and Agent apps. Features QR code payments, money transfers, mobile top-ups, and seamless payment gateway integration. Built for global scalability.",
-        "imageUrl": "assets/images/qrpay.webp",
-        "link": "https://codecanyon.net/item/qrpay-pro-complete-qrpay-solution-with-all-addons-bundle/56101909",
+        "title": "ShopGrow — Multi-Channel AI Agent Platform",
+        "description": "SaaS platform to build one AI agent and deploy to WhatsApp, Instagram, Facebook, TikTok, website, and 6 more sales channels with Bengali NLP and bKash payments.",
+        "imageUrl": "assets/images/web/shopgrow.webp",
+        "link": "https://shopgrow.net/",
         "tags": [
-            "Flutter",
-            "Dart",
-            "Kotlin",
-            "Firebase"
-        ]
+            "Live SaaS",
+            "AI Agent",
+            "Next.js",
+            "Multi-Channel",
+            "Automation"
+        ],
+        "category": "Agency & SaaS",
+        "badge": "Featured SaaS",
+        "type": "web"
     },
     {
-        "title": "adMart - Online Grocery Shopping",
-        "description": "adMart is a powerful, full-featured online grocery and pharmacy eCommerce platform designed for fast launches, seamless delivery, and scalable business growth. Built with Flutter and Laravel, it offers a complete package including a user-friendly mobile app, robust admin dashboard, and dedicated delivery panel — all optimized for performance and usability",
-        "imageUrl": "assets/images/admart.webp",
-        "link": "https://codecanyon.net/item/admart-online-grocery-shopping-ecommerce-pharmacy-solutions/59832532",
+        "title": "Luxora Living — Luxury Real Estate Developer",
+        "description": "Contemporary residential real estate portal in Bangladesh featuring architectural projects, interactive unit browsing, virtual booking, and live construction progress tracking.",
+        "imageUrl": "assets/images/web/luxora.webp",
+        "link": "https://luxoralivingbd.com",
         "tags": [
-            "Flutter",
-            "Dart",
-            "Kotlin",
-            "Swift"
-        ]
+            "Live Web",
+            "Real Estate",
+            "PHP/Laravel",
+            "Interactive UI",
+            "Responsive"
+        ],
+        "category": "Real Estate",
+        "badge": "Live Client",
+        "type": "web"
     },
     {
-        "title": "Crypinvest - Crypto Investment Platform",
-        "description": "A comprehensive cryptocurrency investment solution featuring a secure wallet, support for 20+ cryptocurrencies, personalized investment plans, and a multi-level referral system. Includes Android & iOS apps and a robust Admin Panel.",
-        "imageUrl": "assets/images/crypinvest.webp",
-        "link": "https://codecanyon.net/item/crypinvest-cryptocurrency-investment-platform-full-solution/47446877",
+        "title": "Happy Vacation — Air Ticket, Tour & Hajj Booking",
+        "description": "Full-featured travel booking and tour agency platform offering flight inquiries, Hajj & Umrah pilgrimage packages, vacation bookings, and automated visa consulting services.",
+        "imageUrl": "assets/images/web/happy_vacation.webp",
+        "link": "https://happyvacationbd.com/",
         "tags": [
-            "Flutter",
-            "Dart",
-            "Kotlin",
-            "Swift",
-            "Java"
-        ]
+            "Live Web",
+            "Travel & Tourism",
+            "Booking Engine",
+            "Hajj & Umrah",
+            "PHP"
+        ],
+        "category": "Travel & Booking",
+        "badge": "Live Client",
+        "type": "web"
     },
     {
-        "title": "StripCard - Virtual Credit Card Solution",
-        "description": "A secure virtual credit card platform allowing users to create and manage virtual cards for online transactions. Supports multiple payment gateways, KYC verification, and real-time statements.",
-        "imageUrl": "assets/images/stripcard.webp",
-        "link": "https://codecanyon.net/item/stripcard-virtual-credit-card-solution/47909310",
+        "title": "AN Express BD — Courier Logistics & Parcel Delivery",
+        "description": "Nationwide express courier and parcel tracking logistics portal in Bangladesh. Features instant consignment tracking by ID, shipping cost calculator, and 400+ hub network.",
+        "imageUrl": "assets/images/web/anexpress.webp",
+        "link": "https://anexpressbd.com/",
         "tags": [
-            "Flutter",
-            "Firebase",
-            "Dart",
-            "Kotlin",
-            "Swift"
-        ]
+            "Live Web",
+            "Logistics",
+            "Courier",
+            "Live Tracking",
+            "Hub Network"
+        ],
+        "category": "Logistics",
+        "badge": "Live Client",
+        "type": "web"
     },
     {
-        "title": "ADoctor - Doctor Appointment Booking",
-        "description": "A complete doctor appointment booking system connecting patients with doctors. Features include appointment scheduling, home service booking, health packages, and a comprehensive admin panel for clinic management.",
-        "imageUrl": "assets/images/adoctor.webp",
-        "link": "https://codecanyon.net/item/adoctor-hospital-doctor-booking-android-and-ios-app-website-admin-panel/47212127",
+        "title": "Kiam Express — Kitchen & Home Essentials",
+        "description": "Official e-commerce destination for Kiam cookware, kitchen appliances, glassware, and everyday home essentials. Features dynamic product browsing and fast delivery.",
+        "imageUrl": "assets/images/web/kiam.webp",
+        "link": "https://kiamexpress.com/",
         "tags": [
-            "Flutter",
-            "Kotlin",
-            "Swift",
-            "Dart"
-        ]
+            "Live Web",
+            "E-Commerce",
+            "Retail",
+            "Kitchen & Home",
+            "Fast Shipping"
+        ],
+        "category": "E-Commerce",
+        "badge": "Live Client",
+        "type": "web"
     },
     {
-        "title": "AdFund - Fundraising Platform",
-        "description": "A crowdfunding and fundraising platform empowering users to create campaigns and accept donations. Features include campaign tracking, donation history, and secure wallet management.",
-        "imageUrl": "assets/images/adfund.webp",
-        "link": "https://codecanyon.net/item/adfund-fund-raising-platform-website-androidios-app-admin-panel/45306012",
+        "title": "Vape Empire — Premium Vape & E-Liquid Store",
+        "description": "Modern dark-themed vape marketplace featuring age verification gate, multi-brand filtering, dynamic cart system, and nationwide express checkout.",
+        "imageUrl": "assets/images/web/vape_empire.webp",
+        "link": "https://vapeempire.net/",
         "tags": [
+            "Live Web",
+            "E-Commerce",
+            "Retail",
+            "Lifestyle",
+            "Dark Theme"
+        ],
+        "category": "E-Commerce",
+        "badge": "Live Client",
+        "type": "web"
+    },
+    {
+        "title": "AppDevs — FinTech Software Company",
+        "description": "Official website and enterprise showcase for AppDevs, highlighting high-performance financial software engineering, mobile platforms, and payment integrations.",
+        "imageUrl": "assets/images/apps/appdevs_shot.jpg",
+        "link": "https://appdevs.net/",
+        "tags": [
+            "Live Web",
+            "Agency & SaaS",
+            "FinTech",
+            "Enterprise",
+            "Architecture"
+        ],
+        "category": "Agency & SaaS",
+        "badge": "Enterprise Platform",
+        "type": "web"
+    },
+    {
+        "title": "QRPay — Money Transfer (Google Play)",
+        "description": "Send, receive, and pay seamlessly using secure QR codes. Complete digital wallet with top-ups, transaction ledger, and merchant-agent integration.",
+        "imageUrl": "assets/images/apps/qrpay_shot.jpg",
+        "link": "https://play.google.com/store/apps/details?id=net.appdevs.qrpayuser",
+        "tags": [
+            "Mobile App",
+            "Flutter",
+            "Fintech",
+            "Google Play",
+            "10K+ Installs"
+        ],
+        "category": "FinTech",
+        "badge": "Featured Mobile",
+        "type": "app"
+    },
+    {
+        "title": "Islah — Companion for a Life of Faith",
+        "description": "Ad-free Islamic companion app featuring precise prayer times, accurate Qibla compass, Quranic audio, and daily spiritual routines for Bangladesh.",
+        "imageUrl": "assets/images/apps/islah_shot.jpg",
+        "link": "https://play.google.com/store/apps/details?id=com.islahbd.app",
+        "tags": [
+            "Mobile App",
             "Flutter",
             "Dart",
-            "Kotlin",
-            "Swift",
-            "Java"
-        ]
+            "Lifestyle",
+            "Google Play"
+        ],
+        "category": "Mobile App",
+        "badge": "Featured Mobile",
+        "type": "app"
+    },
+    {
+        "title": "SenPay — Multi-Currency Digital Wallet",
+        "description": "All-in-one digital wallet on iOS App Store. Instant peer-to-peer transfers, balance top-ups, transaction ledger, and virtual cards.",
+        "imageUrl": "assets/images/apps/senpay_shot.jpg",
+        "link": "https://apps.apple.com/us/app/senpay-user/id6746039031",
+        "tags": [
+            "Mobile App",
+            "iOS",
+            "Flutter",
+            "Fintech",
+            "App Store"
+        ],
+        "category": "FinTech",
+        "badge": "Featured Mobile",
+        "type": "app"
+    },
+    {
+        "title": "Poisa — Smart Money & Expense Tracker",
+        "description": "Complete personal financial management Android app with budget analytics, recurring bills, multiple accounts, and intuitive Bengali currency formatting.",
+        "imageUrl": "assets/images/apps/poisa.webp",
+        "link": "https://play.google.com/store/apps/details?id=com.kori.moneytracker",
+        "tags": [
+            "Mobile App",
+            "Flutter",
+            "Finance",
+            "Expense Tracker",
+            "Google Play"
+        ],
+        "category": "FinTech",
+        "badge": "Featured Mobile",
+        "type": "app"
+    },
+    {
+        "title": "AppDevs — FinTech Showcase & Solutions",
+        "description": "Official showcase mobile app for AppDevs, highlighting cutting-edge financial technology software, payment gateways, and client services.",
+        "imageUrl": "assets/images/apps/appdevs_shot.jpg",
+        "link": "https://play.google.com/store/apps/details?id=net.appdevs",
+        "tags": [
+            "Mobile App",
+            "Flutter",
+            "Fintech",
+            "Business",
+            "Google Play"
+        ],
+        "category": "FinTech",
+        "badge": "Featured Mobile",
+        "type": "app"
     }
 ]

@@ -128,7 +128,7 @@ The trade-off is initial boilerplate. I recommend using code generation tools li
           ).animate().fadeIn(delay: 100.ms).slideY(begin: 0.2, end: 0),
 
           const SizedBox(height: 8),
-          const Text(
+          Text(
             'Thoughts on Flutter, architecture, and modern app development.',
             style: TextStyle(color: AppColors.textSecondary, fontSize: 15),
           ).animate().fadeIn(delay: 200.ms),
@@ -189,13 +189,13 @@ class _BlogCardState extends State<_BlogCard> {
                 const Spacer(),
                 Text(
                   widget.post.date,
-                  style: const TextStyle(
+                  style: TextStyle(
                     color: AppColors.textMuted,
                     fontSize: 12,
                   ),
                 ),
                 const SizedBox(width: 12),
-                const Icon(
+                Icon(
                   Icons.access_time_rounded,
                   color: AppColors.textMuted,
                   size: 14,
@@ -203,7 +203,7 @@ class _BlogCardState extends State<_BlogCard> {
                 const SizedBox(width: 4),
                 Text(
                   widget.post.readTime,
-                  style: const TextStyle(
+                  style: TextStyle(
                     color: AppColors.textMuted,
                     fontSize: 12,
                   ),
@@ -228,7 +228,7 @@ class _BlogCardState extends State<_BlogCard> {
             // Summary
             Text(
               widget.post.summary,
-              style: const TextStyle(
+              style: TextStyle(
                 color: AppColors.textSecondary,
                 fontSize: 14,
                 height: 1.7,
@@ -250,7 +250,7 @@ class _BlogCardState extends State<_BlogCard> {
                     ),
                     Text(
                       widget.post.content,
-                      style: const TextStyle(
+                      style: TextStyle(
                         color: AppColors.textSecondary,
                         fontSize: 14,
                         height: 1.8,
@@ -275,7 +275,7 @@ class _BlogCardState extends State<_BlogCard> {
                 children: [
                   Text(
                     _expanded ? 'Collapse' : 'Read More',
-                    style: const TextStyle(
+                    style: TextStyle(
                       color: AppColors.accent,
                       fontWeight: FontWeight.w600,
                       fontSize: 13,
@@ -285,7 +285,7 @@ class _BlogCardState extends State<_BlogCard> {
                   AnimatedRotation(
                     turns: _expanded ? 0.5 : 0,
                     duration: const Duration(milliseconds: 200),
-                    child: const Icon(
+                    child: Icon(
                       Icons.keyboard_arrow_down_rounded,
                       color: AppColors.accent,
                       size: 18,
@@ -315,7 +315,7 @@ class _CategoryPill extends StatelessWidget {
       ),
       child: Text(
         label,
-        style: const TextStyle(
+        style: TextStyle(
           color: AppColors.accent,
           fontSize: 11,
           fontWeight: FontWeight.w700,
@@ -342,7 +342,7 @@ class _SectionLabel extends StatelessWidget {
         ),
         Text(
           label,
-          style: const TextStyle(
+          style: TextStyle(
             color: AppColors.accent,
             fontSize: 11,
             fontWeight: FontWeight.w700,

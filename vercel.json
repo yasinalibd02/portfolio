@@ -1,5 +1,8 @@
 {
   "buildCommand": "bash vercel_build.sh",
   "outputDirectory": "build/web",
-  "installCommand": "echo 'Installing dependencies and building...'"
+  "installCommand": "echo 'Installing dependencies and building...'",
+  "rewrites": [
+    { "source": "/(.*)", "destination": "/index.html" }
+  ]
 }

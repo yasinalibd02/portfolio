@@ -1,7 +1,9 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:portfolio/theme.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -26,14 +28,38 @@ class _ScaffoldWithNavbarState extends State<ScaffoldWithNavbar> {
       // Floating SMS/WhatsApp button
       floatingActionButton: _WhatsAppFAB(),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-      body: isMobile
-          ? widget.navigationShell
-          : Stack(
-              children: [
-                Positioned.fill(child: widget.navigationShell),
-                _DesktopNavbar(navigationShell: widget.navigationShell),
-              ],
+      body: Stack(
+        children: [
+          Positioned.fill(child: widget.navigationShell),
+          if (!isMobile)
+            _DesktopNavbar(navigationShell: widget.navigationShell),
+          // Techven Top Accent Progress Bar
+          Positioned(
+            top: 0,
+            left: 0,
+            right: 0,
+            child: Container(
+              height: 2.5,
+              decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [
+                    Color(0xFFF4795B),
+                    Color(0xFFF25C3B),
+                    Color(0xFFFFB59E),
+                  ],
+                ),
+                boxShadow: [
+                  BoxShadow(
+                    color: Color(0x66F4795B),
+                    blurRadius: 8,
+                    spreadRadius: 0.5,
+                  ),
+                ],
+              ),
             ),
+          ),
+        ],
+      ),
     );
   }
 
@@ -44,10 +70,13 @@ class _ScaffoldWithNavbarState extends State<ScaffoldWithNavbar> {
       title: _LogoWidget(),
       leading: Builder(
         builder: (ctx) => IconButton(
-          icon: const Icon(Icons.menu_rounded, color: AppColors.textPrimary),
+          icon: Icon(Icons.menu_rounded, color: AppColors.textPrimary),
           onPressed: () => Scaffold.of(ctx).openDrawer(),
         ),
       ),
+      actions: const [
+        Padding(padding: EdgeInsets.only(right: 12), child: ThemeToggle()),
+      ],
     );
   }
 
@@ -69,8 +98,8 @@ class _ScaffoldWithNavbarState extends State<ScaffoldWithNavbar> {
                   padding: const EdgeInsets.all(2),
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    gradient: const LinearGradient(
-                      colors: [AppColors.accent, Color(0xFF005F35)],
+                    gradient: LinearGradient(
+                      colors: [AppColors.accent, AppColors.accentDeep],
                     ),
                     boxShadow: [
                       BoxShadow(color: AppColors.accentGlow, blurRadius: 16),
@@ -82,16 +111,16 @@ class _ScaffoldWithNavbarState extends State<ScaffoldWithNavbar> {
                   ),
                 ),
                 const SizedBox(height: 14),
-                const Text(
-                  'Yasin Ali',
+                Text(
+                  'MD Yasin Ali',
                   style: TextStyle(
                     color: AppColors.textPrimary,
                     fontWeight: FontWeight.w800,
                     fontSize: 20,
                   ),
                 ),
-                const Text(
-                  'Flutter Developer',
+                Text(
+                  'Full Stack Developer',
                   style: TextStyle(
                     color: AppColors.accent,
                     fontSize: 12,
@@ -163,6 +192,8 @@ class _WhatsAppFABState extends State<_WhatsAppFAB>
 
   @override
   Widget build(BuildContext context) {
+    const waColor = Color(0xFF25D366);
+
     return AnimatedBuilder(
       animation: _ring,
       builder: (_, child) {
@@ -171,12 +202,12 @@ class _WhatsAppFABState extends State<_WhatsAppFAB>
           children: [
             // Ripple ring
             Container(
-              width: 56 * _ring.value,
-              height: 56 * _ring.value,
+              width: 58 * _ring.value,
+              height: 58 * _ring.value,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: AppColors.accent.withOpacity(
-                  (1.4 - _ring.value).clamp(0, 0.25),
+                color: waColor.withOpacity(
+                  (1.4 - _ring.value).clamp(0.0, 0.28),
                 ),
               ),
             ),
@@ -184,30 +215,43 @@ class _WhatsAppFABState extends State<_WhatsAppFAB>
           ],
         );
       },
-      child: GestureDetector(
-        onTap: () async {
-          const url = 'https://wa.me/8801308985262';
-          final uri = Uri.parse(url);
-          if (await canLaunchUrl(uri)) await launchUrl(uri);
-        },
-        child: Container(
-          width: 52,
-          height: 52,
-          decoration: BoxDecoration(
-            color: AppColors.accent,
-            shape: BoxShape.circle,
-            boxShadow: [
-              BoxShadow(
-                color: AppColors.accentGlow,
-                blurRadius: 20,
-                offset: const Offset(0, 6),
+      child: Tooltip(
+        message: 'Chat on WhatsApp',
+        child: MouseRegion(
+          cursor: SystemMouseCursors.click,
+          child: GestureDetector(
+            onTap: () async {
+              const url = 'https://wa.me/8801308985262';
+              final uri = Uri.parse(url);
+              if (await canLaunchUrl(uri)) await launchUrl(uri);
+            },
+            child: Container(
+              width: 54,
+              height: 54,
+              decoration: BoxDecoration(
+                color: waColor,
+                shape: BoxShape.circle,
+                boxShadow: [
+                  BoxShadow(
+                    color: waColor.withOpacity(0.45),
+                    blurRadius: 20,
+                    offset: const Offset(0, 6),
+                  ),
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.18),
+                    blurRadius: 10,
+                    offset: const Offset(0, 3),
+                  ),
+                ],
               ),
-            ],
-          ),
-          child: const Icon(
-            Icons.chat_rounded,
-            color: AppColors.background,
-            size: 24,
+              child: const Center(
+                child: FaIcon(
+                  FontAwesomeIcons.whatsapp,
+                  color: Colors.white,
+                  size: 28,
+                ),
+              ),
+            ),
           ),
         ),
       ),
@@ -237,7 +281,7 @@ class _SMSButton extends StatelessWidget {
         child: Row(
           mainAxisSize: fullWidth ? MainAxisSize.max : MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.center,
-          children: const [
+          children: [
             Icon(Icons.sms_rounded, color: AppColors.accent, size: 18),
             SizedBox(width: 8),
             Text(
@@ -290,6 +334,8 @@ class _DesktopNavbar extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(width: 20),
+                const ThemeToggle(),
+                const SizedBox(width: 12),
                 _LetsTalkBtn(onTap: () => navigationShell.goBranch(4)),
               ],
             ),
@@ -312,8 +358,8 @@ class _LogoWidget extends StatelessWidget {
           padding: const EdgeInsets.all(1.5),
           decoration: BoxDecoration(
             shape: BoxShape.circle,
-            gradient: const LinearGradient(
-              colors: [AppColors.accent, Color(0xFF004D2C)],
+            gradient: LinearGradient(
+              colors: [AppColors.accent, AppColors.accentDeep],
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
             ),
@@ -328,23 +374,23 @@ class _LogoWidget extends StatelessWidget {
         Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: const [
+          children: [
             Text(
               'Yasin Ali',
-              style: TextStyle(
+              style: GoogleFonts.spaceGrotesk(
                 color: AppColors.textPrimary,
                 fontWeight: FontWeight.w800,
-                fontSize: 14.5,
+                fontSize: 15,
                 letterSpacing: -0.3,
               ),
             ),
             Text(
-              'Flutter Developer',
-              style: TextStyle(
+              'Digital Solutions & Apps',
+              style: GoogleFonts.spaceGrotesk(
                 color: AppColors.accent,
-                fontSize: 9.5,
+                fontSize: 10,
                 fontWeight: FontWeight.w600,
-                letterSpacing: 0.8,
+                letterSpacing: 0.5,
               ),
             ),
           ],
@@ -403,10 +449,12 @@ class _NavLinkState extends State<_NavLink> {
               const SizedBox(height: 3),
               AnimatedContainer(
                 duration: 200.ms,
-                height: 2,
-                width: active ? 18 : 0,
+                height: 2.5,
+                width: active ? 22 : (_h ? 12 : 0),
                 decoration: BoxDecoration(
-                  color: AppColors.accent,
+                  gradient: const LinearGradient(
+                    colors: [Color(0xFFF4795B), Color(0xFFF25C3B)],
+                  ),
                   borderRadius: BorderRadius.circular(2),
                   boxShadow: [
                     BoxShadow(color: AppColors.accentGlow, blurRadius: 6),
@@ -414,6 +462,61 @@ class _NavLinkState extends State<_NavLink> {
                 ),
               ),
             ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+// ─────────────────────────────────────
+// Light / dark toggle
+// ─────────────────────────────────────
+class ThemeToggle extends StatefulWidget {
+  const ThemeToggle({super.key});
+
+  @override
+  State<ThemeToggle> createState() => _ThemeToggleState();
+}
+
+class _ThemeToggleState extends State<ThemeToggle> {
+  bool _h = false;
+
+  @override
+  Widget build(BuildContext context) {
+    final dark = ThemeController.isDark;
+    return Tooltip(
+      message: dark ? 'Switch to light mode' : 'Switch to dark mode',
+      child: MouseRegion(
+        onEnter: (_) => setState(() => _h = true),
+        onExit: (_) => setState(() => _h = false),
+        cursor: SystemMouseCursors.click,
+        child: GestureDetector(
+          onTap: ThemeController.toggle,
+          child: AnimatedContainer(
+            duration: 200.ms,
+            width: 40,
+            height: 40,
+            decoration: BoxDecoration(
+              color: _h ? AppColors.accent.withOpacity(0.12) : AppColors.surfaceCard,
+              shape: BoxShape.circle,
+              border: Border.all(
+                color: _h ? AppColors.accent.withOpacity(0.45) : AppColors.border,
+              ),
+            ),
+            child: AnimatedSwitcher(
+              duration: 300.ms,
+              transitionBuilder: (child, anim) => RotationTransition(
+                turns: Tween(begin: 0.75, end: 1.0).animate(anim),
+                child: FadeTransition(opacity: anim, child: child),
+              ),
+              child: Icon(
+                dark ? Icons.light_mode_rounded : Icons.dark_mode_rounded,
+                key: ValueKey(dark),
+                size: 18,
+                color: _h ? AppColors.accent : AppColors.textPrimary,
+              ),
+            ),
           ),
         ),
       ),
@@ -442,22 +545,42 @@ class _LetsTalkBtnState extends State<_LetsTalkBtn> {
         onTap: widget.onTap,
         child: AnimatedContainer(
           duration: 200.ms,
-          padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 9),
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
           decoration: BoxDecoration(
-            color: _h ? AppColors.accent : Colors.transparent,
-            border: Border.all(color: _h ? AppColors.accent : AppColors.border),
-            borderRadius: BorderRadius.circular(50),
-            boxShadow: _h
-                ? [BoxShadow(color: AppColors.accentGlow, blurRadius: 16)]
-                : [],
-          ),
-          child: Text(
-            "Let's Talk",
-            style: TextStyle(
-              color: _h ? AppColors.background : AppColors.textPrimary,
-              fontWeight: FontWeight.w700,
-              fontSize: 12.5,
+            gradient: LinearGradient(
+              colors: _h
+                  ? [AppColors.accentDark, AppColors.accentDeep]
+                  : [AppColors.accent, AppColors.accentDark],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
             ),
+            borderRadius: BorderRadius.circular(50),
+            boxShadow: [
+              BoxShadow(
+                color: AppColors.accentGlow,
+                blurRadius: _h ? 18 : 12,
+                offset: const Offset(0, 4),
+              ),
+            ],
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                "Let's Talk",
+                style: GoogleFonts.spaceGrotesk(
+                  color: Colors.white,
+                  fontWeight: FontWeight.w700,
+                  fontSize: 12.5,
+                ),
+              ),
+              const SizedBox(width: 6),
+              const Icon(
+                Icons.arrow_forward_rounded,
+                color: Colors.white,
+                size: 14,
+              ),
+            ],
           ),
         ),
       ),

@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:portfolio/theme.dart';
+import 'package:portfolio/widgets/live_web_platforms_section.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:web/web.dart' as web;
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -16,13 +17,14 @@ class HomePage extends StatelessWidget {
       child: Column(
         children: [
           _HeroSection(isMobile: isMobile),
+          const LiveWebPlatformsSection(),
+          const _PublishedAppsSection(),
+          _TechStackMarquee(),
+          _StatsBar(),
           _AboutSection(),
           _SkillsSection(),
           _ServicesSection(),
           _CareerJourneySection(),
-          const _PublishedAppsSection(),
-          _TechStackMarquee(),
-          _StatsBar(),
           _FooterStrip(),
         ],
       ),
@@ -30,8 +32,12 @@ class HomePage extends StatelessWidget {
   }
 }
 
+
 // ──────────────────────────────────────────────────────────
 // HERO
+// ──────────────────────────────────────────────────────────
+// ──────────────────────────────────────────────────────────
+// TECHVEN HERO SECTION (MATCHING SCREENSHOT 1:1)
 // ──────────────────────────────────────────────────────────
 class _HeroSection extends StatelessWidget {
   const _HeroSection({required this.isMobile});
@@ -39,136 +45,663 @@ class _HeroSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        // Mesh gradient blobs
-        _GlowBlob(dx: 0.1, dy: 0.3, size: 380),
-        _GlowBlob(dx: 0.85, dy: 0.6, size: 280),
-        _GlowBlob(dx: 0.5, dy: 0.1, size: 200, color: const Color(0xFF0088FF)),
+    final width = MediaQuery.sizeOf(context).width;
+    final showFloatingChips = width >= 960;
 
-        // Content
+    return Stack(
+      alignment: Alignment.center,
+      clipBehavior: Clip.none,
+      children: [
+        // 48px Grid backdrop
+        Positioned.fill(
+          child: ShaderMask(
+            blendMode: BlendMode.dstIn,
+            shaderCallback: (rect) => const RadialGradient(
+              center: Alignment(0, -0.2),
+              radius: 0.95,
+              colors: [Colors.white, Colors.transparent],
+            ).createShader(rect),
+            child: CustomPaint(
+              painter: _GridPainter(color: AppColors.gridLine),
+            ),
+          ),
+        ),
+
+        // Ambient coral glow blobs (matching Techven .blob)
+        _GlowBlob(
+          dx: -0.05,
+          dy: 0.1,
+          size: 440,
+          color: const Color(0xFFF4795B).withOpacity(0.24),
+        ),
+        _GlowBlob(
+          dx: 0.95,
+          dy: 0.7,
+          size: 460,
+          color: const Color(0xFFF4795B).withOpacity(0.18),
+        ),
+
+        // Faint concentric background orbits (fx-orbit)
+        Positioned(
+          top: 60,
+          child: Container(
+            width: 580,
+            height: 580,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              border: Border.all(
+                color: AppColors.accent.withOpacity(0.06),
+                width: 1,
+              ),
+            ),
+          ),
+        ),
+        Positioned(
+          top: 150,
+          child: Container(
+            width: 400,
+            height: 400,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              border: Border.all(
+                color: AppColors.secondaryAccent.withOpacity(0.04),
+                width: 1,
+              ),
+            ),
+          ),
+        ),
+
+        // ── 4 FLOATING SIDE CHIPS ON DESKTOP (.fx-chip) ──
+        // ── 4 FLOATING SIDE CHIPS ON DESKTOP (.fx-chip) ──
+        if (showFloatingChips) ...[
+          // Top-Left: Web (top: 24%, left: ~4%)
+          Positioned(
+            top: 150,
+            left: (width * 0.05).clamp(20.0, 100.0),
+            child: const _FxChip(
+              icon: Icons.language_rounded,
+              label: 'Web',
+              bobDurationMs: 6500,
+              delayMs: 0,
+            ),
+          ),
+
+          // Bottom-Left: App (top: 64%, left: ~7%)
+          Positioned(
+            top: 360,
+            left: (width * 0.07).clamp(24.0, 120.0),
+            child: const _FxChip(
+              icon: Icons.smartphone_rounded,
+              label: 'App',
+              bobDurationMs: 7500,
+              delayMs: 1500,
+            ),
+          ),
+
+          // Top-Right: SaaS (top: 28%, right: ~6%)
+          Positioned(
+            top: 165,
+            right: (width * 0.06).clamp(20.0, 110.0),
+            child: const _FxChip(
+              icon: Icons.cloud_outlined,
+              label: 'SaaS',
+              bobDurationMs: 7000,
+              delayMs: 3000,
+            ),
+          ),
+
+          // Bottom-Right: Automation (top: 66%, right: ~5%)
+          Positioned(
+            top: 375,
+            right: (width * 0.05).clamp(20.0, 100.0),
+            child: const _FxChip(
+              icon: Icons.auto_awesome_rounded,
+              label: 'Automation',
+              bobDurationMs: 8000,
+              delayMs: 4500,
+            ),
+          ),
+        ],
+
+        // ── CENTER CONTENT ──
         Container(
           width: double.infinity,
           padding: EdgeInsets.fromLTRB(
-            isMobile ? 24 : 80,
-            isMobile ? 110 : 150,
-            isMobile ? 24 : 80,
-            isMobile ? 60 : 100,
+            isMobile ? 20 : 40,
+            isMobile ? 100 : 135,
+            isMobile ? 20 : 40,
+            isMobile ? 16 : 24,
           ),
           child: Column(
+            mainAxisSize: MainAxisSize.min,
             children: [
-              // Badge
-              _Badge().animate().fadeIn(duration: 600.ms).slideY(begin: -.3),
-
-              SizedBox(height: isMobile ? 24 : 32),
-
-              // Avatar
-              _AvatarRing(size: isMobile ? 88 : 108)
-                  .animate()
-                  .fadeIn(delay: 100.ms, duration: 600.ms)
-                  .scale(begin: const Offset(0.7, 0.7)),
-
-              SizedBox(height: isMobile ? 24 : 32),
-
-              // Greeting
-              Text(
-                "Hey, I'm",
-                style: TextStyle(
-                  color: AppColors.textSecondary,
-                  fontSize: isMobile ? 18 : 22,
-                  fontWeight: FontWeight.w500,
-                  letterSpacing: 0.5,
-                ),
-              ).animate().fadeIn(delay: 200.ms),
-
-              const SizedBox(height: 4),
-
-              // Name
-              ShaderMask(
-                    shaderCallback: (bounds) => const LinearGradient(
-                      colors: [AppColors.textPrimary, Color(0xFFB8D4FF)],
-                    ).createShader(bounds),
-                    child: Text(
-                      'Yasin Ali',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: isMobile ? 56 : 88,
-                        fontWeight: FontWeight.w900,
-                        height: 1.0,
-                        letterSpacing: -2,
-                      ),
-                    ),
-                  )
-                  .animate()
-                  .fadeIn(delay: 300.ms, duration: 700.ms)
-                  .slideY(begin: 0.2, end: 0)
-                  .shimmer(
-                    delay: 1000.ms,
-                    duration: 2000.ms,
-                    color: Colors.white24,
-                  ),
-
-              SizedBox(height: isMobile ? 12 : 16),
-
-              // Role chip
-              _RoleChip(isMobile: isMobile)
-                  .animate()
-                  .fadeIn(delay: 500.ms)
-                  .scale(begin: const Offset(0.85, 0.85)),
+              // Badge: Ready to Build and Scale Beyond Borders?
+              const _Badge().animate().fadeIn(duration: 600.ms).slideY(begin: -.2),
 
               SizedBox(height: isMobile ? 20 : 28),
 
-              // Description
+              // Headline: Helping Brands Build and Grow [Digital Products] That Scale Globally
+              _TechvenHeadline(isMobile: isMobile)
+                  .animate()
+                  .fadeIn(delay: 150.ms, duration: 700.ms)
+                  .slideY(begin: 0.15, end: 0),
+
+              SizedBox(height: isMobile ? 18 : 26),
+
+              // Subtitle paragraph
               ConstrainedBox(
-                constraints: const BoxConstraints(maxWidth: 540),
-                child: const Text(
-                  "Crafting beautiful, high-performance Flutter apps for mobile & web. "
-                  "3+ years · 50+ apps shipped · 100+ store deployments.",
+                constraints: const BoxConstraints(maxWidth: 820),
+                child: Text(
+                  "Full Stack Developer with 4+ years of experience engineering mobile applications, web platforms, SaaS products, and AI-powered automation workflows. Delivering high-impact digital solutions across fintech, e-commerce, healthcare, and SaaS.",
                   textAlign: TextAlign.center,
-                  style: TextStyle(
+                  style: GoogleFonts.inter(
                     color: AppColors.textSecondary,
-                    fontSize: 15.5,
-                    height: 1.75,
+                    fontSize: isMobile ? 15 : 17.5,
+                    height: 1.65,
+                    fontWeight: FontWeight.w400,
                   ),
                 ),
-              ).animate().fadeIn(delay: 600.ms),
+              ).animate().fadeIn(delay: 300.ms),
 
-              SizedBox(height: isMobile ? 36 : 48),
+              SizedBox(height: isMobile ? 26 : 36),
 
-              // CTAs
+              // Two CTA buttons: Start Your Project & Explore My Work
               Wrap(
-                spacing: 14,
+                spacing: 16,
                 runSpacing: 14,
                 alignment: WrapAlignment.center,
                 children: [
-                  _GreenButton(
-                    label: 'View Projects',
-                    icon: Icons.arrow_forward_rounded,
+                  _TechvenPrimaryBtn(
+                    label: 'Start Your Project',
+                    icon: Icons.rocket_launch_rounded,
+                    onTap: (ctx) => ctx.go('/contact'),
+                  ),
+                  _TechvenSecondaryBtn(
+                    label: 'Explore My Work',
+                    icon: Icons.arrow_outward_rounded,
                     onTap: (ctx) => ctx.go('/projects'),
                   ),
-                  _OutlineButton(
-                    label: 'Download Resume',
-                    icon: Icons.download_rounded,
-                    onTap: () {
-                      final anchor = web.HTMLAnchorElement()
-                        ..href = 'assets/MD_Yasin_Ali_Resume.pdf'
-                        ..download = 'MD_Yasin_Ali_Resume.pdf';
-                      anchor.click();
-                    },
-                  ),
                 ],
-              ).animate().fadeIn(delay: 800.ms),
+              ).animate().fadeIn(delay: 450.ms).slideY(begin: 0.1, end: 0),
 
-              SizedBox(height: isMobile ? 40 : 56),
-
-              // Social row
-              _SocialRow().animate().fadeIn(delay: 1000.ms),
+              // On mobile / smaller screens, display the 4 chips in a clean wrap
+              if (!showFloatingChips) ...[
+                const SizedBox(height: 24),
+                Wrap(
+                  spacing: 10,
+                  runSpacing: 10,
+                  alignment: WrapAlignment.center,
+                  children: const [
+                    _FxChipInline(icon: Icons.language_rounded, label: 'Web'),
+                    _FxChipInline(icon: Icons.smartphone_rounded, label: 'App'),
+                    _FxChipInline(icon: Icons.cloud_outlined, label: 'SaaS'),
+                    _FxChipInline(icon: Icons.auto_awesome_rounded, label: 'Automation'),
+                  ],
+                ).animate().fadeIn(delay: 550.ms),
+              ],
             ],
           ),
         ),
       ],
     );
   }
+}
+
+// ──────────────────────────────────────────────────────────
+// HEADLINE WITH ROTATING WORD & BLINKING CARET
+// ──────────────────────────────────────────────────────────
+class _TechvenHeadline extends StatelessWidget {
+  const _TechvenHeadline({required this.isMobile});
+  final bool isMobile;
+
+  @override
+  Widget build(BuildContext context) {
+    final width = MediaQuery.sizeOf(context).width;
+
+    if (width < 640) {
+      return Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(
+            'Helping Brands Build & Grow',
+            textAlign: TextAlign.center,
+            style: GoogleFonts.spaceGrotesk(
+              color: AppColors.textPrimary,
+              fontSize: 34,
+              fontWeight: FontWeight.w800,
+              height: 1.12,
+              letterSpacing: -1.2,
+            ),
+          ),
+          const SizedBox(height: 6),
+          const _HeroRotator(fontSize: 36),
+          const SizedBox(height: 6),
+          Text(
+            'That Scale Globally',
+            textAlign: TextAlign.center,
+            style: GoogleFonts.spaceGrotesk(
+              color: AppColors.textPrimary,
+              fontSize: 34,
+              fontWeight: FontWeight.w800,
+              height: 1.12,
+              letterSpacing: -1.2,
+            ),
+          ),
+        ],
+      );
+    }
+
+    final fontSize = width > 1100 ? 66.0 : 50.0;
+
+    return ConstrainedBox(
+      constraints: const BoxConstraints(maxWidth: 940),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(
+            'Helping Brands Build and',
+            textAlign: TextAlign.center,
+            style: GoogleFonts.spaceGrotesk(
+              color: AppColors.textPrimary,
+              fontSize: fontSize,
+              fontWeight: FontWeight.w800,
+              height: 1.05,
+              letterSpacing: -2.0,
+            ),
+          ),
+          Wrap(
+            alignment: WrapAlignment.center,
+            crossAxisAlignment: WrapCrossAlignment.center,
+            children: [
+              Text(
+                'Grow ',
+                style: GoogleFonts.spaceGrotesk(
+                  color: AppColors.textPrimary,
+                  fontSize: fontSize,
+                  fontWeight: FontWeight.w800,
+                  height: 1.05,
+                  letterSpacing: -2.0,
+                ),
+              ),
+              _HeroRotator(fontSize: fontSize),
+              Text(
+                ' That',
+                style: GoogleFonts.spaceGrotesk(
+                  color: AppColors.textPrimary,
+                  fontSize: fontSize,
+                  fontWeight: FontWeight.w800,
+                  height: 1.05,
+                  letterSpacing: -2.0,
+                ),
+              ),
+            ],
+          ),
+          Text(
+            'Scale Globally',
+            textAlign: TextAlign.center,
+            style: GoogleFonts.spaceGrotesk(
+              color: AppColors.textPrimary,
+              fontSize: fontSize,
+              fontWeight: FontWeight.w800,
+              height: 1.05,
+              letterSpacing: -2.0,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _HeroRotator extends StatefulWidget {
+  const _HeroRotator({required this.fontSize});
+  final double fontSize;
+
+  @override
+  State<_HeroRotator> createState() => _HeroRotatorState();
+}
+
+class _HeroRotatorState extends State<_HeroRotator> {
+  static const _words = [
+    'Digital Products',
+    'Mobile Apps',
+    'Web Platforms',
+    'SaaS Products',
+    'AI Workflows',
+    'FinTech Solutions',
+  ];
+
+  int _index = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    _loop();
+  }
+
+  void _loop() async {
+    while (mounted) {
+      await Future.delayed(const Duration(milliseconds: 2800));
+      if (!mounted) break;
+      setState(() {
+        _index = (_index + 1) % _words.length;
+      });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        ShaderMask(
+          shaderCallback: (bounds) => const LinearGradient(
+            colors: [Color(0xFFF4795B), Color(0xFFF25C3B)],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ).createShader(bounds),
+          child: AnimatedSwitcher(
+            duration: const Duration(milliseconds: 400),
+            transitionBuilder: (child, anim) => SlideTransition(
+              position: Tween<Offset>(
+                begin: const Offset(0, 0.4),
+                end: Offset.zero,
+              ).animate(CurvedAnimation(parent: anim, curve: Curves.easeOut)),
+              child: FadeTransition(opacity: anim, child: child),
+            ),
+            child: Text(
+              _words[_index],
+              key: ValueKey<int>(_index),
+              style: GoogleFonts.spaceGrotesk(
+                color: Colors.white,
+                fontSize: widget.fontSize,
+                fontWeight: FontWeight.w800,
+                height: 1.05,
+                letterSpacing: -2.0,
+              ),
+            ),
+          ),
+        ),
+        _CaretCursor(fontSize: widget.fontSize),
+      ],
+    );
+  }
+}
+
+class _CaretCursor extends StatefulWidget {
+  const _CaretCursor({required this.fontSize});
+  final double fontSize;
+
+  @override
+  State<_CaretCursor> createState() => _CaretCursorState();
+}
+
+class _CaretCursorState extends State<_CaretCursor>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _ctrl;
+
+  @override
+  void initState() {
+    super.initState();
+    _ctrl = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 700),
+    )..repeat(reverse: true);
+  }
+
+  @override
+  void dispose() {
+    _ctrl.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return FadeTransition(
+      opacity: _ctrl,
+      child: Container(
+        width: 3.5,
+        height: widget.fontSize * 0.72,
+        margin: const EdgeInsets.only(left: 4),
+        decoration: BoxDecoration(
+          gradient: const LinearGradient(
+            colors: [Color(0xFFF4795B), Color(0xFFF25C3B)],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+          ),
+          borderRadius: BorderRadius.circular(2),
+        ),
+      ),
+    );
+  }
+}
+
+// ──────────────────────────────────────────────────────────
+// FLOATING SIDE CHIP (.fx-chip)
+// ──────────────────────────────────────────────────────────
+class _FxChip extends StatefulWidget {
+  const _FxChip({
+    required this.icon,
+    required this.label,
+    required this.bobDurationMs,
+    required this.delayMs,
+  });
+
+  final IconData icon;
+  final String label;
+  final int bobDurationMs;
+  final int delayMs;
+
+  @override
+  State<_FxChip> createState() => _FxChipState();
+}
+
+class _FxChipState extends State<_FxChip> with SingleTickerProviderStateMixin {
+  late AnimationController _ctrl;
+  late Animation<double> _transAnim;
+  late Animation<double> _rotAnim;
+  bool _hovered = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _ctrl = AnimationController(
+      vsync: this,
+      duration: Duration(milliseconds: widget.bobDurationMs),
+    );
+
+    _transAnim = Tween<double>(begin: 0, end: -16).animate(
+      CurvedAnimation(parent: _ctrl, curve: Curves.easeInOut),
+    );
+
+    _rotAnim = Tween<double>(begin: -0.025, end: 0.025).animate(
+      CurvedAnimation(parent: _ctrl, curve: Curves.easeInOut),
+    );
+
+    Future.delayed(Duration(milliseconds: widget.delayMs), () {
+      if (mounted) _ctrl.repeat(reverse: true);
+    });
+  }
+
+  @override
+  void dispose() {
+    _ctrl.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final dark = ThemeController.isDark;
+
+    return AnimatedBuilder(
+      animation: _ctrl,
+      builder: (context, child) {
+        return Transform.translate(
+          offset: Offset(0, _hovered ? -4 : _transAnim.value),
+          child: Transform.rotate(
+            angle: _hovered ? 0 : _rotAnim.value,
+            child: child,
+          ),
+        );
+      },
+      child: MouseRegion(
+        onEnter: (_) => setState(() => _hovered = true),
+        onExit: (_) => setState(() => _hovered = false),
+        cursor: SystemMouseCursors.click,
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 220),
+          curve: Curves.easeOutCubic,
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 13),
+          decoration: BoxDecoration(
+            color: _hovered
+                ? (dark
+                    ? const Color(0xFFF4795B).withOpacity(0.22)
+                    : const Color(0xFFFFF1EE))
+                : (dark
+                    ? AppColors.surfaceCard.withOpacity(0.95)
+                    : Colors.white.withOpacity(0.98)),
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(
+              color: _hovered
+                  ? const Color(0xFFF4795B).withOpacity(0.85)
+                  : AppColors.border,
+              width: _hovered ? 1.5 : 1.2,
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: const Color(0xFFF4795B).withOpacity(_hovered ? 0.35 : 0.06),
+                blurRadius: _hovered ? 26 : 14,
+                offset: Offset(0, _hovered ? 8 : 4),
+              ),
+              BoxShadow(
+                color: Colors.black.withOpacity(dark ? 0.35 : 0.04),
+                blurRadius: 8,
+                offset: const Offset(0, 2),
+              ),
+            ],
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(
+                widget.icon,
+                size: 19,
+                color: const Color(0xFFF4795B),
+              ),
+              const SizedBox(width: 10),
+              Text(
+                widget.label,
+                style: GoogleFonts.spaceGrotesk(
+                  color: _hovered
+                      ? const Color(0xFFF4795B)
+                      : AppColors.textPrimary,
+                  fontSize: 14.5,
+                  fontWeight: FontWeight.w700,
+                  letterSpacing: -0.2,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _FxChipInline extends StatefulWidget {
+  const _FxChipInline({required this.icon, required this.label});
+  final IconData icon;
+  final String label;
+
+  @override
+  State<_FxChipInline> createState() => _FxChipInlineState();
+}
+
+class _FxChipInlineState extends State<_FxChipInline> {
+  bool _hovered = false;
+
+  @override
+  Widget build(BuildContext context) {
+    final dark = ThemeController.isDark;
+
+    return MouseRegion(
+      onEnter: (_) => setState(() => _hovered = true),
+      onExit: (_) => setState(() => _hovered = false),
+      cursor: SystemMouseCursors.click,
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 200),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 9),
+        decoration: BoxDecoration(
+          color: _hovered
+              ? (dark
+                  ? const Color(0xFFF4795B).withOpacity(0.22)
+                  : const Color(0xFFFFF1EE))
+              : (dark
+                  ? AppColors.surfaceCard.withOpacity(0.95)
+                  : Colors.white.withOpacity(0.98)),
+          borderRadius: BorderRadius.circular(14),
+          border: Border.all(
+            color: _hovered
+                ? const Color(0xFFF4795B).withOpacity(0.85)
+                : AppColors.border,
+            width: _hovered ? 1.4 : 1.0,
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: const Color(0xFFF4795B).withOpacity(_hovered ? 0.28 : 0.04),
+              blurRadius: _hovered ? 16 : 8,
+              offset: Offset(0, _hovered ? 4 : 2),
+            ),
+          ],
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(
+              widget.icon,
+              size: 16,
+              color: const Color(0xFFF4795B),
+            ),
+            const SizedBox(width: 8),
+            Text(
+              widget.label,
+              style: GoogleFonts.spaceGrotesk(
+                color: _hovered
+                    ? const Color(0xFFF4795B)
+                    : AppColors.textPrimary,
+                fontSize: 13,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+
+class _GridPainter extends CustomPainter {
+  const _GridPainter({required this.color});
+  final Color color;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()
+      ..color = color
+      ..strokeWidth = 1;
+    const step = 48.0;
+    for (double x = 0; x < size.width; x += step) {
+      canvas.drawLine(Offset(x, 0), Offset(x, size.height), paint);
+    }
+    for (double y = 0; y < size.height; y += step) {
+      canvas.drawLine(Offset(0, y), Offset(size.width, y), paint);
+    }
+  }
+
+  @override
+  bool shouldRepaint(_GridPainter old) => old.color != color;
 }
 
 // Glow blob in background
@@ -221,27 +754,42 @@ class _GlowBlob extends StatelessWidget {
 }
 
 class _Badge extends StatelessWidget {
+  const _Badge();
+
   @override
   Widget build(BuildContext context) {
+    final dark = ThemeController.isDark;
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 7),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 7),
       decoration: BoxDecoration(
-        color: AppColors.accent.withOpacity(0.08),
-        border: Border.all(color: AppColors.accent.withOpacity(0.3)),
+        color: dark
+            ? const Color(0xFFF4795B).withOpacity(0.12)
+            : const Color(0xFFF4795B).withOpacity(0.08),
+        border: Border.all(
+          color: const Color(0xFFF4795B).withOpacity(0.35),
+          width: 1,
+        ),
         borderRadius: BorderRadius.circular(50),
+        boxShadow: [
+          BoxShadow(
+            color: const Color(0xFFF4795B).withOpacity(0.08),
+            blurRadius: 14,
+            offset: const Offset(0, 2),
+          ),
+        ],
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          _PulsingDot(),
-          const SizedBox(width: 8),
-          const Text(
-            'AVAILABLE FOR HIRE',
-            style: TextStyle(
-              color: AppColors.accent,
-              fontSize: 10.5,
+          const _PulsingDot(),
+          const SizedBox(width: 9),
+          Text(
+            'Full Stack Developer · Available for Hire & Projects',
+            style: GoogleFonts.spaceGrotesk(
+              color: const Color(0xFFF4795B),
+              fontSize: 12.5,
               fontWeight: FontWeight.w700,
-              letterSpacing: 1.8,
+              letterSpacing: 0.1,
             ),
           ),
         ],
@@ -251,6 +799,8 @@ class _Badge extends StatelessWidget {
 }
 
 class _PulsingDot extends StatefulWidget {
+  const _PulsingDot();
+
   @override
   State<_PulsingDot> createState() => _PulsingDotState();
 }
@@ -284,10 +834,10 @@ class _PulsingDotState extends State<_PulsingDot>
     return ScaleTransition(
       scale: _scale,
       child: Container(
-        width: 7,
-        height: 7,
+        width: 8,
+        height: 8,
         decoration: const BoxDecoration(
-          color: AppColors.accent,
+          color: Color(0xFFF4795B),
           shape: BoxShape.circle,
         ),
       ),
@@ -295,123 +845,51 @@ class _PulsingDotState extends State<_PulsingDot>
   }
 }
 
-class _AvatarRing extends StatelessWidget {
-  const _AvatarRing({required this.size});
-  final double size;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: size,
-      height: size,
-      padding: const EdgeInsets.all(3),
-      decoration: BoxDecoration(
-        shape: BoxShape.circle,
-        gradient: const SweepGradient(
-          colors: [AppColors.accent, Color(0xFF005F35), AppColors.accent],
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: AppColors.accentGlow,
-            blurRadius: 24,
-            spreadRadius: 2,
-          ),
-        ],
-      ),
-      child: Container(
-        decoration: const BoxDecoration(
-          shape: BoxShape.circle,
-          color: AppColors.background,
-        ),
-        padding: const EdgeInsets.all(3),
-        child: CircleAvatar(
-          radius: size / 2,
-          backgroundImage: const AssetImage('assets/images/profile.jpeg'),
-        ),
-      ),
-    );
-  }
-}
-
-class _RoleChip extends StatelessWidget {
-  const _RoleChip({required this.isMobile});
-  final bool isMobile;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.symmetric(
-        horizontal: isMobile ? 16 : 22,
-        vertical: isMobile ? 8 : 10,
-      ),
-      decoration: BoxDecoration(
-        color: AppColors.surfaceCard,
-        borderRadius: BorderRadius.circular(50),
-        border: Border.all(color: AppColors.border),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Container(
-            width: 8,
-            height: 8,
-            decoration: const BoxDecoration(
-              color: AppColors.accent,
-              shape: BoxShape.circle,
-            ),
-          ),
-          const SizedBox(width: 10),
-          Text(
-            'Flutter Developer & Mobile App Specialist',
-            style: TextStyle(
-              color: AppColors.textSecondary,
-              fontSize: isMobile ? 12 : 14,
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-// ─── Buttons ───────────────────────────────────────────
-class _GreenButton extends StatefulWidget {
-  const _GreenButton({
+// ──────────────────────────────────────────────────────────
+// TECHVEN CTA BUTTONS
+// ──────────────────────────────────────────────────────────
+class _TechvenPrimaryBtn extends StatefulWidget {
+  const _TechvenPrimaryBtn({
     required this.label,
     required this.icon,
     required this.onTap,
   });
+
   final String label;
   final IconData icon;
   final void Function(BuildContext) onTap;
 
   @override
-  State<_GreenButton> createState() => _GreenButtonState();
+  State<_TechvenPrimaryBtn> createState() => _TechvenPrimaryBtnState();
 }
 
-class _GreenButtonState extends State<_GreenButton> {
-  bool _h = false;
+class _TechvenPrimaryBtnState extends State<_TechvenPrimaryBtn> {
+  bool _hovered = false;
 
   @override
   Widget build(BuildContext context) {
     return MouseRegion(
-      onEnter: (_) => setState(() => _h = true),
-      onExit: (_) => setState(() => _h = false),
+      onEnter: (_) => setState(() => _hovered = true),
+      onExit: (_) => setState(() => _hovered = false),
       cursor: SystemMouseCursors.click,
       child: GestureDetector(
         onTap: () => widget.onTap(context),
         child: AnimatedContainer(
-          duration: 200.ms,
-          padding: const EdgeInsets.symmetric(horizontal: 26, vertical: 15),
+          duration: const Duration(milliseconds: 200),
+          transform: Matrix4.identity()..translate(0.0, _hovered ? -3.0 : 0.0),
+          padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 15),
           decoration: BoxDecoration(
-            color: _h ? AppColors.accentDark : AppColors.accent,
+            gradient: const LinearGradient(
+              colors: [Color(0xFFF4795B), Color(0xFFF25C3B)],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
             borderRadius: BorderRadius.circular(50),
             boxShadow: [
               BoxShadow(
-                color: AppColors.accentGlow,
-                blurRadius: _h ? 32 : 16,
-                offset: const Offset(0, 6),
+                color: const Color(0xFFF4795B).withOpacity(_hovered ? 0.45 : 0.30),
+                blurRadius: _hovered ? 26 : 18,
+                offset: const Offset(0, 8),
               ),
             ],
           ),
@@ -420,14 +898,15 @@ class _GreenButtonState extends State<_GreenButton> {
             children: [
               Text(
                 widget.label,
-                style: const TextStyle(
-                  color: AppColors.background,
+                style: GoogleFonts.spaceGrotesk(
+                  color: Colors.white,
                   fontWeight: FontWeight.w700,
-                  fontSize: 14.5,
+                  fontSize: 15,
+                  letterSpacing: -0.2,
                 ),
               ),
               const SizedBox(width: 8),
-              Icon(widget.icon, color: AppColors.background, size: 17),
+              Icon(widget.icon, color: Colors.white, size: 16),
             ],
           ),
         ),
@@ -436,142 +915,72 @@ class _GreenButtonState extends State<_GreenButton> {
   }
 }
 
-class _OutlineButton extends StatefulWidget {
-  const _OutlineButton({
+class _TechvenSecondaryBtn extends StatefulWidget {
+  const _TechvenSecondaryBtn({
     required this.label,
     required this.icon,
     required this.onTap,
   });
+
   final String label;
   final IconData icon;
-  final VoidCallback onTap;
+  final void Function(BuildContext) onTap;
 
   @override
-  State<_OutlineButton> createState() => _OutlineButtonState();
+  State<_TechvenSecondaryBtn> createState() => _TechvenSecondaryBtnState();
 }
 
-class _OutlineButtonState extends State<_OutlineButton> {
-  bool _h = false;
+class _TechvenSecondaryBtnState extends State<_TechvenSecondaryBtn> {
+  bool _hovered = false;
 
   @override
   Widget build(BuildContext context) {
+    final dark = ThemeController.isDark;
+
     return MouseRegion(
-      onEnter: (_) => setState(() => _h = true),
-      onExit: (_) => setState(() => _h = false),
+      onEnter: (_) => setState(() => _hovered = true),
+      onExit: (_) => setState(() => _hovered = false),
       cursor: SystemMouseCursors.click,
       child: GestureDetector(
-        onTap: widget.onTap,
+        onTap: () => widget.onTap(context),
         child: AnimatedContainer(
-          duration: 200.ms,
+          duration: const Duration(milliseconds: 200),
+          transform: Matrix4.identity()..translate(0.0, _hovered ? -3.0 : 0.0),
           padding: const EdgeInsets.symmetric(horizontal: 26, vertical: 15),
           decoration: BoxDecoration(
-            color: _h ? AppColors.surfaceHover : Colors.transparent,
+            color: _hovered
+                ? (dark ? Colors.white.withOpacity(0.10) : Colors.white)
+                : (dark ? Colors.white.withOpacity(0.05) : Colors.white.withOpacity(0.92)),
             border: Border.all(
-              color: _h
-                  ? AppColors.textSecondary.withOpacity(0.4)
+              color: _hovered
+                  ? const Color(0xFFF4795B).withOpacity(0.6)
                   : AppColors.border,
+              width: 1.3,
             ),
             borderRadius: BorderRadius.circular(50),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(dark ? 0.25 : 0.04),
+                blurRadius: _hovered ? 16 : 8,
+                offset: const Offset(0, 4),
+              ),
+            ],
           ),
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(
                 widget.label,
-                style: TextStyle(
-                  color: _h ? AppColors.textPrimary : AppColors.textSecondary,
-                  fontWeight: FontWeight.w600,
-                  fontSize: 14.5,
+                style: GoogleFonts.spaceGrotesk(
+                  color: AppColors.textPrimary,
+                  fontWeight: FontWeight.w700,
+                  fontSize: 15,
+                  letterSpacing: -0.2,
                 ),
               ),
               const SizedBox(width: 8),
-              Icon(
-                widget.icon,
-                color: _h ? AppColors.textPrimary : AppColors.textSecondary,
-                size: 17,
-              ),
+              Icon(widget.icon, color: AppColors.textPrimary, size: 16),
             ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-// ─── Social Row ─────────────────────────────────────────
-class _SocialRow extends StatelessWidget {
-  final _socials = const [
-    (FontAwesomeIcons.github, 'https://github.com/yasinalibd02'),
-    (FontAwesomeIcons.linkedin, 'https://www.linkedin.com/in/yasinalibd02'),
-    (FontAwesomeIcons.twitter, 'https://x.com/YasinAl99967413'),
-    (FontAwesomeIcons.whatsapp, 'https://wa.me/8801308985262'),
-    (FontAwesomeIcons.facebook, 'https://www.facebook.com/yasinarafat02'),
-  ];
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: _socials
-              .map((s) => _SocialIcon(icon: s.$1, url: s.$2))
-              .toList(),
-        ),
-        const SizedBox(height: 12),
-        const Text(
-          'Find me on',
-          style: TextStyle(
-            color: AppColors.textMuted,
-            fontSize: 11,
-            letterSpacing: 1,
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-class _SocialIcon extends StatefulWidget {
-  const _SocialIcon({required this.icon, required this.url});
-  final IconData icon;
-  final String url;
-
-  @override
-  State<_SocialIcon> createState() => _SocialIconState();
-}
-
-class _SocialIconState extends State<_SocialIcon> {
-  bool _h = false;
-
-  @override
-  Widget build(BuildContext context) {
-    return MouseRegion(
-      onEnter: (_) => setState(() => _h = true),
-      onExit: (_) => setState(() => _h = false),
-      cursor: SystemMouseCursors.click,
-      child: GestureDetector(
-        onTap: () async {
-          final uri = Uri.parse(widget.url);
-          if (await canLaunchUrl(uri)) await launchUrl(uri);
-        },
-        child: AnimatedContainer(
-          duration: 200.ms,
-          margin: const EdgeInsets.symmetric(horizontal: 5),
-          padding: const EdgeInsets.all(11),
-          decoration: BoxDecoration(
-            color: _h
-                ? AppColors.accent.withOpacity(0.12)
-                : AppColors.surfaceCard,
-            border: Border.all(
-              color: _h ? AppColors.accent.withOpacity(0.45) : AppColors.border,
-            ),
-            borderRadius: BorderRadius.circular(12),
-          ),
-          child: FaIcon(
-            widget.icon,
-            size: 16,
-            color: _h ? AppColors.accent : AppColors.textSecondary,
           ),
         ),
       ),
@@ -582,32 +991,105 @@ class _SocialIconState extends State<_SocialIcon> {
 // ──────────────────────────────────────────────────────────
 // PUBLISHED APPS
 // ──────────────────────────────────────────────────────────
+enum _Store { play, apple }
+
+class _AppData {
+  const _AppData({
+    required this.name,
+    required this.tagline,
+    required this.category,
+    required this.icon,
+    required this.screenshot,
+    required this.tint,
+    required this.store,
+    required this.url,
+    this.downloads,
+    this.rating,
+  });
+
+  final String name, tagline, category, icon, screenshot, url;
+  final Color tint;
+  final _Store store;
+  final String? downloads;
+  final String? rating;
+}
+
 class _PublishedAppsSection extends StatelessWidget {
   const _PublishedAppsSection();
 
   static const _apps = [
-    (
-      name: 'AppDevs - FinTech Software',
-      category: 'Finance',
-      icon: FontAwesomeIcons.googlePlay,
-      store: 'Play Store',
-      url: 'https://play.google.com/store/apps/details?id=net.appdevs',
+    _AppData(
+      name: 'Islah — দ্বীনি জীবনের সঙ্গী',
+      tagline:
+          'Ad-free Islamic companion with precise prayer times, Qibla finder and daily routines for Bangladesh.',
+      category: 'Lifestyle',
+      icon: 'assets/images/apps/islah_icon.png',
+      screenshot: 'assets/images/apps/islah_shot.jpg',
+      tint: Color(0xFF10876A),
+      store: _Store.play,
+      url: 'https://play.google.com/store/apps/details?id=com.islahbd.app',
+      downloads: '5K+',
+      rating: '5.0',
     ),
-    (
-      name: 'QRPay - Money Transfer',
+    _AppData(
+      name: 'QRPay — Money Transfer',
+      tagline:
+          'Send, receive and pay with QR codes. Wallet, top-ups and a full merchant & agent ecosystem.',
       category: 'Finance',
-      icon: FontAwesomeIcons.googlePlay,
-      store: 'Play Store',
+      icon: 'assets/images/apps/qrpay_icon.png',
+      screenshot: 'assets/images/apps/qrpay_shot.jpg',
+      tint: Color(0xFF2563EB),
+      store: _Store.play,
       url:
-          'https://play.google.com/store/apps/details?id=net.appdevs.qrpayuser',
+          'https://play.google.com/store/apps/details?id=net.appdevs.qrpayuser&hl=en',
+      downloads: '10K+',
     ),
-
-    (
-      name: 'SenPay',
+    _AppData(
+      name: 'SenPay User',
+      tagline:
+          'All-in-one digital wallet — transfer funds, top up balance and use virtual cards securely.',
       category: 'Finance',
-      icon: FontAwesomeIcons.apple,
-      store: 'App Store',
+      icon: 'assets/images/apps/senpay_icon.png',
+      screenshot: 'assets/images/apps/senpay_shot.jpg',
+      tint: Color(0xFF3B5BFD),
+      store: _Store.apple,
       url: 'https://apps.apple.com/us/app/senpay-user/id6746039031',
+    ),
+    _AppData(
+      name: 'Poisa — Money Tracker',
+      tagline:
+          'Track income & expenses, set budgets and see clean charts — in English or Bangla, online or offline.',
+      category: 'Finance',
+      icon: 'assets/images/apps/poisa_icon.png',
+      screenshot: 'assets/images/apps/poisa_shot.jpg',
+      tint: Color(0xFF22A447),
+      store: _Store.play,
+      url: 'https://play.google.com/store/apps/details?id=com.kori.moneytracker',
+      downloads: '50+',
+    ),
+    _AppData(
+      name: 'Luxora Living',
+      tagline:
+          'Real-estate platform to discover luxury flats, compare projects and monitor live construction progress.',
+      category: 'Real Estate',
+      icon: 'assets/images/apps/luxora_icon.png',
+      screenshot: 'assets/images/apps/luxora_shot.jpg',
+      tint: Color(0xFFC9A24A),
+      store: _Store.play,
+      url: 'https://play.google.com/store/apps/details?id=com.luxoraliving',
+      downloads: '50+',
+    ),
+    _AppData(
+      name: 'AppDevs — FinTech Software',
+      tagline:
+          'Showcase app for AppDevs, a FinTech company building cutting-edge financial products.',
+      category: 'Business',
+      icon: 'assets/images/apps/appdevs_icon.png',
+      screenshot: 'assets/images/apps/appdevs_shot.jpg',
+      tint: Color(0xFF1E88E5),
+      store: _Store.play,
+      url: 'https://play.google.com/store/apps/details?id=net.appdevs',
+      downloads: '100+',
     ),
   ];
 
@@ -618,8 +1100,8 @@ class _PublishedAppsSection extends StatelessWidget {
     return Container(
       width: double.infinity,
       padding: EdgeInsets.symmetric(
-        horizontal: isMobile ? 24 : 80,
-        vertical: 60,
+        horizontal: isMobile ? 16 : (MediaQuery.sizeOf(context).width > 1200 ? 70 : 36),
+        vertical: isMobile ? 40 : 64,
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -632,7 +1114,7 @@ class _PublishedAppsSection extends StatelessWidget {
                 color: AppColors.accent,
                 margin: const EdgeInsets.only(right: 10),
               ),
-              const Text(
+              Text(
                 'LIVE ON STORES',
                 style: TextStyle(
                   color: AppColors.accent,
@@ -643,23 +1125,69 @@ class _PublishedAppsSection extends StatelessWidget {
               ),
             ],
           ).animate().fadeIn().slideX(),
-          const SizedBox(height: 24),
+          const SizedBox(height: 16),
           Wrap(
-            spacing: 20,
-            runSpacing: 20,
-            children: _apps.indexed.map((e) {
-              final (i, app) = e;
-              return _PublishedAppCard(
-                    name: app.name,
-                    category: app.category,
-                    icon: app.icon,
-                    store: app.store,
-                    url: app.url,
+            spacing: 24,
+            runSpacing: 16,
+            crossAxisAlignment: WrapCrossAlignment.end,
+            children: [
+              ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 620),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Apps people actually use',
+                      style: TextStyle(
+                        color: AppColors.textPrimary,
+                        fontSize: isMobile ? 30 : 40,
+                        fontWeight: FontWeight.w900,
+                        height: 1.1,
+                        letterSpacing: -1,
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                    Text(
+                      'A selection of production apps I built and shipped — '
+                      'live on Google Play and the App Store.',
+                      style: TextStyle(
+                        color: AppColors.textSecondary,
+                        fontSize: 15.5,
+                        height: 1.6,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              _StoreCountPill(
+                play: _apps.where((a) => a.store == _Store.play).length,
+                apple: _apps.where((a) => a.store == _Store.apple).length,
+              ),
+            ],
+          ).animate().fadeIn(delay: 100.ms).slideY(begin: 0.1, end: 0),
+          const SizedBox(height: 40),
+          LayoutBuilder(
+            builder: (context, constraints) {
+              final w = constraints.maxWidth;
+              final isMobile = w < 700;
+              final cols = w > 950 ? 3 : 2;
+              final gap = isMobile ? 12.0 : 24.0;
+              final cardW = (w - gap * (cols - 1)) / cols;
+              return Wrap(
+                spacing: gap,
+                runSpacing: gap,
+                children: _apps.indexed.map((e) {
+                  final (i, app) = e;
+                  return SizedBox(
+                    width: cardW,
+                    child: _PublishedAppCard(app: app, isMobile: isMobile),
                   )
-                  .animate()
-                  .fadeIn(delay: (i * 100).ms)
-                  .slideY(begin: 0.1, end: 0);
-            }).toList(),
+                      .animate()
+                      .fadeIn(delay: (i * 90).ms, duration: 500.ms)
+                      .slideY(begin: 0.12, end: 0, curve: Curves.easeOutCubic);
+                }).toList(),
+              );
+            },
           ),
         ],
       ),
@@ -667,17 +1195,56 @@ class _PublishedAppsSection extends StatelessWidget {
   }
 }
 
-class _PublishedAppCard extends StatefulWidget {
-  const _PublishedAppCard({
-    required this.name,
-    required this.category,
-    required this.icon,
-    required this.store,
-    required this.url,
-  });
+class _StoreCountPill extends StatelessWidget {
+  const _StoreCountPill({required this.play, required this.apple});
+  final int play, apple;
 
-  final String name, category, store, url;
-  final IconData icon;
+  @override
+  Widget build(BuildContext context) {
+    Widget item(FaIconData icon, String label) => Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            FaIcon(icon, size: 14, color: AppColors.textPrimary),
+            const SizedBox(width: 8),
+            Text(
+              label,
+              style: TextStyle(
+                color: AppColors.textSecondary,
+                fontSize: 13,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ],
+        );
+
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 12),
+      decoration: BoxDecoration(
+        color: AppColors.surfaceCard,
+        borderRadius: BorderRadius.circular(50),
+        border: Border.all(color: AppColors.border),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          item(FontAwesomeIcons.googlePlay, '$play on Google Play'),
+          Container(
+            width: 1,
+            height: 16,
+            color: AppColors.border,
+            margin: const EdgeInsets.symmetric(horizontal: 14),
+          ),
+          item(FontAwesomeIcons.apple, '$apple on App Store'),
+        ],
+      ),
+    );
+  }
+}
+
+class _PublishedAppCard extends StatefulWidget {
+  const _PublishedAppCard({required this.app, this.isMobile = false});
+  final _AppData app;
+  final bool isMobile;
 
   @override
   State<_PublishedAppCard> createState() => _PublishedAppCardState();
@@ -686,120 +1253,225 @@ class _PublishedAppCard extends StatefulWidget {
 class _PublishedAppCardState extends State<_PublishedAppCard> {
   bool _h = false;
 
+  Future<void> _open() async {
+    final uri = Uri.parse(widget.app.url);
+    if (await canLaunchUrl(uri)) {
+      await launchUrl(uri, mode: LaunchMode.externalApplication);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    final isMobile = MediaQuery.sizeOf(context).width < 700;
-    final w = isMobile ? double.infinity : 340.0;
+    final app = widget.app;
+    final dark = ThemeController.isDark;
+    final isMobile = widget.isMobile;
 
     return MouseRegion(
       onEnter: (_) => setState(() => _h = true),
       onExit: (_) => setState(() => _h = false),
       cursor: SystemMouseCursors.click,
       child: GestureDetector(
-        onTap: () async {
-          if (widget.url.isEmpty) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text('App is coming soon on the store!'),
-                behavior: SnackBarBehavior.floating,
-              ),
-            );
-            return;
-          }
-          final uri = Uri.parse(widget.url);
-          if (await canLaunchUrl(uri)) await launchUrl(uri);
-        },
+        onTap: _open,
         child: AnimatedContainer(
-          duration: 250.ms,
-          width: w,
-          padding: const EdgeInsets.all(24),
+          duration: 280.ms,
+          curve: Curves.easeOutCubic,
+          transform: Matrix4.translationValues(0, _h ? -6 : 0, 0),
           decoration: BoxDecoration(
-            color: _h ? AppColors.surfaceHover : AppColors.surfaceCard,
-            borderRadius: BorderRadius.circular(20),
+            color: AppColors.surfaceCard,
+            borderRadius: BorderRadius.circular(isMobile ? 18 : 24),
             border: Border.all(
-              color: _h ? AppColors.accent.withOpacity(0.4) : AppColors.border,
+              color: _h ? app.tint.withOpacity(0.55) : AppColors.border,
             ),
-            boxShadow: _h
-                ? [
-                    BoxShadow(
-                      color: AppColors.accent.withOpacity(0.08),
-                      blurRadius: 24,
-                      offset: const Offset(0, 8),
-                    ),
-                  ]
-                : [],
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                children: [
-                  Container(
-                    padding: const EdgeInsets.all(12),
-                    decoration: BoxDecoration(
-                      color: AppColors.background,
-                      borderRadius: BorderRadius.circular(12),
-                      border: Border.all(color: AppColors.border),
-                    ),
-                    child: FaIcon(
-                      widget.icon,
-                      color: widget.store == 'Play Store'
-                          ? AppColors.accent
-                          : AppColors.textPrimary,
-                      size: 24,
-                    ),
-                  ),
-                  const Spacer(),
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 10,
-                      vertical: 4,
-                    ),
-                    decoration: BoxDecoration(
-                      color: AppColors.accent.withOpacity(0.1),
-                      borderRadius: BorderRadius.circular(50),
-                    ),
-                    child: Text(
-                      widget.category,
-                      style: const TextStyle(
-                        color: AppColors.accent,
-                        fontSize: 10,
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 20),
-              Text(
-                widget.name,
-                style: TextStyle(
-                  color: _h ? AppColors.accent : AppColors.textPrimary,
-                  fontSize: 16,
-                  fontWeight: FontWeight.w700,
-                ),
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-              ),
-              const SizedBox(height: 6),
-              Row(
-                children: [
-                  Text(
-                    'Available on ${widget.store}',
-                    style: const TextStyle(
-                      color: AppColors.textMuted,
-                      fontSize: 13,
-                    ),
-                  ),
-                  const Spacer(),
-                  Icon(
-                    Icons.arrow_forward_rounded,
-                    color: _h ? AppColors.accent : AppColors.textMuted,
-                    size: 16,
-                  ),
-                ],
+            boxShadow: [
+              BoxShadow(
+                color: _h ? app.tint.withOpacity(0.22) : AppColors.shadow,
+                blurRadius: _h ? 40 : 20,
+                offset: Offset(0, _h ? 18 : 8),
               ),
             ],
+          ),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(isMobile ? 17 : 23),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // ── Showcase: tinted backdrop + phone mockup ──
+                SizedBox(
+                  height: isMobile ? 160 : 230,
+                  child: Stack(
+                    clipBehavior: Clip.hardEdge,
+                    children: [
+                      Positioned.fill(
+                        child: DecoratedBox(
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                              colors: [
+                                app.tint.withOpacity(dark ? 0.35 : 0.22),
+                                app.tint.withOpacity(dark ? 0.08 : 0.05),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                      Positioned.fill(
+                        child: CustomPaint(
+                          painter: _DotGridPainter(
+                            color: app.tint.withOpacity(dark ? 0.18 : 0.14),
+                          ),
+                        ),
+                      ),
+                      // Soft glow behind phone
+                      Positioned(
+                        right: -40,
+                        top: -40,
+                        child: Container(
+                          width: 200,
+                          height: 200,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            gradient: RadialGradient(
+                              colors: [
+                                app.tint.withOpacity(0.45),
+                                Colors.transparent,
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                      // Category chip
+                      Positioned(
+                        left: isMobile ? 10 : 16,
+                        top: isMobile ? 10 : 16,
+                        child: _GlassChip(label: app.category),
+                      ),
+                      // Phone
+                      AnimatedPositioned(
+                        duration: 350.ms,
+                        curve: Curves.easeOutCubic,
+                        right: isMobile ? 8 : 24,
+                        top: _h
+                            ? (isMobile ? 14 : 26)
+                            : (isMobile ? 22 : 40),
+                        child: AnimatedRotation(
+                          duration: 350.ms,
+                          curve: Curves.easeOutCubic,
+                          turns: _h ? 0 : 0.012,
+                          child: Transform.scale(
+                            scale: isMobile ? 0.72 : 1.0,
+                            alignment: Alignment.topRight,
+                            child: _PhoneMockup(image: app.screenshot),
+                          ),
+                        ),
+                      ),
+                      // App icon
+                      Positioned(
+                        left: isMobile ? 12 : 20,
+                        bottom: isMobile ? 12 : 20,
+                        child: AnimatedScale(
+                          duration: 300.ms,
+                          scale: _h ? 1.06 : 1,
+                          child: Container(
+                            width: isMobile ? 44 : 68,
+                            height: isMobile ? 44 : 68,
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(isMobile ? 12 : 18),
+                              border: Border.all(
+                                color: Colors.white.withOpacity(0.7),
+                                width: 2,
+                              ),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: app.tint.withOpacity(0.35),
+                                  blurRadius: 16,
+                                  offset: const Offset(0, 6),
+                                ),
+                              ],
+                            ),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(isMobile ? 10 : 16),
+                              child: Image.asset(app.icon, fit: BoxFit.cover),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+
+                // ── Body ──
+                Padding(
+                  padding: EdgeInsets.fromLTRB(
+                    isMobile ? 12 : 22,
+                    isMobile ? 12 : 20,
+                    isMobile ? 12 : 22,
+                    isMobile ? 14 : 22,
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        app.name,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          color: AppColors.textPrimary,
+                          fontSize: isMobile ? 14 : 17,
+                          fontWeight: FontWeight.w800,
+                          letterSpacing: -0.2,
+                        ),
+                      ),
+                      SizedBox(height: isMobile ? 4 : 8),
+                      SizedBox(
+                        height: isMobile ? 32 : 42,
+                        child: Text(
+                          app.tagline,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            color: AppColors.textSecondary,
+                            fontSize: isMobile ? 11 : 13.5,
+                            height: 1.45,
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: isMobile ? 10 : 16),
+                      Wrap(
+                        spacing: isMobile ? 5 : 8,
+                        runSpacing: isMobile ? 5 : 8,
+                        children: [
+                          if (app.rating != null)
+                            _MetaChip(
+                              icon: Icons.star_rounded,
+                              iconColor: const Color(0xFFFFB400),
+                              label: app.rating!,
+                            ),
+                          if (app.downloads != null)
+                            _MetaChip(
+                              icon: Icons.download_rounded,
+                              label: app.downloads!,
+                            ),
+                          if (!isMobile)
+                            _MetaChip(
+                              icon: Icons.verified_rounded,
+                              iconColor: AppColors.accent,
+                              label: 'Live',
+                            ),
+                        ],
+                      ),
+                      SizedBox(height: isMobile ? 12 : 18),
+                      _StoreBadge(
+                        store: app.store,
+                        hovered: _h,
+                        tint: app.tint,
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -807,23 +1479,203 @@ class _PublishedAppCardState extends State<_PublishedAppCard> {
   }
 }
 
+class _PhoneMockup extends StatelessWidget {
+  const _PhoneMockup({required this.image});
+  final String image;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 132,
+      height: 270,
+      padding: const EdgeInsets.all(5),
+      decoration: BoxDecoration(
+        color: const Color(0xFF0B0F17),
+        borderRadius: BorderRadius.circular(26),
+        border: Border.all(color: Colors.white.withOpacity(0.12)),
+        boxShadow: const [
+          BoxShadow(
+            color: Color(0x55000000),
+            blurRadius: 30,
+            offset: Offset(0, 16),
+          ),
+        ],
+      ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(21),
+        child: Image.asset(
+          image,
+          fit: BoxFit.cover,
+          alignment: Alignment.topCenter,
+        ),
+      ),
+    );
+  }
+}
+
+class _GlassChip extends StatelessWidget {
+  const _GlassChip({required this.label});
+  final String label;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+      decoration: BoxDecoration(
+        color: AppColors.surfaceCard.withOpacity(0.75),
+        borderRadius: BorderRadius.circular(50),
+        border: Border.all(color: AppColors.border),
+      ),
+      child: Text(
+        label.toUpperCase(),
+        style: TextStyle(
+          color: AppColors.textPrimary,
+          fontSize: 9.5,
+          fontWeight: FontWeight.w800,
+          letterSpacing: 1.2,
+        ),
+      ),
+    );
+  }
+}
+
+class _MetaChip extends StatelessWidget {
+  const _MetaChip({required this.icon, required this.label, this.iconColor});
+  final IconData icon;
+  final String label;
+  final Color? iconColor;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+      decoration: BoxDecoration(
+        color: AppColors.background,
+        borderRadius: BorderRadius.circular(50),
+        border: Border.all(color: AppColors.border),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(icon, size: 14, color: iconColor ?? AppColors.textMuted),
+          const SizedBox(width: 5),
+          Text(
+            label,
+            style: TextStyle(
+              color: AppColors.textSecondary,
+              fontSize: 12,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _StoreBadge extends StatelessWidget {
+  const _StoreBadge({
+    required this.store,
+    required this.hovered,
+    required this.tint,
+  });
+  final _Store store;
+  final bool hovered;
+  final Color tint;
+
+  @override
+  Widget build(BuildContext context) {
+    final isPlay = store == _Store.play;
+    final bg = hovered ? tint : AppColors.textPrimary;
+    final fg = hovered ? Colors.white : AppColors.background;
+
+    return AnimatedContainer(
+      duration: 250.ms,
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+      decoration: BoxDecoration(
+        color: bg,
+        borderRadius: BorderRadius.circular(14),
+      ),
+      child: Row(
+        children: [
+          FaIcon(
+            isPlay ? FontAwesomeIcons.googlePlay : FontAwesomeIcons.apple,
+            color: fg,
+            size: isPlay ? 18 : 22,
+          ),
+          const SizedBox(width: 12),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                isPlay ? 'GET IT ON' : 'Download on the',
+                style: TextStyle(
+                  color: fg.withOpacity(0.75),
+                  fontSize: 9,
+                  fontWeight: FontWeight.w600,
+                  letterSpacing: 0.6,
+                ),
+              ),
+              Text(
+                isPlay ? 'Google Play' : 'App Store',
+                style: TextStyle(
+                  color: fg,
+                  fontSize: 15,
+                  fontWeight: FontWeight.w800,
+                  height: 1.1,
+                ),
+              ),
+            ],
+          ),
+          const Spacer(),
+          AnimatedSlide(
+            duration: 250.ms,
+            offset: Offset(hovered ? 0.15 : 0, 0),
+            child: Icon(Icons.arrow_outward_rounded, color: fg, size: 18),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _DotGridPainter extends CustomPainter {
+  const _DotGridPainter({required this.color});
+  final Color color;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()..color = color;
+    const step = 18.0;
+    for (double y = step / 2; y < size.height; y += step) {
+      for (double x = step / 2; x < size.width; x += step) {
+        canvas.drawCircle(Offset(x, y), 1.1, paint);
+      }
+    }
+  }
+
+  @override
+  bool shouldRepaint(_DotGridPainter old) => old.color != color;
+}
+
 // ──────────────────────────────────────────────────────────
 // TECH marquee
 // ──────────────────────────────────────────────────────────
 class _TechStackMarquee extends StatelessWidget {
   static const _techs = [
-    'Flutter',
-    'Dart',
-    'Firebase',
-    'REST API',
-    'BLoC',
-    'Provider',
-    'Git',
-    'Figma',
-    'Android',
-    'iOS',
-    'CI/CD',
-    'Clean Arch',
+    'Laravel & PHP',
+    'JavaScript & Next.js',
+    'Flutter & Dart',
+    'MySQL & Databases',
+    'n8n Automation',
+    'Prompt Engineering',
+    'REST APIs & Webhooks',
+    'Google Play & App Store',
+    'SaaS Architecture',
+    'Figma UI/UX',
+    'GitHub & CI/CD',
+    'Tailwind CSS',
   ];
 
   @override
@@ -837,7 +1689,7 @@ class _TechStackMarquee extends StatelessWidget {
       ),
       child: Column(
         children: [
-          const Text(
+          Text(
             'TECHNOLOGIES I WORK WITH',
             style: TextStyle(
               color: AppColors.textMuted,
@@ -885,10 +1737,10 @@ class _TechPillState extends State<_TechPill> {
         padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 9),
         decoration: BoxDecoration(
           color: _h
-              ? AppColors.accent.withOpacity(0.10)
+              ? AppColors.accent.withValues(alpha: 0.10)
               : AppColors.surfaceCard,
           border: Border.all(
-            color: _h ? AppColors.accent.withOpacity(0.4) : AppColors.border,
+            color: _h ? AppColors.accent.withValues(alpha: 0.4) : AppColors.border,
           ),
           borderRadius: BorderRadius.circular(50),
         ),
@@ -912,10 +1764,10 @@ class _StatsBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     const stats = [
-      ('3+', 'Years', 'Experience'),
-      ('50+', 'Apps', 'Built'),
-      ('100+', 'Store', 'Deployments'),
-      ('2', 'Happy', 'Clients'),
+      ('4+', 'Years', 'Experience'),
+      ('40+', 'Mobile & Web', 'Projects'),
+      ('6+', 'Live SaaS &', 'Web Platforms'),
+      ('100%', 'Production', 'Deployments'),
     ];
 
     final isMobile = MediaQuery.sizeOf(context).width < 700;
@@ -929,12 +1781,13 @@ class _StatsBar extends StatelessWidget {
         border: Border.all(color: AppColors.border),
         boxShadow: [
           BoxShadow(
-            color: AppColors.accent.withOpacity(0.04),
+            color: AppColors.accent.withValues(alpha: 0.04),
             blurRadius: 40,
             offset: const Offset(0, 16),
           ),
         ],
       ),
+
       child: isMobile
           ? GridView.count(
               shrinkWrap: true,
@@ -984,9 +1837,9 @@ class _StatItem extends StatelessWidget {
       children: [
         Text(
           num,
-          style: const TextStyle(
+          style: GoogleFonts.spaceGrotesk(
             color: AppColors.accent,
-            fontSize: 42,
+            fontSize: 44,
             fontWeight: FontWeight.w900,
             height: 1,
           ),
@@ -998,7 +1851,7 @@ class _StatItem extends StatelessWidget {
             children: [
               TextSpan(
                 text: '$label1 ',
-                style: const TextStyle(
+                style: TextStyle(
                   color: AppColors.textPrimary,
                   fontWeight: FontWeight.w600,
                   fontSize: 13,
@@ -1006,7 +1859,7 @@ class _StatItem extends StatelessWidget {
               ),
               TextSpan(
                 text: label2,
-                style: const TextStyle(
+                style: TextStyle(
                   color: AppColors.textMuted,
                   fontSize: 13,
                 ),
@@ -1029,10 +1882,10 @@ class _FooterStrip extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 28, horizontal: 24),
       child: Column(
         children: [
-          const Divider(color: AppColors.border),
+          Divider(color: AppColors.border),
           const SizedBox(height: 20),
-          const Text(
-            '© 2025 Yasin Ali · Flutter Developer',
+          Text(
+            '© 2026 MD Yasin Ali · Full Stack Developer',
             style: TextStyle(color: AppColors.textMuted, fontSize: 12),
           ),
         ],
@@ -1105,7 +1958,7 @@ class _AboutSection extends StatelessWidget {
               color: AppColors.accent,
               margin: const EdgeInsets.only(right: 10),
             ),
-            const Text(
+            Text(
               'ABOUT ME',
               style: TextStyle(
                 color: AppColors.accent,
@@ -1117,8 +1970,8 @@ class _AboutSection extends StatelessWidget {
           ],
         ).animate().fadeIn().slideX(),
         const SizedBox(height: 24),
-        const Text(
-          "I'm a passionate Flutter Developer dedicated to crafting exceptional cross-platform experiences.",
+        Text(
+          "Full Stack Developer driving scalable digital execution.",
           style: TextStyle(
             color: AppColors.textPrimary,
             fontSize: 28,
@@ -1127,8 +1980,8 @@ class _AboutSection extends StatelessWidget {
           ),
         ).animate().fadeIn(delay: 200.ms).slideY(begin: 0.1),
         const SizedBox(height: 24),
-        const Text(
-          "With over 3 years of professional experience, I have developed and deployed a wide array of mobile applications ranging from FinTech solutions to robust enterprise software. My journey involves a constant pursuit of learning and embracing modern architectural patterns like BLoC and Clean Architecture to ensure scalable and maintainable codebases.",
+        Text(
+          "With 4+ years of experience engineering mobile applications, web platforms, SaaS products, and AI-powered automation workflows, I deliver high-impact digital products from architecture to production. Skilled in Laravel, PHP, JavaScript, Next.js, MySQL, and API integration, with deep expertise in Flutter and Dart.",
           style: TextStyle(
             color: AppColors.textSecondary,
             fontSize: 16,
@@ -1136,8 +1989,8 @@ class _AboutSection extends StatelessWidget {
           ),
         ).animate().fadeIn(delay: 300.ms).slideY(begin: 0.1),
         const SizedBox(height: 20),
-        const Text(
-          "I believe in the power of beautiful UI and smooth UX. When I'm not coding, I'm exploring new design trends or contributing to the tech community.",
+        Text(
+          "I have contributed to 40+ mobile and web projects across fintech, e-commerce, healthcare, and digital enterprises. Experienced in product development, technical decision-making, App Store and Google Play deployments, and AI automation using n8n and prompt engineering.",
           style: TextStyle(
             color: AppColors.textSecondary,
             fontSize: 16,
@@ -1158,12 +2011,12 @@ class _SkillsSection extends StatelessWidget {
     final isMobile = MediaQuery.sizeOf(context).width < 700;
 
     final skills = [
-      ('Flutter / Dart', 0.95),
-      ('Firebase / Backend', 0.85),
-      ('State Management (GetX)', 0.90),
-      ('UI / UX Design', 0.80),
-      ('REST APIs & GraphQL', 0.85),
-      ('CI/CD & DevOps', 0.70),
+      ('Flutter & Dart (Mobile)', 0.95),
+      ('Laravel & PHP (Backend)', 0.90),
+      ('JavaScript & Next.js (Web)', 0.88),
+      ('MySQL & REST API Architecture', 0.92),
+      ('n8n Automation & AI Workflows', 0.85),
+      ('App Store & Google Play Deployment', 0.95),
     ];
 
     return Container(
@@ -1182,7 +2035,7 @@ class _SkillsSection extends StatelessWidget {
                 color: AppColors.accent,
                 margin: const EdgeInsets.only(right: 10),
               ),
-              const Text(
+              Text(
                 'MY SKILLS',
                 style: TextStyle(
                   color: AppColors.accent,
@@ -1245,7 +2098,7 @@ class _SkillBar extends StatelessWidget {
           children: [
             Text(
               title,
-              style: const TextStyle(
+              style: TextStyle(
                 color: AppColors.textPrimary,
                 fontSize: 15,
                 fontWeight: FontWeight.w600,
@@ -1253,7 +2106,7 @@ class _SkillBar extends StatelessWidget {
             ),
             Text(
               '${(percentage * 100).toInt()}%',
-              style: const TextStyle(
+              style: TextStyle(
                 color: AppColors.accent,
                 fontSize: 14,
                 fontWeight: FontWeight.w700,
@@ -1279,7 +2132,7 @@ class _SkillBar extends StatelessWidget {
                     width: constraints.maxWidth * percentage,
                     height: 8,
                     decoration: BoxDecoration(
-                      gradient: const LinearGradient(
+                      gradient: LinearGradient(
                         colors: [AppColors.accentDark, AppColors.accent],
                       ),
                       borderRadius: BorderRadius.circular(4),
@@ -1321,20 +2174,20 @@ class _ServicesSection extends StatelessWidget {
       (
         icon: Icons.phone_android_rounded,
         title: 'Mobile App\nDevelopment',
-        desc: 'We build high-performance mobile apps using Flutter and Native technologies. From concept to deployment, we handle the entire lifecycle.',
-        points: ['iOS & Android Support', 'Custom UI/UX Design', 'API Integration']
+        desc: 'Cross-platform mobile applications built with Flutter & Dart. End-to-end delivery from pixel-perfect UI to App Store & Google Play deployments.',
+        points: ['Flutter & Dart Ecosystem', 'App Store & Google Play', 'API & State Architecture']
       ),
       (
-        icon: Icons.computer_rounded,
-        title: 'Web\nDevelopment',
-        desc: 'Creating robust web applications with the latest frameworks like React, Next.js, and Flutter Web. SEO optimized and varying from landing pages to complex SaaS platforms.',
-        points: ['Responsive Design', 'SEO Optimization', 'CMS Integration']
+        icon: Icons.cloud_done_rounded,
+        title: 'SaaS & Web\nPlatforms',
+        desc: 'High-performing web platforms and SaaS solutions built on Laravel, PHP, Next.js, and MySQL. Scalable, secure, and production-ready.',
+        points: ['Laravel & Next.js Platforms', 'FinTech & E-Commerce', 'MySQL Database Architecture']
       ),
       (
-        icon: Icons.design_services_rounded,
-        title: 'UI/UX\nDesign',
-        desc: 'We craft intuitive and beautiful interfaces that users love. Our process involves user research, wireframing, and high-fidelity prototyping.',
-        points: ['User Research', 'Wireframing & Prototyping', 'Design Systems']
+        icon: Icons.auto_awesome_rounded,
+        title: 'AI & Workflow\nAutomation',
+        desc: 'Smart business automation and AI agent workflows using n8n and prompt engineering. Connecting APIs, CRM, and multi-channel customer journeys.',
+        points: ['n8n Workflow Automation', 'AI Agent Integration', 'Webhooks & Third-Party APIs']
       ),
     ];
 
@@ -1412,108 +2265,139 @@ class _ServiceCard extends StatefulWidget {
 class _ServiceCardState extends State<_ServiceCard> {
   bool _h = false;
 
+  Future<void> _openWhatsApp() async {
+    final cleanTitle = widget.title.replaceAll('\n', ' ');
+    final message = 'Hello Yasin! I would like to discuss a project regarding $cleanTitle.';
+    final url = 'https://wa.me/8801308985262?text=${Uri.encodeComponent(message)}';
+    final uri = Uri.parse(url);
+    if (await canLaunchUrl(uri)) {
+      await launchUrl(uri, mode: LaunchMode.externalApplication);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return MouseRegion(
+      cursor: SystemMouseCursors.click,
       onEnter: (_) => setState(() => _h = true),
       onExit: (_) => setState(() => _h = false),
-      child: AnimatedContainer(
-        duration: 300.ms,
-        padding: const EdgeInsets.all(32),
-        decoration: BoxDecoration(
-          color: _h ? AppColors.surfaceHover : AppColors.surfaceCard,
-          borderRadius: BorderRadius.circular(24),
-          border: Border.all(
-            color: _h ? AppColors.accent.withOpacity(0.4) : AppColors.border,
+      child: GestureDetector(
+        onTap: _openWhatsApp,
+        child: AnimatedContainer(
+          duration: 300.ms,
+          padding: const EdgeInsets.all(32),
+          decoration: BoxDecoration(
+            color: _h ? AppColors.surfaceHover : AppColors.surfaceCard,
+            borderRadius: BorderRadius.circular(24),
+            border: Border.all(
+              color: _h ? AppColors.accent.withOpacity(0.55) : AppColors.border,
+              width: _h ? 1.4 : 1.0,
+            ),
+            boxShadow: _h
+                ? [
+                    BoxShadow(
+                      color: AppColors.accent.withOpacity(0.14),
+                      blurRadius: 28,
+                      offset: const Offset(0, 10),
+                    ),
+                  ]
+                : null,
           ),
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
-              padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                color: AppColors.background,
-                borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: AppColors.border),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: AppColors.background,
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(color: AppColors.border),
+                ),
+                child: Icon(widget.icon, color: AppColors.textPrimary, size: 24),
               ),
-              child: Icon(widget.icon, color: AppColors.textPrimary, size: 24),
-            ),
-            const SizedBox(height: 32),
-            Text(
-              widget.title,
-              style: const TextStyle(
-                color: AppColors.textPrimary,
-                fontSize: 22,
-                fontWeight: FontWeight.w800,
-                height: 1.2,
+              const SizedBox(height: 32),
+              Text(
+                widget.title,
+                style: TextStyle(
+                  color: AppColors.textPrimary,
+                  fontSize: 22,
+                  fontWeight: FontWeight.w800,
+                  height: 1.2,
+                ),
               ),
-            ),
-            const SizedBox(height: 20),
-            Text(
-              widget.desc,
-              style: const TextStyle(
-                color: AppColors.textSecondary,
-                fontSize: 14,
-                height: 1.6,
+              const SizedBox(height: 20),
+              Text(
+                widget.desc,
+                style: TextStyle(
+                  color: AppColors.textSecondary,
+                  fontSize: 14,
+                  height: 1.6,
+                ),
               ),
-            ),
-            const SizedBox(height: 32),
-            ...widget.points.map((p) => Padding(
-                  padding: const EdgeInsets.only(bottom: 12),
-                  child: Row(
-                    children: [
-                      Container(
-                        width: 6,
-                        height: 6,
-                        decoration: const BoxDecoration(
-                          color: AppColors.accent,
-                          shape: BoxShape.circle,
-                        ),
-                      ),
-                      const SizedBox(width: 12),
-                      Expanded(
-                        child: Text(
-                          p,
-                          style: const TextStyle(
-                            color: AppColors.textSecondary,
-                            fontSize: 13,
+              const SizedBox(height: 32),
+              ...widget.points.map((p) => Padding(
+                    padding: const EdgeInsets.only(bottom: 12),
+                    child: Row(
+                      children: [
+                        Container(
+                          width: 6,
+                          height: 6,
+                          decoration: BoxDecoration(
+                            color: AppColors.accent,
+                            shape: BoxShape.circle,
                           ),
                         ),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: Text(
+                            p,
+                            style: TextStyle(
+                              color: AppColors.textSecondary,
+                              fontSize: 13,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  )),
+              const SizedBox(height: 32),
+              Divider(color: AppColors.border),
+              const SizedBox(height: 24),
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    'Start Project',
+                    style: TextStyle(
+                      color: _h ? AppColors.accent : AppColors.textPrimary,
+                      fontSize: 14,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  AnimatedContainer(
+                    duration: const Duration(milliseconds: 200),
+                    transform: Matrix4.translationValues(_h ? 4.0 : 0.0, 0, 0),
+                    padding: const EdgeInsets.all(6),
+                    decoration: BoxDecoration(
+                      color: _h
+                          ? AppColors.accent.withOpacity(0.15)
+                          : AppColors.background,
+                      shape: BoxShape.circle,
+                      border: Border.all(
+                        color: _h ? AppColors.accent : AppColors.border,
                       ),
-                    ],
+                    ),
+                    child: Icon(
+                      Icons.arrow_forward_rounded,
+                      color: _h ? AppColors.accent : AppColors.textPrimary,
+                      size: 14,
+                    ),
                   ),
-                )),
-            const SizedBox(height: 32),
-            const Divider(color: AppColors.border),
-            const SizedBox(height: 24),
-            Row(
-              children: [
-                Text(
-                  'Start Project',
-                  style: TextStyle(
-                    color: _h ? AppColors.accent : AppColors.textPrimary,
-                    fontSize: 14,
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-                const SizedBox(width: 8),
-                Container(
-                  padding: const EdgeInsets.all(6),
-                  decoration: BoxDecoration(
-                    color: AppColors.background,
-                    shape: BoxShape.circle,
-                    border: Border.all(color: AppColors.border),
-                  ),
-                  child: Icon(
-                    Icons.arrow_forward_rounded,
-                    color: _h ? AppColors.accent : AppColors.textPrimary,
-                    size: 14,
-                  ),
-                ),
-              ],
-            ),
-          ],
+                ],
+              ),
+            ],
+          ),
         ),
       ).animate().fadeIn(delay: widget.delay.ms).slideY(begin: 0.1, end: 0),
     );
@@ -1530,25 +2414,39 @@ class _CareerJourneySection extends StatelessWidget {
     
     final roles = [
       (
-        period: 'JAN 2025 - MAR 2026',
-        title: 'Senior Software Developer (Flutter) & Team Lead',
-        company: 'AppDevs',
+        period: '04/2026 - PRESENT',
+        title: 'Full Stack Developer',
+        company: 'Dhaka, Bangladesh',
         location: 'Dhaka, Bangladesh',
-        desc: 'Leading Flutter teams and building scalable fintech applications.',
+        desc: 'Lead technical execution across mobile applications, web platforms, SaaS products, and AI automation workflows. Contribute to product development, technical decision-making, and product strategy.',
       ),
       (
-        period: 'FEB 2023 - JAN 2025',
+        period: '05/2023 - 03/2026',
         title: 'Software Developer (Flutter)',
         company: 'AppDevs',
         location: 'Dhaka, Bangladesh',
-        desc: 'Built fintech and payment-based Flutter applications.',
+        desc: 'Managed end-to-end mobile app deployments on the App Store and Google Play at AppDevs. Resolved bugs, implemented client customizations, and collaborated across teams to deliver high-performance apps on schedule.',
       ),
       (
-        period: 'NOV 2022 - JAN 2023',
-        title: 'Junior Software Developer (Flutter)',
-        company: 'AppDevs',
+        period: '10/2022 - 04/2023',
+        title: 'Jr. Software Developer (Flutter)',
+        company: 'Dhaka, Bangladesh',
         location: 'Dhaka, Bangladesh',
-        desc: 'Contributed to fintech applications.',
+        desc: 'Delivered pixel-perfect UI across multiple Flutter projects. Worked on API integrations, connecting mobile apps with backend microservices.',
+      ),
+      (
+        period: '01/2022 - 01/2026',
+        title: 'B.Sc in Computer Science & Engineering',
+        company: 'Sonargaon University',
+        location: 'Dhaka, Bangladesh',
+        desc: 'Undergraduate degree focusing on software engineering principles, algorithms, distributed systems, and computer architecture.',
+      ),
+      (
+        period: '07/2017 - 07/2021',
+        title: 'Diploma in Computer Technology',
+        company: 'Magura Polytechnic Institute',
+        location: 'Magura, Bangladesh',
+        desc: 'Engineering diploma in computer technology with comprehensive practical training in software fundamentals and network systems.',
       ),
     ];
 
@@ -1559,7 +2457,7 @@ class _CareerJourneySection extends StatelessWidget {
       ),
       child: Column(
         children: [
-          const Text(
+          Text(
             'Career Journey',
             style: TextStyle(
               color: AppColors.textPrimary,
@@ -1572,7 +2470,7 @@ class _CareerJourneySection extends StatelessWidget {
             width: 60,
             height: 4,
             decoration: BoxDecoration(
-              gradient: const LinearGradient(
+              gradient: LinearGradient(
                 colors: [AppColors.accentDark, AppColors.accent],
               ),
               borderRadius: BorderRadius.circular(4),
@@ -1725,7 +2623,7 @@ class _JourneyCardState extends State<_JourneyCard> {
           children: [
             Text(
               r.period,
-              style: const TextStyle(
+              style: TextStyle(
                 color: AppColors.accent,
                 fontSize: 12,
                 fontWeight: FontWeight.w800,
@@ -1736,7 +2634,7 @@ class _JourneyCardState extends State<_JourneyCard> {
             Text(
               r.title,
               textAlign: widget.isLeft ? TextAlign.right : TextAlign.left,
-              style: const TextStyle(
+              style: TextStyle(
                 color: AppColors.textPrimary,
                 fontSize: 20,
                 fontWeight: FontWeight.w700,
@@ -1747,11 +2645,11 @@ class _JourneyCardState extends State<_JourneyCard> {
             Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                const Icon(Icons.business_rounded, color: AppColors.textMuted, size: 14),
+                Icon(Icons.business_rounded, color: AppColors.textMuted, size: 14),
                 const SizedBox(width: 8),
                 Text(
                   '${r.company}  ·  ${r.location}',
-                  style: const TextStyle(
+                  style: TextStyle(
                     color: AppColors.textMuted,
                     fontSize: 13,
                   ),
@@ -1762,7 +2660,7 @@ class _JourneyCardState extends State<_JourneyCard> {
             Text(
               r.desc,
               textAlign: widget.isLeft ? TextAlign.right : TextAlign.left,
-              style: const TextStyle(
+              style: TextStyle(
                 color: AppColors.textSecondary,
                 fontSize: 14,
                 height: 1.6,

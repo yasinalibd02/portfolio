@@ -92,7 +92,7 @@ class _SectionLabel extends StatelessWidget {
         ),
         Text(
           label,
-          style: const TextStyle(
+          style: TextStyle(
             color: AppColors.accent,
             fontSize: 11,
             fontWeight: FontWeight.w700,
@@ -161,14 +161,13 @@ class _BioContent extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          "I am a Software Engineer specializing in cross-platform mobile app development "
-          "using Flutter. With 3+ years of professional experience, I have developed 50+ "
-          "high-quality applications across diverse industries such as fintech, e-commerce, "
-          "healthcare, crypto, transportation, and car rental.\n\n"
-          "I have also handled direct communication with clients, understanding their "
-          "requirements, providing technical guidance, and delivering solutions that match "
-          "their business goals.",
+        Text(
+          "I am a Full Stack Developer with 4+ years of experience contributing to mobile applications, "
+          "web platforms, SaaS products, and AI-powered automation workflows. Skilled in Laravel, PHP, JavaScript, "
+          "Next.js, MySQL, and API integration, with deep expertise in Flutter and Dart.\n\n"
+          "I have led and contributed to 40+ mobile and web projects across fintech, e-commerce, healthcare, and SaaS. "
+          "My experience spans end-to-end product development, technical decision-making, application deployment "
+          "on the App Store and Google Play, and advanced AI workflow automations using n8n and prompt engineering.",
           style: TextStyle(
             color: AppColors.textSecondary,
             fontSize: 15,
@@ -186,10 +185,10 @@ class _InfoGrid extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final items = [
-      ('Location', 'Bangladesh 🇧🇩'),
-      ('Experience', '3+ Years'),
-      ('Speciality', 'Flutter & Dart'),
-      ('Availability', 'Open to hire'),
+      ('Location', 'Mirpur, Dhaka 🇧🇩'),
+      ('Experience', '4+ Years'),
+      ('Core Stack', 'Laravel, Next.js, Flutter, n8n'),
+      ('Availability', 'Open to hire & contract'),
     ];
 
     return GridView.count(
@@ -213,7 +212,7 @@ class _InfoGrid extends StatelessWidget {
             children: [
               Text(
                 item.$1,
-                style: const TextStyle(
+                style: TextStyle(
                   color: AppColors.textMuted,
                   fontSize: 11,
                   fontWeight: FontWeight.w600,
@@ -223,7 +222,7 @@ class _InfoGrid extends StatelessWidget {
               const SizedBox(height: 4),
               Text(
                 item.$2,
-                style: const TextStyle(
+                style: TextStyle(
                   color: AppColors.textPrimary,
                   fontSize: 13,
                   fontWeight: FontWeight.w600,
@@ -242,19 +241,20 @@ class _InfoGrid extends StatelessWidget {
 // ─────────────────────────────────
 class _SkillsGrid extends StatelessWidget {
   final _skills = [
-    _SkillItem('Flutter', 'Mobile / Web / Desktop'),
-    _SkillItem('Dart', 'Programming Language'),
-    _SkillItem('Firebase', 'Auth, Firestore, Cloud'),
-    _SkillItem('REST API', 'Integration & Design'),
-    _SkillItem('Git & GitHub', 'Version Control'),
-    _SkillItem('Figma', 'UI/UX Prototyping'),
-    _SkillItem('Android', 'Native Kotlin/Java'),
-    _SkillItem('iOS', 'Swift & App Store'),
-    _SkillItem('State Mgmt', 'BLoC, Provider, Riverpod'),
-    _SkillItem('CI/CD', 'GitHub Actions, Fastlane'),
-    _SkillItem('Clean Arch', 'SOLID & Design Patterns'),
-    _SkillItem('Testing', 'Unit & Widget Tests'),
+    _SkillItem('Flutter & Dart', 'Cross-Platform Mobile Ecosystem'),
+    _SkillItem('Laravel & PHP', 'Backend APIs & Architecture'),
+    _SkillItem('Next.js & JavaScript', 'Full-Stack Web & SSR'),
+    _SkillItem('MySQL & Databases', 'Schema Design & Data Modeling'),
+    _SkillItem('n8n Automation', 'AI Workflows & Pipeline Automation'),
+    _SkillItem('Prompt Engineering', 'AI Agents & LLM Integration'),
+    _SkillItem('Google Play & App Store', 'End-to-End Store Deployments'),
+    _SkillItem('REST APIs & Auth', 'Secure Webhooks & Endpoints'),
+    _SkillItem('Figma & UI/UX', 'Design Engineering & Prototypes'),
+    _SkillItem('GitHub & CI/CD', 'Git Workflows & Automated Builds'),
+    _SkillItem('State Management', 'BLoC, Provider & Reactive Patterns'),
+    _SkillItem('Tailwind CSS', 'Modern Responsive Styling'),
   ];
+
 
   @override
   Widget build(BuildContext context) {
@@ -330,7 +330,7 @@ class _SkillCardState extends State<_SkillCard> {
             const SizedBox(height: 4),
             Text(
               widget.skill.sub,
-              style: const TextStyle(color: AppColors.textMuted, fontSize: 11),
+              style: TextStyle(color: AppColors.textMuted, fontSize: 11),
             ),
           ],
         ),
@@ -345,25 +345,39 @@ class _SkillCardState extends State<_SkillCard> {
 class _Timeline extends StatelessWidget {
   final _items = const [
     _TimelineItem(
-      year: '2024 – Present',
-      role: 'Senior Flutter Developer',
-      company: 'Freelance / Remote',
+      year: '04/2026 – Present',
+      role: 'Full Stack Developer',
+      company: 'Dhaka, Bangladesh',
       desc:
-          'Building premium apps for global clients including fintech, healthcare, and e-commerce platforms. Deployed 20+ apps to Play Store & App Store.',
+          'Lead technical execution across mobile applications, web platforms, SaaS products, and AI automation workflows. Contribute to product development, technical decision-making, and product strategy.',
     ),
     _TimelineItem(
-      year: '2022 – 2024',
-      role: 'Flutter Developer',
-      company: 'Software Agency',
+      year: '05/2023 – 03/2026',
+      role: 'Software Developer (Flutter)',
+      company: 'AppDevs · Dhaka, Bangladesh',
       desc:
-          'Developed 30+ cross-platform apps. Led UI/UX implementation, state management (BLoC/Provider), and Firebase integration.',
+          'Managed end-to-end mobile app deployments on the App Store and Google Play at AppDevs. Resolved bugs, implemented client customizations, and collaborated across teams to deliver high-performance apps on schedule.',
     ),
     _TimelineItem(
-      year: '2021 – 2022',
-      role: 'Junior Flutter Developer',
-      company: 'Startup',
+      year: '10/2022 – 04/2023',
+      role: 'Jr. Software Developer (Flutter)',
+      company: 'Dhaka, Bangladesh',
       desc:
-          'Began Flutter journey building e-commerce and social apps. Hands-on with REST APIs, animations, and app deployment.',
+          'Delivered pixel-perfect UI across multiple Flutter projects. Worked on API integrations, connecting mobile applications with backend services.',
+    ),
+    _TimelineItem(
+      year: '01/2022 – 01/2026',
+      role: 'B.Sc in Computer Science & Engineering',
+      company: 'Sonargaon University · Dhaka, Bangladesh',
+      desc:
+          'Degree program emphasizing algorithms, software engineering principles, relational databases, distributed systems, and computer architecture.',
+    ),
+    _TimelineItem(
+      year: '07/2017 – 07/2021',
+      role: 'Diploma in Computer Technology',
+      company: 'Magura Polytechnic Institute · Magura, Bangladesh',
+      desc:
+          'Comprehensive 4-year technical diploma program with practical training in programming, computer networks, database systems, and electronics.',
     ),
   ];
 
@@ -412,7 +426,7 @@ class _TimelineCard extends StatelessWidget {
                 width: 14,
                 height: 14,
                 margin: const EdgeInsets.only(top: 4),
-                decoration: const BoxDecoration(
+                decoration: BoxDecoration(
                   color: AppColors.accent,
                   shape: BoxShape.circle,
                 ),
@@ -437,7 +451,7 @@ class _TimelineCard extends StatelessWidget {
                 children: [
                   Text(
                     item.year,
-                    style: const TextStyle(
+                    style: TextStyle(
                       color: AppColors.accent,
                       fontSize: 12,
                       fontWeight: FontWeight.w600,
@@ -447,7 +461,7 @@ class _TimelineCard extends StatelessWidget {
                   const SizedBox(height: 4),
                   Text(
                     item.role,
-                    style: const TextStyle(
+                    style: TextStyle(
                       color: AppColors.textPrimary,
                       fontSize: 18,
                       fontWeight: FontWeight.w700,
@@ -455,7 +469,7 @@ class _TimelineCard extends StatelessWidget {
                   ),
                   Text(
                     item.company,
-                    style: const TextStyle(
+                    style: TextStyle(
                       color: AppColors.textSecondary,
                       fontSize: 14,
                     ),
@@ -463,7 +477,7 @@ class _TimelineCard extends StatelessWidget {
                   const SizedBox(height: 12),
                   Text(
                     item.desc,
-                    style: const TextStyle(
+                    style: TextStyle(
                       color: AppColors.textMuted,
                       fontSize: 14,
                       height: 1.7,

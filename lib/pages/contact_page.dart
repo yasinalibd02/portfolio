@@ -61,16 +61,36 @@ class _ContactPageState extends State<ContactPage> {
           throw Exception('HTTP ${res.statusCode}');
         }
       } else {
-        final uri = Uri(
-          scheme: 'mailto',
-          path: kEmail,
-          query: _encodeParams({
-            'subject': 'Portfolio Contact: ${_nameCtrl.text}',
-            'body': 'From: ${_emailCtrl.text}\n\n${_messageCtrl.text}',
+        // Real-world automatic email delivery via FormSubmit AJAX service directly to yasinali.dev@gmail.com
+        final res = await http.post(
+          Uri.parse('https://formsubmit.co/ajax/$kEmail'),
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+          },
+          body: jsonEncode({
+            'name': _nameCtrl.text.trim(),
+            'email': _emailCtrl.text.trim(),
+            'message': _messageCtrl.text.trim(),
+            '_subject': 'Portfolio Inquiry from ${_nameCtrl.text.trim()}',
+            '_template': 'table',
           }),
         );
-        if (await canLaunchUrl(uri)) await launchUrl(uri);
+
+        if (res.statusCode < 200 || res.statusCode >= 300) {
+          // Fallback to mailto if service is unreachable
+          final uri = Uri(
+            scheme: 'mailto',
+            path: kEmail,
+            query: _encodeParams({
+              'subject': 'Portfolio Contact: ${_nameCtrl.text.trim()}',
+              'body': 'From: ${_emailCtrl.text.trim()}\n\n${_messageCtrl.text.trim()}',
+            }),
+          );
+          if (await canLaunchUrl(uri)) await launchUrl(uri);
+        }
       }
+
       if (mounted) {
         setState(() => _sent = true);
         _formKey.currentState!.reset();
@@ -79,10 +99,28 @@ class _ContactPageState extends State<ContactPage> {
         _messageCtrl.clear();
       }
     } catch (e) {
-      if (mounted) {
+      // Offline fallback: launch mailto
+      final uri = Uri(
+        scheme: 'mailto',
+        path: kEmail,
+        query: _encodeParams({
+          'subject': 'Portfolio Contact: ${_nameCtrl.text.trim()}',
+          'body': 'From: ${_emailCtrl.text.trim()}\n\n${_messageCtrl.text.trim()}',
+        }),
+      );
+      if (await canLaunchUrl(uri)) {
+        await launchUrl(uri);
+        if (mounted) {
+          setState(() => _sent = true);
+          _formKey.currentState!.reset();
+          _nameCtrl.clear();
+          _emailCtrl.clear();
+          _messageCtrl.clear();
+        }
+      } else if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Error: $e'),
+            content: Text('Error: $e. You can also contact directly on WhatsApp.'),
             backgroundColor: Colors.redAccent,
           ),
         );
@@ -90,6 +128,23 @@ class _ContactPageState extends State<ContactPage> {
     } finally {
       if (mounted) setState(() => _sending = false);
     }
+  }
+
+  void _openWhatsApp() async {
+    final name = _nameCtrl.text.trim();
+    final email = _emailCtrl.text.trim();
+    final message = _messageCtrl.text.trim();
+
+    String text;
+    if (name.isEmpty && message.isEmpty) {
+      text = "Hello Yasin! I am contacting you through your portfolio website.";
+    } else {
+      text = "Hello Yasin! I am $name ($email).\n\n$message";
+    }
+
+    final url = "https://wa.me/8801308985262?text=${Uri.encodeComponent(text)}";
+    final uri = Uri.parse(url);
+    if (await canLaunchUrl(uri)) await launchUrl(uri);
   }
 
   String? _encodeParams(Map<String, String> p) => p.entries
@@ -127,7 +182,7 @@ class _ContactPageState extends State<ContactPage> {
           ).animate().fadeIn(delay: 100.ms).slideY(begin: 0.2, end: 0),
 
           const SizedBox(height: 12),
-          const Text(
+          Text(
             "Have a project in mind? Message me anywhere below — I respond fast!",
             style: TextStyle(
               color: AppColors.textSecondary,
@@ -160,6 +215,7 @@ class _ContactPageState extends State<ContactPage> {
                       sending: _sending,
                       sent: _sent,
                       onSubmit: _submit,
+                      onWhatsApp: _openWhatsApp,
                       onReset: () => setState(() => _sent = false),
                     ),
                   ],
@@ -179,6 +235,7 @@ class _ContactPageState extends State<ContactPage> {
                         sending: _sending,
                         sent: _sent,
                         onSubmit: _submit,
+                        onWhatsApp: _openWhatsApp,
                         onReset: () => setState(() => _sent = false),
                       ),
                     ),
@@ -288,7 +345,7 @@ class _QuickBtnState extends State<_QuickBtn> {
                       size: 18,
                     )
                   : FaIcon(
-                      widget.icon as IconData,
+                      widget.icon as FaIconData,
                       color: _h ? widget.color : AppColors.textSecondary,
                       size: 17,
                     ),
@@ -315,6 +372,13 @@ class _QuickBtnState extends State<_QuickBtn> {
 class _ContactInfoCard extends StatelessWidget {
   final _links = const [
     _LinkData(
+      FontAwesomeIcons.globe,
+      'Website',
+      'yasinali.vercel.app',
+      'https://yasinali.vercel.app',
+      false,
+    ),
+    _LinkData(
       FontAwesomeIcons.github,
       'GitHub',
       'github.com/yasinalibd02',
@@ -329,13 +393,6 @@ class _ContactInfoCard extends StatelessWidget {
       false,
     ),
     _LinkData(
-      FontAwesomeIcons.twitter,
-      'Twitter',
-      '@YasinAl99967413',
-      'https://x.com/YasinAl99967413',
-      false,
-    ),
-    _LinkData(
       FontAwesomeIcons.whatsapp,
       'WhatsApp',
       '+880 130 898 5262',
@@ -343,10 +400,10 @@ class _ContactInfoCard extends StatelessWidget {
       false,
     ),
     _LinkData(
-      FontAwesomeIcons.facebook,
-      'Facebook',
-      'facebook.com/yasinarafat02',
-      'https://www.facebook.com/yasinarafat02',
+      FontAwesomeIcons.twitter,
+      'Twitter',
+      '@YasinAl99967413',
+      'https://x.com/YasinAl99967413',
       false,
     ),
   ];
@@ -363,7 +420,7 @@ class _ContactInfoCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
+          Text(
             'Direct Contact',
             style: TextStyle(
               color: AppColors.textPrimary,
@@ -371,18 +428,41 @@ class _ContactInfoCard extends StatelessWidget {
               fontSize: 17,
             ),
           ),
-          const SizedBox(height: 4),
-          const Text(
-            kEmail,
-            style: TextStyle(color: AppColors.accent, fontSize: 12.5),
+          const SizedBox(height: 6),
+          Row(
+            children: [
+              Icon(Icons.location_on_outlined, size: 14, color: AppColors.accent),
+              const SizedBox(width: 5),
+              Text(
+                'Mirpur, Dhaka, Bangladesh',
+                style: TextStyle(color: AppColors.textSecondary, fontSize: 12.5),
+              ),
+            ],
           ),
           const SizedBox(height: 4),
-          Text(
-            kPhoneNumber,
-            style: const TextStyle(
-              color: AppColors.textSecondary,
-              fontSize: 12.5,
-            ),
+          Row(
+            children: [
+              Icon(Icons.email_outlined, size: 14, color: AppColors.accent),
+              const SizedBox(width: 5),
+              Text(
+                kEmail,
+                style: TextStyle(color: AppColors.accent, fontSize: 12.5),
+              ),
+            ],
+          ),
+          const SizedBox(height: 4),
+          Row(
+            children: [
+              Icon(Icons.phone_outlined, size: 14, color: AppColors.accent),
+              const SizedBox(width: 5),
+              Text(
+                kPhoneNumber,
+                style: TextStyle(
+                  color: AppColors.textSecondary,
+                  fontSize: 12.5,
+                ),
+              ),
+            ],
           ),
           const SizedBox(height: 20),
           Container(height: 1, color: AppColors.border),
@@ -395,7 +475,7 @@ class _ContactInfoCard extends StatelessWidget {
 }
 
 class _LinkData {
-  final IconData icon;
+  final FaIconData icon;
   final String platform, handle, url;
   final bool isMaterial;
   const _LinkData(
@@ -450,7 +530,7 @@ class _SocialLinkState extends State<_SocialLink> {
                 children: [
                   Text(
                     widget.data.platform,
-                    style: const TextStyle(
+                    style: TextStyle(
                       color: AppColors.textMuted,
                       fontSize: 10,
                       letterSpacing: 0.4,
@@ -492,13 +572,14 @@ class _FormCard extends StatelessWidget {
     required this.sending,
     required this.sent,
     required this.onSubmit,
+    required this.onWhatsApp,
     required this.onReset,
   });
 
   final GlobalKey<FormState> formKey;
   final TextEditingController nameCtrl, emailCtrl, messageCtrl;
   final bool sending, sent;
-  final VoidCallback onSubmit, onReset;
+  final VoidCallback onSubmit, onWhatsApp, onReset;
 
   @override
   Widget build(BuildContext context) {
@@ -520,14 +601,14 @@ class _FormCard extends StatelessWidget {
                 color: AppColors.accent.withOpacity(0.1),
                 shape: BoxShape.circle,
               ),
-              child: const Icon(
+              child: Icon(
                 Icons.check_rounded,
                 color: AppColors.accent,
                 size: 40,
               ),
             ),
             const SizedBox(height: 20),
-            const Text(
+            Text(
               'Message Sent! 🎉',
               style: TextStyle(
                 color: AppColors.textPrimary,
@@ -536,7 +617,7 @@ class _FormCard extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 8),
-            const Text(
+            Text(
               "I'll get back to you within 24 hours.",
               textAlign: TextAlign.center,
               style: TextStyle(color: AppColors.textSecondary),
@@ -544,7 +625,7 @@ class _FormCard extends StatelessWidget {
             const SizedBox(height: 28),
             TextButton(
               onPressed: onReset,
-              child: const Text(
+              child: Text(
                 'Send Another Message',
                 style: TextStyle(
                   color: AppColors.accent,
@@ -569,7 +650,7 @@ class _FormCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
+            Text(
               'Send a Message',
               style: TextStyle(
                 color: AppColors.textPrimary,
@@ -578,7 +659,7 @@ class _FormCard extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 4),
-            const Text(
+            Text(
               "I'll reply within 24 hours.",
               style: TextStyle(color: AppColors.textMuted, fontSize: 12.5),
             ),
@@ -623,6 +704,12 @@ class _FormCard extends StatelessWidget {
               sending: sending,
               onTap: onSubmit,
             ).animate().fadeIn(delay: 500.ms),
+
+            const SizedBox(height: 12),
+
+            _WhatsAppSubmitButton(
+              onTap: onWhatsApp,
+            ).animate().fadeIn(delay: 550.ms),
           ],
         ),
       ),
@@ -674,7 +761,7 @@ class _FormField extends StatelessWidget {
       maxLines: maxLines,
       keyboardType: keyboard,
       validator: validator,
-      style: const TextStyle(color: AppColors.textPrimary, fontSize: 14),
+      style: TextStyle(color: AppColors.textPrimary, fontSize: 14),
       decoration: InputDecoration(
         labelText: label,
         hintText: hint,
@@ -723,21 +810,21 @@ class _SubmitButtonState extends State<_SubmitButton> {
           ),
           child: Center(
             child: widget.sending
-                ? const SizedBox(
+                ? SizedBox(
                     width: 22,
                     height: 22,
                     child: CircularProgressIndicator(
                       strokeWidth: 2.5,
-                      color: AppColors.background,
+                      color: AppColors.onAccent,
                     ),
                   )
-                : const Row(
+                : Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Text(
                         'Send Message',
                         style: TextStyle(
-                          color: AppColors.background,
+                          color: AppColors.onAccent,
                           fontWeight: FontWeight.w800,
                           fontSize: 15,
                           letterSpacing: 0.2,
@@ -746,11 +833,79 @@ class _SubmitButtonState extends State<_SubmitButton> {
                       SizedBox(width: 8),
                       Icon(
                         Icons.send_rounded,
-                        color: AppColors.background,
+                        color: AppColors.onAccent,
                         size: 17,
                       ),
                     ],
                   ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _WhatsAppSubmitButton extends StatefulWidget {
+  const _WhatsAppSubmitButton({required this.onTap});
+  final VoidCallback onTap;
+
+  @override
+  State<_WhatsAppSubmitButton> createState() => _WhatsAppSubmitButtonState();
+}
+
+class _WhatsAppSubmitButtonState extends State<_WhatsAppSubmitButton> {
+  bool _h = false;
+
+  @override
+  Widget build(BuildContext context) {
+    const waColor = Color(0xFF25D366);
+
+    return MouseRegion(
+      onEnter: (_) => setState(() => _h = true),
+      onExit: (_) => setState(() => _h = false),
+      cursor: SystemMouseCursors.click,
+      child: GestureDetector(
+        onTap: widget.onTap,
+        child: AnimatedContainer(
+          duration: 200.ms,
+          width: double.infinity,
+          height: 48,
+          decoration: BoxDecoration(
+            color: _h ? waColor : waColor.withOpacity(0.09),
+            borderRadius: BorderRadius.circular(14),
+            border: Border.all(
+              color: _h ? waColor : waColor.withOpacity(0.55),
+              width: 1.2,
+            ),
+            boxShadow: _h
+                ? [
+                    BoxShadow(
+                      color: waColor.withOpacity(0.35),
+                      blurRadius: 20,
+                      offset: const Offset(0, 4),
+                    ),
+                  ]
+                : [],
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              FaIcon(
+                FontAwesomeIcons.whatsapp,
+                color: _h ? Colors.white : waColor,
+                size: 19,
+              ),
+              const SizedBox(width: 10),
+              Text(
+                'Or Send via WhatsApp',
+                style: TextStyle(
+                  color: _h ? Colors.white : waColor,
+                  fontWeight: FontWeight.w700,
+                  fontSize: 14.5,
+                  letterSpacing: 0.1,
+                ),
+              ),
+            ],
           ),
         ),
       ),
@@ -777,7 +932,7 @@ class _SectionLabel extends StatelessWidget {
         ),
         Text(
           label,
-          style: const TextStyle(
+          style: TextStyle(
             color: AppColors.accent,
             fontSize: 10.5,
             fontWeight: FontWeight.w700,
