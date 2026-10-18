@@ -205,7 +205,7 @@ class _HeroSection extends StatelessWidget {
 
               SizedBox(height: isMobile ? 26 : 36),
 
-              // Two CTA buttons: Start Your Project & Explore My Work
+              // Two CTA buttons: Start Your Project & Download Resume
               Wrap(
                 spacing: 16,
                 runSpacing: 14,
@@ -217,16 +217,34 @@ class _HeroSection extends StatelessWidget {
                     onTap: (ctx) => ctx.go('/contact'),
                   ),
                   _TechvenSecondaryBtn(
-                    label: 'Explore My Work',
-                    icon: Icons.arrow_outward_rounded,
-                    onTap: (ctx) => ctx.go('/projects'),
+                    label: 'Download Resume',
+                    icon: Icons.download_rounded,
+                    onTap: (ctx) async {
+                      final uri = Uri.parse('resume.pdf');
+                      if (await canLaunchUrl(uri)) {
+                        await launchUrl(uri, mode: LaunchMode.externalApplication);
+                      } else {
+                        await launchUrl(
+                          Uri.parse('assets/assets/MD_Yasin_Ali_Full_Stack_Developer.pdf'),
+                          mode: LaunchMode.externalApplication,
+                        );
+                      }
+                    },
                   ),
                 ],
               ).animate().fadeIn(delay: 450.ms).slideY(begin: 0.1, end: 0),
 
+              SizedBox(height: isMobile ? 18 : 22),
+
+              // Social Icons Row
+              const _HeroSocialIcons()
+                  .animate()
+                  .fadeIn(delay: 500.ms)
+                  .slideY(begin: 0.1, end: 0),
+
               // On mobile / smaller screens, display the 4 chips in a clean wrap
               if (!showFloatingChips) ...[
-                const SizedBox(height: 24),
+                const SizedBox(height: 20),
                 Wrap(
                   spacing: 10,
                   runSpacing: 10,
@@ -981,6 +999,135 @@ class _TechvenSecondaryBtnState extends State<_TechvenSecondaryBtn> {
               const SizedBox(width: 8),
               Icon(widget.icon, color: AppColors.textPrimary, size: 16),
             ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+// ──────────────────────────────────────────────────────────
+// HERO & FOOTER SOCIAL ICONS
+// ──────────────────────────────────────────────────────────
+class _HeroSocialIcons extends StatelessWidget {
+  const _HeroSocialIcons();
+
+  @override
+  Widget build(BuildContext context) {
+    return Wrap(
+      spacing: 12,
+      runSpacing: 10,
+      alignment: WrapAlignment.center,
+      children: const [
+        _HeroSocialBtn(
+          icon: FontAwesomeIcons.github,
+          tooltip: 'GitHub',
+          url: 'https://github.com/yasinalibd02',
+          hoverColor: Color(0xFF6E5494),
+        ),
+        _HeroSocialBtn(
+          icon: FontAwesomeIcons.linkedin,
+          tooltip: 'LinkedIn',
+          url: 'https://www.linkedin.com/in/yasinalibd02',
+          hoverColor: Color(0xFF0A66C2),
+        ),
+        _HeroSocialBtn(
+          icon: FontAwesomeIcons.whatsapp,
+          tooltip: 'WhatsApp',
+          url: 'https://wa.me/8801308985262',
+          hoverColor: Color(0xFF25D366),
+        ),
+        _HeroSocialBtn(
+          icon: FontAwesomeIcons.twitter,
+          tooltip: 'X (Twitter)',
+          url: 'https://x.com/YasinAl99967413',
+          hoverColor: Color(0xFF1DA1F2),
+        ),
+        _HeroSocialBtn(
+          icon: FontAwesomeIcons.envelope,
+          tooltip: 'Email',
+          url: 'mailto:yasinali.dev@gmail.com',
+          hoverColor: Color(0xFFEA4335),
+        ),
+      ],
+    );
+  }
+}
+
+class _HeroSocialBtn extends StatefulWidget {
+  const _HeroSocialBtn({
+    required this.icon,
+    required this.tooltip,
+    required this.url,
+    required this.hoverColor,
+  });
+
+  final FaIconData icon;
+  final String tooltip;
+  final String url;
+  final Color hoverColor;
+
+  @override
+  State<_HeroSocialBtn> createState() => _HeroSocialBtnState();
+}
+
+class _HeroSocialBtnState extends State<_HeroSocialBtn> {
+  bool _hovered = false;
+
+  @override
+  Widget build(BuildContext context) {
+    final dark = ThemeController.isDark;
+
+    return Tooltip(
+      message: widget.tooltip,
+      waitDuration: const Duration(milliseconds: 300),
+      child: MouseRegion(
+        onEnter: (_) => setState(() => _hovered = true),
+        onExit: (_) => setState(() => _hovered = false),
+        cursor: SystemMouseCursors.click,
+        child: GestureDetector(
+          onTap: () async {
+            final uri = Uri.parse(widget.url);
+            if (await canLaunchUrl(uri)) {
+              await launchUrl(uri, mode: LaunchMode.externalApplication);
+            }
+          },
+          child: AnimatedContainer(
+            duration: const Duration(milliseconds: 200),
+            curve: Curves.easeOutCubic,
+            width: 44,
+            height: 44,
+            transform: Matrix4.identity()..translate(0.0, _hovered ? -3.0 : 0.0),
+            decoration: BoxDecoration(
+              color: _hovered
+                  ? widget.hoverColor.withOpacity(dark ? 0.20 : 0.12)
+                  : (dark
+                      ? const Color(0xFF161A23)
+                      : Colors.white.withOpacity(0.9)),
+              borderRadius: BorderRadius.circular(50),
+              border: Border.all(
+                color: _hovered
+                    ? widget.hoverColor.withOpacity(0.65)
+                    : (dark ? const Color(0xFF262C3A) : const Color(0xFFE2E8F0)),
+                width: 1.2,
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: _hovered
+                      ? widget.hoverColor.withOpacity(0.3)
+                      : Colors.black.withOpacity(dark ? 0.2 : 0.04),
+                  blurRadius: _hovered ? 14 : 6,
+                  offset: const Offset(0, 3),
+                ),
+              ],
+            ),
+            child: Center(
+              child: FaIcon(
+                widget.icon,
+                size: 17,
+                color: _hovered ? widget.hoverColor : AppColors.textSecondary,
+              ),
+            ),
           ),
         ),
       ),
@@ -1884,6 +2031,8 @@ class _FooterStrip extends StatelessWidget {
         children: [
           Divider(color: AppColors.border),
           const SizedBox(height: 20),
+          const _HeroSocialIcons(),
+          const SizedBox(height: 18),
           Text(
             '© 2026 MD Yasin Ali · Full Stack Developer',
             style: TextStyle(color: AppColors.textMuted, fontSize: 12),
