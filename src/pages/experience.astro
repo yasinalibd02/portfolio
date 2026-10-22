@@ -1,0 +1,129 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHeader from '../components/PageHeader.astro';
+import Timeline from '../components/Timeline.astro';
+import CtaBand from '../components/CtaBand.astro';
+import Icon from '../components/Icon.astro';
+import { education, stats, site } from '../data/portfolio';
+---
+
+<Base
+  title="Experience"
+  description="4+ years building apps, web platforms and SaaS products: Full Stack Developer & CTO at TechVen, previously Flutter developer at AppDevs."
+>
+  <PageHeader eyebrow="Experience" title="4+ years building" highlight="real products." lead="From pixel-perfect app screens to leading technology for a product company.">
+    <ul class="mini-stats rise" style="--d: 3">
+      {
+        stats.map((s) => (
+          <li>
+            <strong><span data-count={s.value}>{s.value}</span>{s.suffix}</strong>
+            <span>{s.label}</span>
+          </li>
+        ))
+      }
+    </ul>
+  </PageHeader>
+
+  <section class="section exp" aria-label="Work history">
+    <div class="container">
+      <Timeline />
+    </div>
+  </section>
+
+  <section class="section section-alt" aria-labelledby="edu-title">
+    <div class="container">
+      <div class="section-head reveal">
+        <span class="eyebrow">Education</span>
+        <h2 class="section-title" id="edu-title">Where I studied</h2>
+      </div>
+      <ul class="edu">
+        {
+          education.map((e, i) => (
+            <li class="card spotlight reveal" style={`--i: ${i}`}>
+              <span class="icon-tile">
+                <Icon name="cap" size={26} />
+              </span>
+              <div>
+                <h3>{e.degree}</h3>
+                <p>{e.school}</p>
+                <span class="period">{e.period}</span>
+              </div>
+            </li>
+          ))
+        }
+      </ul>
+      <a class="btn btn-ghost resume reveal" href={site.resume} download>
+        <Icon name="download" />
+        Download full resume (PDF)
+      </a>
+    </div>
+  </section>
+
+  <CtaBand />
+</Base>
+
+<style>
+  .mini-stats {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 32px;
+  }
+  .mini-stats li {
+    display: flex;
+    flex-direction: column;
+    min-width: 130px;
+    padding: 14px 20px;
+    border-radius: 18px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow);
+  }
+  .mini-stats strong {
+    font-family: var(--font-display);
+    font-size: 30px;
+    font-weight: 700;
+    line-height: 1.1;
+    font-variant-numeric: tabular-nums;
+  }
+  .mini-stats span:not([data-count]) {
+    color: var(--text-2);
+    font-size: 14px;
+  }
+  .exp {
+    padding-top: 32px;
+  }
+  .edu {
+    display: grid;
+    gap: 20px;
+  }
+  @media (min-width: 768px) {
+    .edu {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+  .edu li {
+    display: flex;
+    gap: 18px;
+    align-items: flex-start;
+    padding: 24px;
+  }
+  .edu h3 {
+    font-size: 19px;
+    font-weight: 700;
+  }
+  .edu p {
+    margin-top: 4px;
+    color: var(--text-2);
+  }
+  .period {
+    display: inline-block;
+    margin-top: 6px;
+    color: var(--accent-text);
+    font-size: 14px;
+    font-weight: 600;
+  }
+  .resume {
+    margin-top: 32px;
+  }
+</style>

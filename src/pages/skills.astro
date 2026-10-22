@@ -1,0 +1,129 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHeader from '../components/PageHeader.astro';
+import Marquee from '../components/Marquee.astro';
+import CtaBand from '../components/CtaBand.astro';
+import Icon from '../components/Icon.astro';
+import { skillGroups } from '../data/portfolio';
+---
+
+<Base
+  title="Skills"
+  description="Skills across mobile apps, web & SaaS, AI agents and automation: Flutter, Laravel, Next.js, n8n, LLM APIs, prompt engineering and store publishing."
+>
+  <PageHeader
+    eyebrow="Skills"
+    title="The right tool for"
+    highlight="every product."
+    lead="I pick the stack that fits your project, and use AI tools to build faster without cutting corners."
+  />
+
+  <Marquee />
+
+  <section class="section" aria-label="Skill groups">
+    <div class="container">
+      <div class="groups">
+        {
+          skillGroups.map((g, gi) => (
+            <article class="card spotlight group reveal" style={`--i: ${gi % 2}`}>
+              <div class="group-head">
+                <span class="icon-tile">
+                  <Icon name={g.icon} size={26} />
+                </span>
+                <div>
+                  <h2>{g.title}</h2>
+                  <p>{g.description}</p>
+                </div>
+              </div>
+              <ul>
+                {g.skills.map((s, si) => (
+                  <li style={`--s: ${si}`}>{s}</li>
+                ))}
+              </ul>
+            </article>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <CtaBand heading="Need a stack you don't see here?" text="Ask me. If it helps your product, I'll learn it fast and ship it." />
+</Base>
+
+<style>
+  .groups {
+    display: grid;
+    gap: 22px;
+  }
+  @media (min-width: 900px) {
+    .groups {
+      grid-template-columns: 1fr 1fr;
+      gap: 26px;
+    }
+  }
+  .group {
+    padding: 28px;
+  }
+  .group-head {
+    display: flex;
+    gap: 18px;
+    align-items: flex-start;
+  }
+  h2 {
+    font-size: 24px;
+    font-weight: 700;
+  }
+  .group-head p {
+    margin-top: 4px;
+    color: var(--text-2);
+    font-size: 15px;
+  }
+  ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 24px;
+  }
+  li {
+    padding: 9px 16px;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    background: var(--bg);
+    font-size: 15px;
+    font-weight: 600;
+    transition:
+      transform 0.25s var(--ease),
+      border-color 0.25s ease,
+      color 0.25s ease;
+  }
+  li:hover {
+    transform: translateY(-3px);
+    border-color: var(--accent);
+    color: var(--accent-text);
+  }
+  /* Chips pop in one after another when the card is revealed */
+  :global(.js) .group li {
+    opacity: 0;
+    transform: scale(0.85);
+  }
+  :global(.js) .group:global(.is-visible) li {
+    animation: pop 0.5s var(--ease) both;
+    animation-delay: calc(0.25s + var(--s) * 60ms);
+  }
+  @keyframes pop {
+    from {
+      opacity: 0;
+      transform: scale(0.85);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    :global(.js) .group li {
+      opacity: 1;
+      transform: none;
+    }
+  }
+</style>

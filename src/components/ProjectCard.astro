@@ -1,0 +1,154 @@
+---
+import { Image } from 'astro:assets';
+import Icon from './Icon.astro';
+import type { Project } from '../data/portfolio';
+
+interface Props {
+  project: Project;
+  index: number;
+}
+
+const { project: p, index } = Astro.props;
+const contain = p.imageFit === 'contain';
+---
+
+<li class="card spotlight project reveal" data-category={p.category} style={`--i: ${index % 3}`}>
+  <div class:list={['thumb', contain && 'thumb-contain']} style={p.imageBg ? `--thumb-bg: ${p.imageBg}` : undefined}>
+    {
+      p.image ? (
+        <Image
+          src={p.image}
+          alt={`${p.title} screenshot`}
+          widths={contain ? [160, 320] : [400, 700]}
+          sizes={contain ? '160px' : '(min-width: 1100px) 360px, (min-width: 640px) 45vw, 92vw'}
+          loading="lazy"
+          decoding="async"
+          format="webp"
+          quality={75}
+        />
+      ) : (
+        <div class="placeholder" role="img" aria-label={`${p.title} placeholder image`}>
+          <span>{p.title}</span>
+        </div>
+      )
+    }
+    {p.featured && <span class="featured">Featured</span>}
+  </div>
+
+  <div class="body">
+    <h3>{p.title}</h3>
+    <p class="desc">{p.description}</p>
+    <p class="role"><span>Role:</span> {p.role}</p>
+    <ul class="tags" aria-label="Tags">
+      {p.tags.map((t) => <li class="tag">{t}</li>)}
+    </ul>
+    <a
+      class="link-arrow live"
+      href={p.link.url}
+      target="_blank"
+      rel="noopener"
+      aria-label={`${p.link.label}: ${p.title} (opens in new tab)`}
+    >
+      {p.link.label}
+      <Icon name="external" size={16} />
+    </a>
+  </div>
+</li>
+
+<style>
+  .project {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+  .project[hidden] {
+    display: none;
+  }
+  .thumb {
+    position: relative;
+    aspect-ratio: 16 / 10;
+    background: var(--thumb-bg, var(--surface-2));
+    border-bottom: 1px solid var(--border);
+    overflow: hidden;
+  }
+  .thumb :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: top center;
+    transition: transform 0.7s var(--ease);
+  }
+  .thumb-contain :global(img) {
+    object-fit: contain;
+    padding-top: 14px;
+    object-position: bottom center;
+  }
+  .project:hover .thumb :global(img) {
+    transform: scale(1.06);
+  }
+  .placeholder {
+    display: grid;
+    place-items: center;
+    height: 100%;
+    padding: 24px;
+    background:
+      radial-gradient(circle at 80% 10%, rgba(255, 255, 255, 0.3), transparent 50%),
+      linear-gradient(135deg, var(--accent), var(--accent-2));
+    transition: transform 0.7s var(--ease);
+  }
+  .project:hover .placeholder {
+    transform: scale(1.06);
+  }
+  .placeholder span {
+    font-family: var(--font-display);
+    font-size: 30px;
+    font-weight: 700;
+    color: #0a0a0f;
+    letter-spacing: -0.02em;
+  }
+  .featured {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    padding: 5px 12px;
+    border-radius: 999px;
+    background: #0a0a0f;
+    color: #ffffff;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+  }
+
+  .body {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    padding: 22px 22px 16px;
+  }
+  h3 {
+    font-size: 21px;
+    font-weight: 700;
+  }
+  .desc {
+    margin-top: 8px;
+    color: var(--text-2);
+    font-size: 15px;
+  }
+  .role {
+    margin-top: 12px;
+    font-size: 14px;
+  }
+  .role span {
+    font-weight: 700;
+  }
+  .tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin: 14px 0 10px;
+  }
+  .live {
+    margin-top: auto;
+    align-self: flex-start;
+  }
+</style>

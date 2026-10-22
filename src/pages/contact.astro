@@ -1,0 +1,280 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHeader from '../components/PageHeader.astro';
+import Icon from '../components/Icon.astro';
+import { contact, links, profile, site } from '../data/portfolio';
+
+const channels = [
+  { icon: 'whatsapp', label: 'WhatsApp', value: 'Chat now', href: links.whatsapp, external: true },
+  { icon: 'mail', label: 'Email', value: links.email, href: `mailto:${links.email}`, external: false },
+  { icon: 'phone', label: 'Phone', value: links.phone, href: `tel:${links.phone}`, external: false },
+  { icon: 'linkedin', label: 'LinkedIn', value: 'yasinalibd02', href: links.linkedin, external: true },
+] as const;
+---
+
+<Base
+  title="Contact"
+  description="Hire MD Yasin Ali for your mobile app, website, SaaS product, AI agent or automation project. Reach out on WhatsApp, email or LinkedIn."
+>
+  <PageHeader eyebrow="Contact" title="Have a project in mind?" highlight="Let's talk." lead={contact.subtext} />
+
+  <section class="section contact" aria-label="Contact options">
+    <div class="container layout">
+      <div class="side">
+        <ul class="channels">
+          {
+            channels.map((c, i) => (
+              <li class="reveal" style={`--i: ${i}`}>
+                <a class="card spotlight channel" href={c.href} {...(c.external ? { target: '_blank', rel: 'noopener' } : {})}>
+                  <span class="icon-tile">
+                    <Icon name={c.icon} size={22} />
+                  </span>
+                  <span class="channel-text">
+                    <span class="label">{c.label}</span>
+                    <span class="value">{c.value}</span>
+                  </span>
+                  <Icon name="arrow" size={18} class="go" />
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+        <div class="card info reveal" style="--i: 4">
+          <p><Icon name="pin" size={18} /> {profile.location}</p>
+          <a class="link-arrow" href={site.resume} download><Icon name="download" size={18} /> Download Resume (PDF)</a>
+        </div>
+      </div>
+
+      <form class="card brief reveal" style="--i: 1" data-brief data-whatsapp={links.whatsapp}>
+        <h2>Send a project brief</h2>
+        <p class="hint">Fill this in and it opens WhatsApp with your message ready to send.</p>
+
+        <div class="field">
+          <label for="name">Your name</label>
+          <input id="name" name="name" type="text" autocomplete="name" required />
+        </div>
+
+        <fieldset class="field">
+          <legend>What do you need?</legend>
+          <div class="types">
+            {
+              contact.projectTypes.map((t, i) => (
+                <label class="type">
+                  <input type="radio" name="type" value={t} checked={i === 0} />
+                  <span>{t}</span>
+                </label>
+              ))
+            }
+          </div>
+        </fieldset>
+
+        <div class="field">
+          <label for="budget">Budget <span class="opt">(optional)</span></label>
+          <input id="budget" name="budget" type="text" placeholder="e.g. $500 – $1,000" />
+        </div>
+
+        <div class="field">
+          <label for="message">Tell me about the project</label>
+          <textarea id="message" name="message" rows="5" required placeholder="What should it do? Who is it for? Any deadline?"></textarea>
+        </div>
+
+        <button class="btn btn-primary submit" type="submit">
+          <Icon name="whatsapp" />
+          Send on WhatsApp
+        </button>
+      </form>
+    </div>
+  </section>
+</Base>
+
+<script>
+  const form = document.querySelector<HTMLFormElement>('[data-brief]');
+  form?.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const data = new FormData(form);
+    const lines = [`Hi Yasin, I'm ${data.get('name')}.`, `I need: ${data.get('type')}`];
+    if (data.get('budget')) lines.push(`Budget: ${data.get('budget')}`);
+    lines.push('', String(data.get('message')));
+    window.open(`${form.dataset.whatsapp}?text=${encodeURIComponent(lines.join('\n'))}`, '_blank', 'noopener');
+  });
+</script>
+
+<style>
+  .contact {
+    padding-top: 24px;
+  }
+  .layout {
+    display: grid;
+    gap: 24px;
+  }
+  @media (min-width: 960px) {
+    .layout {
+      grid-template-columns: 1fr 1.25fr;
+      gap: 32px;
+      align-items: start;
+    }
+  }
+  .channels {
+    display: grid;
+    gap: 14px;
+  }
+  .channel {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 18px 20px;
+    text-decoration: none;
+  }
+  .channel-text {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-width: 0;
+  }
+  .label {
+    color: var(--text-2);
+    font-size: 14px;
+  }
+  .value {
+    font-family: var(--font-display);
+    font-size: 18px;
+    font-weight: 700;
+    overflow-wrap: break-word;
+  }
+  .channel :global(.go) {
+    color: var(--text-2);
+    transition: transform 0.3s var(--ease), color 0.3s;
+  }
+  @media (max-width: 480px) {
+    .channel {
+      gap: 14px;
+      padding: 16px;
+    }
+    .channel .icon-tile {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+    }
+    .channel :global(.go) {
+      display: none;
+    }
+    .value {
+      font-size: 16px;
+    }
+  }
+  .channel:hover :global(.go) {
+    transform: translateX(4px);
+    color: var(--accent-text);
+  }
+  .info {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 14px;
+    padding: 18px 20px;
+  }
+  .info p {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--text-2);
+  }
+
+  .brief {
+    padding: 28px 22px;
+  }
+  @media (min-width: 768px) {
+    .brief {
+      padding: 36px;
+    }
+  }
+  .brief h2 {
+    font-size: 26px;
+    font-weight: 700;
+  }
+  .hint {
+    margin-top: 6px;
+    color: var(--text-2);
+    font-size: 15px;
+  }
+  .field {
+    margin: 22px 0 0;
+    padding: 0;
+    border: 0;
+  }
+  label,
+  legend {
+    display: block;
+    margin-bottom: 8px;
+    padding: 0;
+    font-weight: 600;
+    font-size: 15px;
+  }
+  .opt {
+    color: var(--text-2);
+    font-weight: 400;
+  }
+  input[type='text'],
+  textarea {
+    width: 100%;
+    padding: 13px 16px;
+    border-radius: 14px;
+    border: 1px solid var(--border);
+    background: var(--bg);
+    color: var(--text);
+    font: inherit;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  input[type='text']:focus,
+  textarea:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 4px var(--accent-soft);
+  }
+  input::placeholder,
+  textarea::placeholder {
+    color: var(--text-2);
+    opacity: 0.8;
+  }
+  textarea {
+    resize: vertical;
+  }
+  .types {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .type {
+    position: relative;
+    margin: 0;
+    font-weight: 500;
+  }
+  .type input {
+    position: absolute;
+    opacity: 0;
+    inset: 0;
+    cursor: pointer;
+  }
+  .type span {
+    display: inline-block;
+    padding: 9px 14px;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    background: var(--bg);
+    font-size: 14px;
+    transition: all 0.2s var(--ease);
+  }
+  .type input:checked + span {
+    background: var(--text);
+    color: var(--bg);
+    border-color: var(--text);
+  }
+  .type input:focus-visible + span {
+    outline: 3px solid var(--accent);
+    outline-offset: 2px;
+  }
+  .submit {
+    width: 100%;
+    margin-top: 28px;
+  }
+</style>

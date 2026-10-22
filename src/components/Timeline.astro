@@ -1,0 +1,178 @@
+---
+import Icon from './Icon.astro';
+import { experience } from '../data/portfolio';
+---
+
+<div class="timeline" data-timeline>
+  <div class="rail" aria-hidden="true"><div class="rail-fill" data-rail-fill></div></div>
+  <ol>
+    {
+      experience.map((c, ci) => (
+        <li class="company reveal">
+          <span class="dot" aria-hidden="true">
+            <Icon name="briefcase" size={16} />
+          </span>
+          <h2>
+            {c.company}
+            {ci === 0 && <span class="now">Current</span>}
+          </h2>
+          {c.roles.length > 1 && (
+            <p class="promo">
+              Promoted to {c.roles[0].title} in {c.roles[0].period.split(' – ')[0]}
+            </p>
+          )}
+          <ol class="roles">
+            {c.roles.map((r, ri) => (
+              <li class="card spotlight role reveal" style={`--i: ${ri}`}>
+                <div class="role-head">
+                  <h3>{r.title}</h3>
+                  <span class="period">{r.period}</span>
+                </div>
+                <ul>
+                  {r.points.map((pt) => (
+                    <li>{pt}</li>
+                  ))}
+                </ul>
+              </li>
+            ))}
+          </ol>
+        </li>
+      ))
+    }
+  </ol>
+</div>
+
+<script>
+  // Fill the timeline rail as the user scrolls through it.
+  const timeline = document.querySelector<HTMLElement>('[data-timeline]');
+  const fill = document.querySelector<HTMLElement>('[data-rail-fill]');
+  if (timeline && fill) {
+    const update = () => {
+      const r = timeline.getBoundingClientRect();
+      const progress = (window.innerHeight * 0.6 - r.top) / r.height;
+      fill.style.transform = `scaleY(${Math.min(Math.max(progress, 0), 1)})`;
+    };
+    update();
+    window.addEventListener('scroll', update, { passive: true });
+    window.addEventListener('resize', update);
+  }
+</script>
+
+<style>
+  .timeline {
+    position: relative;
+    max-width: 860px;
+    padding-left: 48px;
+  }
+  .rail {
+    position: absolute;
+    left: 17px;
+    top: 10px;
+    bottom: 10px;
+    width: 2px;
+    border-radius: 2px;
+    background: var(--border);
+    overflow: hidden;
+  }
+  .rail-fill {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(var(--accent), var(--accent-2));
+    transform: scaleY(0);
+    transform-origin: top;
+    transition: transform 0.15s linear;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .rail-fill {
+      transform: none !important;
+    }
+  }
+  .company {
+    position: relative;
+  }
+  .company + .company {
+    margin-top: 56px;
+  }
+  .dot {
+    position: absolute;
+    left: -48px;
+    top: -2px;
+    display: grid;
+    place-items: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: var(--bg);
+    border: 2px solid var(--accent);
+    color: var(--accent-text);
+    box-shadow: 0 0 0 6px var(--bg);
+  }
+  h2 {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: clamp(24px, 3.4vw, 32px);
+    font-weight: 700;
+  }
+  .now {
+    padding: 4px 10px;
+    border-radius: 999px;
+    background: var(--green-soft);
+    color: var(--green);
+    font-family: var(--font-body);
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0;
+  }
+  .promo {
+    margin-top: 6px;
+    color: var(--text-2);
+    font-size: 15px;
+  }
+  .roles {
+    display: grid;
+    gap: 16px;
+    margin-top: 20px;
+  }
+  .role {
+    padding: 22px 24px;
+  }
+  .role-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 4px 16px;
+  }
+  h3 {
+    font-size: 19px;
+    font-weight: 700;
+  }
+  .period {
+    color: var(--accent-text);
+    font-size: 14px;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+  .role ul {
+    display: grid;
+    gap: 6px;
+    margin-top: 12px;
+  }
+  .role ul li {
+    position: relative;
+    padding-left: 18px;
+    color: var(--text-2);
+    font-size: 15px;
+  }
+  .role ul li::before {
+    content: '';
+    position: absolute;
+    left: 2px;
+    top: 0.65em;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--accent);
+  }
+</style>

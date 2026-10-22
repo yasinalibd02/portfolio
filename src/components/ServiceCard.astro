@@ -1,0 +1,85 @@
+---
+import Icon from './Icon.astro';
+import type { Service } from '../data/portfolio';
+
+interface Props {
+  service: Service;
+  index: number;
+  /** Show the "what you get" list (services page) or keep it short (home). */
+  detailed?: boolean;
+}
+
+const { service, index, detailed = false } = Astro.props;
+---
+
+<li class="card spotlight service reveal" style={`--i: ${index % 3}`}>
+  <span class="num" aria-hidden="true">{String(index + 1).padStart(2, '0')}</span>
+  <span class="icon-tile"><Icon name={service.icon} size={26} /></span>
+  <h3>{service.title}</h3>
+  <p>{service.description}</p>
+  {
+    detailed && (
+      <ul class="points">
+        {service.points.map((pt) => (
+          <li>
+            <Icon name="check" size={16} />
+            {pt}
+          </li>
+        ))}
+      </ul>
+    )
+  }
+</li>
+
+<style>
+  .service {
+    padding: 30px 26px;
+    overflow: hidden;
+  }
+  .num {
+    position: absolute;
+    top: 18px;
+    right: 22px;
+    font-family: var(--font-display);
+    font-size: 44px;
+    font-weight: 700;
+    line-height: 1;
+    color: transparent;
+    -webkit-text-stroke: 1px var(--border);
+    transition: -webkit-text-stroke-color 0.35s ease;
+  }
+  .service:hover .num {
+    -webkit-text-stroke-color: var(--accent);
+  }
+  h3 {
+    margin-top: 22px;
+    font-size: 21px;
+    font-weight: 700;
+  }
+  p {
+    margin-top: 8px;
+    color: var(--text-2);
+    font-size: 15px;
+  }
+  .points {
+    display: grid;
+    gap: 8px;
+    margin-top: 18px;
+    padding-top: 18px;
+    border-top: 1px dashed var(--border);
+  }
+  .points li {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 15px;
+    font-weight: 500;
+  }
+  .points :global(svg) {
+    flex-shrink: 0;
+    padding: 2px;
+    border-radius: 50%;
+    background: var(--accent-soft);
+    color: var(--accent-text);
+  }
+</style>

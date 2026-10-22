@@ -5,52 +5,94 @@ import { links } from '../data/portfolio';
 import avatar from '../assets/avatar.png';
 
 const navLinks = [
-  { href: '#services', label: 'Services' },
-  { href: '#projects', label: 'Projects' },
-  { href: '#experience', label: 'Experience' },
-  { href: '#skills', label: 'Skills' },
-  { href: '#contact', label: 'Contact' },
+  { href: '/services', label: 'Services' },
+  { href: '/projects', label: 'Projects' },
+  { href: '/experience', label: 'Experience' },
+  { href: '/skills', label: 'Skills' },
+  { href: '/contact', label: 'Contact' },
 ];
+const path = Astro.url.pathname.replace(/\/$/, '') || '/';
 ---
 
-<header class="nav">
+<header class="nav" data-nav>
   <div class="container nav-inner">
-    <a class="logo" href="#top">
+    <a class="logo" href="/">
       <Image class="logo-avatar" src={avatar} alt="" widths={[40, 80, 120]} sizes="40px" format="webp" loading="eager" />
       <span class="logo-text">Yasin Ali</span>
     </a>
 
-    <nav aria-label="Main">
+    <nav aria-label="Main" class="nav-menu" id="nav-menu">
       <ul class="nav-links">
-        {navLinks.map((l) => <li><a href={l.href}>{l.label}</a></li>)}
+        {
+          navLinks.map((l, i) => (
+            <li style={`--i: ${i}`}>
+              <a href={l.href} aria-current={path === l.href ? 'page' : undefined}>
+                {l.label}
+              </a>
+            </li>
+          ))
+        }
       </ul>
     </nav>
 
     <div class="nav-actions">
-      <button class="theme-toggle" type="button" aria-label="Toggle dark mode" data-theme-toggle>
+      <button class="icon-btn" type="button" aria-label="Toggle dark mode" data-theme-toggle>
         <Icon name="moon" class="icon-moon" />
         <Icon name="sun" class="icon-sun" />
       </button>
-      <a class="btn btn-primary nav-cta" href={links.whatsapp} target="_blank" rel="noopener">
-        Hire Me
-      </a>
+      <a class="btn btn-primary nav-cta" href={links.whatsapp} target="_blank" rel="noopener">Hire Me</a>
+      <button
+        class="icon-btn menu-btn"
+        type="button"
+        aria-label="Open menu"
+        aria-expanded="false"
+        aria-controls="nav-menu"
+        data-menu-btn
+      >
+        <Icon name="menu" class="icon-open" />
+        <Icon name="close" class="icon-close" />
+      </button>
     </div>
   </div>
 </header>
 
 <script>
-  const btn = document.querySelector<HTMLButtonElement>('[data-theme-toggle]');
   const root = document.documentElement;
-  const sync = () => btn?.setAttribute('aria-pressed', String(root.dataset.theme === 'dark'));
-  sync();
-  btn?.addEventListener('click', () => {
+  const themeBtn = document.querySelector<HTMLButtonElement>('[data-theme-toggle]');
+  const syncTheme = () => themeBtn?.setAttribute('aria-pressed', String(root.dataset.theme === 'dark'));
+  syncTheme();
+  themeBtn?.addEventListener('click', () => {
     const next = root.dataset.theme === 'dark' ? 'light' : 'dark';
-    root.dataset.theme = next;
+    const apply = () => {
+      root.dataset.theme = next;
+      syncTheme();
+    };
+    // Cross-fade the theme change where the browser supports it.
+    const doc = document as Document & { startViewTransition?: (cb: () => void) => unknown };
+    if (doc.startViewTransition && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      doc.startViewTransition(apply);
+    } else {
+      apply();
+    }
     try {
       localStorage.setItem('theme', next);
     } catch {}
-    sync();
   });
+
+  const nav = document.querySelector<HTMLElement>('[data-nav]');
+  const menuBtn = document.querySelector<HTMLButtonElement>('[data-menu-btn]');
+  const setMenu = (open: boolean) => {
+    nav?.classList.toggle('menu-open', open);
+    menuBtn?.setAttribute('aria-expanded', String(open));
+    menuBtn?.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+  };
+  menuBtn?.addEventListener('click', () => setMenu(!nav?.classList.contains('menu-open')));
+  document.addEventListener('keydown', (e) => e.key === 'Escape' && setMenu(false));
+
+  // Add a border and shadow once the page has scrolled.
+  const onScroll = () => nav?.classList.toggle('scrolled', window.scrollY > 8);
+  onScroll();
+  window.addEventListener('scroll', onScroll, { passive: true });
 </script>
 
 <style>
@@ -58,17 +100,25 @@ const navLinks = [
     position: sticky;
     top: 0;
     z-index: 50;
-    background: color-mix(in srgb, var(--bg) 82%, transparent);
-    backdrop-filter: saturate(160%) blur(14px);
-    -webkit-backdrop-filter: saturate(160%) blur(14px);
-    border-bottom: 1px solid var(--border);
+    view-transition-name: site-nav;
+    background: color-mix(in srgb, var(--bg) 78%, transparent);
+    backdrop-filter: saturate(160%) blur(16px);
+    -webkit-backdrop-filter: saturate(160%) blur(16px);
+    border-bottom: 1px solid transparent;
+    transition:
+      border-color 0.3s ease,
+      box-shadow 0.3s ease;
+  }
+  .nav.scrolled {
+    border-color: var(--border);
+    box-shadow: 0 8px 30px -12px rgba(10, 10, 15, 0.15);
   }
   .nav-inner {
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: 16px;
-    height: 68px;
+    height: 72px;
   }
   .logo {
     display: inline-flex;
@@ -86,12 +136,18 @@ const navLinks = [
     object-fit: cover;
     background: var(--surface-2);
     box-shadow: 0 0 0 2px var(--accent);
+    transition: transform 0.4s var(--ease);
   }
+  .logo:hover :global(.logo-avatar) {
+    transform: rotate(-8deg) scale(1.06);
+  }
+
   .nav-links {
-    display: none;
+    display: flex;
     gap: 4px;
   }
   .nav-links a {
+    position: relative;
     display: block;
     padding: 8px 14px;
     border-radius: 999px;
@@ -99,23 +155,36 @@ const navLinks = [
     font-weight: 500;
     font-size: 15px;
     text-decoration: none;
-    transition: color 0.2s, background-color 0.2s;
+    transition:
+      color 0.2s,
+      background-color 0.2s;
   }
   .nav-links a:hover {
     color: var(--text);
     background: var(--accent-soft);
   }
-  @media (min-width: 900px) {
-    .nav-links {
-      display: flex;
-    }
+  .nav-links a[aria-current='page'] {
+    color: var(--text);
+    font-weight: 600;
   }
+  .nav-links a[aria-current='page']::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    bottom: 2px;
+    width: 18px;
+    height: 3px;
+    margin-left: -9px;
+    border-radius: 3px;
+    background: linear-gradient(90deg, var(--accent), var(--accent-2));
+  }
+
   .nav-actions {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 8px;
   }
-  .theme-toggle {
+  .icon-btn {
     display: grid;
     place-items: center;
     width: 44px;
@@ -125,14 +194,19 @@ const navLinks = [
     background: var(--surface);
     color: var(--text);
     cursor: pointer;
+    transition: border-color 0.2s;
   }
-  .theme-toggle :global(.icon-sun) {
+  .icon-btn:hover {
+    border-color: var(--accent);
+  }
+  .icon-btn :global(.icon-sun),
+  .icon-btn :global(.icon-close) {
     display: none;
   }
-  :global([data-theme='dark']) .theme-toggle :global(.icon-sun) {
+  :global([data-theme='dark']) .icon-btn :global(.icon-sun) {
     display: block;
   }
-  :global([data-theme='dark']) .theme-toggle :global(.icon-moon) {
+  :global([data-theme='dark']) .icon-btn :global(.icon-moon) {
     display: none;
   }
   .nav-cta {
@@ -140,15 +214,75 @@ const navLinks = [
     padding: 8px 20px;
     font-size: 15px;
   }
-  @media (max-width: 380px) {
-    /* Keep the name for screen readers, hide it visually */
-    .logo-text {
+  .menu-btn {
+    display: none;
+  }
+
+  /* Mobile menu */
+  @media (max-width: 899px) {
+    .menu-btn {
+      display: grid;
+    }
+    .nav-menu {
       position: absolute;
-      width: 1px;
-      height: 1px;
-      overflow: hidden;
-      clip: rect(0, 0, 0, 0);
-      white-space: nowrap;
+      top: 72px;
+      left: 0;
+      right: 0;
+      padding: 12px 16px 20px;
+      background: var(--bg);
+      border-bottom: 1px solid var(--border);
+      box-shadow: 0 20px 40px -20px rgba(10, 10, 15, 0.25);
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(-8px);
+      transition:
+        opacity 0.25s ease,
+        transform 0.35s var(--ease),
+        visibility 0.25s;
+    }
+    .menu-open .nav-menu {
+      opacity: 1;
+      visibility: visible;
+      transform: none;
+    }
+    .nav-links {
+      flex-direction: column;
+      gap: 2px;
+    }
+    .nav-links li {
+      opacity: 0;
+      transform: translateX(-10px);
+      transition:
+        opacity 0.3s ease,
+        transform 0.4s var(--ease);
+      transition-delay: calc(var(--i) * 40ms);
+    }
+    .menu-open .nav-links li {
+      opacity: 1;
+      transform: none;
+    }
+    .nav-links a {
+      padding: 14px 16px;
+      border-radius: 14px;
+      font-size: 18px;
+      font-family: var(--font-display);
+    }
+    .nav-links a[aria-current='page'] {
+      background: var(--accent-soft);
+    }
+    .nav-links a[aria-current='page']::after {
+      display: none;
+    }
+    .menu-open .icon-btn :global(.icon-open) {
+      display: none;
+    }
+    .menu-open .icon-btn :global(.icon-close) {
+      display: block;
+    }
+  }
+  @media (max-width: 480px) {
+    .nav-cta {
+      display: none;
     }
   }
 </style>

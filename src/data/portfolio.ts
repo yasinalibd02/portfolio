@@ -18,24 +18,26 @@ import profilePhoto from '../assets/profile.jpeg';
 
 export const site = {
   url: 'https://yasinali.vercel.app',
-  title: 'MD Yasin Ali | Full Stack Developer — Flutter, Laravel & Next.js',
+  title: 'MD Yasin Ali | Full Stack Developer — Apps, Web, SaaS & AI Automation',
   description:
-    'Full Stack Developer from Dhaka building fintech and business apps with Flutter, Laravel and Next.js. 5 live apps, 40+ projects. Available for freelance work.',
+    'Full Stack Developer from Dhaka building mobile apps, web platforms, SaaS products, AI agents and automations. 50+ live apps, 40+ projects. Available for freelance work.',
   ogImage: '/og-image.png',
   resume: '/Yasin-Ali-Resume.pdf',
 };
 
 export const profile = {
   name: 'MD Yasin Ali',
-  title: 'Full Stack Developer — Flutter, Laravel & Next.js',
+  title: 'Full Stack Developer — Apps, Web, SaaS & AI Automation',
   location: 'Mirpur, Dhaka, Bangladesh',
   photo: profilePhoto,
   photoAlt: 'MD Yasin Ali at a desk, giving a thumbs up',
   available: true,
   hero: {
-    headline: 'I build fintech & business apps that ship.',
+    /** The rotating words after "I build". The first one is also used in the static <h1> text. */
+    rotating: ['Mobile Apps', 'Web Platforms', 'SaaS Products', 'AI Agents', 'Automations'],
+    headlineEnd: 'that ship.',
     subtext:
-      'Full Stack Developer working with Flutter, Laravel & Next.js. 5 apps live on Google Play & App Store, 40+ projects delivered.',
+      'From idea to launch: mobile apps, web platforms, SaaS products, AI agents and automations that save your team hours. 50+ apps live on Google Play & App Store.',
   },
 };
 
@@ -48,36 +50,99 @@ export const links = {
 };
 
 export const stats = [
-  { value: '4+', label: 'Years' },
-  { value: '40+', label: 'Projects' },
-  { value: '5', label: 'Live Apps' },
+  { value: 4, suffix: '+', label: 'Years experience' },
+  { value: 40, suffix: '+', label: 'Projects delivered' },
+  { value: 50, suffix: '+', label: 'Live apps' },
+];
+
+/** Scrolling ticker on the home page. */
+export const capabilities = [
+  'Mobile Apps',
+  'Web Platforms',
+  'SaaS Products',
+  'AI Agents',
+  'n8n Automation',
+  'Fintech & Wallets',
+  'Admin Dashboards',
+  'WhatsApp Bots',
+  'Play Store & App Store',
+  'E-commerce',
 ];
 
 // ─── Services ───────────────────────────────────────────────────────
 
-export type IconName = 'mobile' | 'web' | 'wallet' | 'automation';
+export type IconName =
+  | 'mobile'
+  | 'web'
+  | 'saas'
+  | 'bot'
+  | 'automation'
+  | 'wallet'
+  | 'search'
+  | 'pen'
+  | 'code'
+  | 'rocket'
+  | 'chat';
 
-export const services: { icon: IconName; title: string; description: string }[] = [
+export interface Service {
+  icon: IconName;
+  title: string;
+  description: string;
+  points: string[];
+}
+
+export const services: Service[] = [
   {
     icon: 'mobile',
-    title: 'Flutter App Development',
-    description: 'Cross-platform apps plus Play Store & App Store publishing.',
+    title: 'Mobile App Development',
+    description: 'Android & iOS apps from one codebase, published on Google Play & the App Store.',
+    points: ['Android & iOS from one codebase', 'Pixel-perfect UI from your design', 'API & payment integration', 'Store publishing & updates'],
   },
   {
     icon: 'web',
-    title: 'Web Apps & Dashboards',
-    description: 'Laravel and Next.js platforms, admin panels, SaaS.',
+    title: 'Web Platforms & Dashboards',
+    description: 'Business websites, admin panels, booking and e-commerce platforms.',
+    points: ['Fast, SEO-friendly websites', 'Admin panels & dashboards', 'Booking & e-commerce flows', 'Hosting & deployment'],
+  },
+  {
+    icon: 'saas',
+    title: 'SaaS Products',
+    description: 'From MVP to launch: subscriptions, user roles, dashboards and billing.',
+    points: ['MVP scoping & build', 'Subscriptions & billing', 'Multi-user roles', 'Analytics dashboards'],
+  },
+  {
+    icon: 'bot',
+    title: 'AI Agents & Chatbots',
+    description: 'AI assistants for WhatsApp, Messenger and your website that answer customers 24/7.',
+    points: ['Trained on your business info', 'WhatsApp, Facebook & web chat', 'Lead capture & handoff', 'Prompt design & tuning'],
+  },
+  {
+    icon: 'automation',
+    title: 'Automation with n8n',
+    description: 'WhatsApp, lead and order follow-up automations that save hours every week.',
+    points: ['Lead & order follow-ups', 'CRM, sheets & email sync', 'Notifications & reports', 'AI steps inside workflows'],
   },
   {
     icon: 'wallet',
     title: 'Fintech & Wallet Solutions',
-    description: 'Wallet/payment app setup, customization and deployment (QRPay-style scripts).',
+    description: 'Wallet and payment app setup, customization and deployment (QRPay-style scripts).',
+    points: ['Wallet app setup & branding', 'Custom features for clients', 'Payment gateway integration', 'Store deployment'],
   },
-  {
-    icon: 'automation',
-    title: 'AI Automation with n8n',
-    description: 'WhatsApp, lead and order follow-up automations that save hours.',
-  },
+];
+
+export const process: { icon: IconName; title: string; description: string }[] = [
+  { icon: 'search', title: 'Discover', description: 'We talk through your goals, users and budget, and agree on scope.' },
+  { icon: 'pen', title: 'Design', description: 'Screens and flows are planned before any code is written.' },
+  { icon: 'code', title: 'Build', description: 'Development with regular demo builds, so you can see progress as it happens.' },
+  { icon: 'rocket', title: 'Launch', description: 'Deployment to the stores or your server, ready for real users.' },
+  { icon: 'chat', title: 'Support', description: 'Fixes, updates and new features after launch.' },
+];
+
+export const whyMe = [
+  { title: 'Shipped, not just built', description: '50+ apps live on Google Play & App Store.' },
+  { title: 'One person, full stack', description: 'App, web, backend, AI and deployment, without hand-offs.' },
+  { title: 'Fintech experience', description: 'Wallet and payment products used by real customers.' },
+  { title: 'AI-first workflow', description: 'AI agents and automations built into products from day one.' },
 ];
 
 // ─── Projects ───────────────────────────────────────────────────────
@@ -104,9 +169,9 @@ export interface Project {
 export const projects: Project[] = [
   {
     title: 'QRPay – Money Transfer',
-    description: 'Flutter fintech wallet app: send, receive and pay with QR codes.',
-    role: 'Flutter development & Google Play deployment',
-    tags: ['Flutter', 'Dart', 'Fintech', 'REST API'],
+    description: 'Fintech wallet app: send, receive and pay with QR codes.',
+    role: 'App development & Google Play deployment',
+    tags: ['Fintech', 'Mobile App', 'Flutter'],
     category: 'mobile',
     featured: true,
     link: { label: 'Google Play', url: 'https://play.google.com/store/apps/details?id=net.appdevs.qrpayuser' },
@@ -117,8 +182,8 @@ export const projects: Project[] = [
   {
     title: 'SenPay',
     description: 'Fintech wallet app on the App Store: transfers, top-ups and virtual cards.',
-    role: 'Flutter development & App Store deployment',
-    tags: ['Flutter', 'iOS', 'Fintech'],
+    role: 'App development & App Store deployment',
+    tags: ['Fintech', 'iOS', 'Flutter'],
     category: 'mobile',
     featured: true,
     link: { label: 'App Store', url: 'https://apps.apple.com/us/app/senpay-user/id6746039031' },
@@ -127,12 +192,22 @@ export const projects: Project[] = [
     imageBg: '#ecd9fb',
   },
   {
+    title: 'ShopGrow',
+    description: 'Multi-channel AI agent SaaS: one agent deployed to WhatsApp, Instagram, Facebook and more.',
+    role: 'Full stack development',
+    tags: ['AI Agent', 'SaaS', 'Automation'],
+    category: 'web',
+    featured: true,
+    link: { label: 'Visit site', url: 'https://shopgrow.net/' },
+    image: shopgrowShot,
+    imageFit: 'cover',
+  },
+  {
     title: 'QRPay Pro',
     description: 'Complete QRPay solution with all add-ons, sold on CodeCanyon.',
-    role: 'Flutter app development & client customization',
-    tags: ['Flutter', 'Laravel', 'Fintech'],
+    role: 'App development & client customization',
+    tags: ['Fintech', 'Mobile App', 'Web Admin'],
     category: 'mobile',
-    featured: true,
     link: {
       label: 'CodeCanyon',
       url: 'https://codecanyon.net/item/qrpay-pro-complete-qrpay-solution-with-all-addons-bundle/56101909',
@@ -140,20 +215,10 @@ export const projects: Project[] = [
     // TODO(Yasin): add a QRPay Pro screenshot to src/assets/projects/ and import it here.
   },
   {
-    title: 'ShopGrow',
-    description: 'Multi-channel AI agent SaaS: one agent deployed to WhatsApp, Instagram, Facebook and more.',
-    role: 'Full stack development',
-    tags: ['Next.js', 'SaaS', 'AI Agent', 'Automation'],
-    category: 'web',
-    link: { label: 'Visit site', url: 'https://shopgrow.net/' },
-    image: shopgrowShot,
-    imageFit: 'cover',
-  },
-  {
     title: 'Luxora Living',
     description: 'Premium real estate developer website with project showcases and progress tracking.',
     role: 'Full stack development',
-    tags: ['Laravel', 'PHP', 'Real Estate'],
+    tags: ['Website', 'Real Estate', 'Laravel'],
     category: 'web',
     link: { label: 'Visit site', url: 'https://luxoralivingbd.com/' },
     image: luxoraShot,
@@ -163,7 +228,7 @@ export const projects: Project[] = [
     title: 'Happy Vacation',
     description: 'Travel agency website for air tickets, tours and Hajj & Umrah packages.',
     role: 'Full stack development',
-    tags: ['PHP', 'Booking', 'Travel'],
+    tags: ['Website', 'Booking', 'Travel'],
     category: 'web',
     link: { label: 'Visit site', url: 'https://happyvacationbd.com/' },
     image: happyVacationShot,
@@ -172,8 +237,8 @@ export const projects: Project[] = [
   {
     title: 'Islah',
     description: 'Islamic lifestyle companion: prayer times, Qibla finder and daily routines.',
-    role: 'Flutter development & Google Play deployment',
-    tags: ['Flutter', 'Dart', 'Lifestyle'],
+    role: 'App development & Google Play deployment',
+    tags: ['Mobile App', 'Lifestyle'],
     category: 'mobile',
     link: { label: 'Google Play', url: 'https://play.google.com/store/apps/details?id=com.islahbd.app' },
     image: islahShot,
@@ -183,8 +248,8 @@ export const projects: Project[] = [
   {
     title: 'Poisa',
     description: 'Personal finance & budgeting app with expense tracking and clean charts.',
-    role: 'Flutter development & Google Play deployment',
-    tags: ['Flutter', 'Finance'],
+    role: 'App development & Google Play deployment',
+    tags: ['Mobile App', 'Finance'],
     category: 'mobile',
     link: { label: 'Google Play', url: 'https://play.google.com/store/apps/details?id=com.kori.moneytracker' },
     image: poisaShot,
@@ -193,8 +258,8 @@ export const projects: Project[] = [
   {
     title: 'AppDevs',
     description: 'Showcase app for AppDevs, a fintech software company.',
-    role: 'Flutter development & Google Play deployment',
-    tags: ['Flutter', 'Fintech', 'Business'],
+    role: 'App development & Google Play deployment',
+    tags: ['Mobile App', 'Fintech', 'Business'],
     category: 'mobile',
     link: { label: 'Google Play', url: 'https://play.google.com/store/apps/details?id=net.appdevs' },
     image: appdevsShot,
@@ -206,7 +271,7 @@ export const projects: Project[] = [
 export const projectFilters: { id: 'all' | ProjectCategory; label: string }[] = [
   { id: 'all', label: 'All' },
   { id: 'mobile', label: 'Mobile Apps' },
-  { id: 'web', label: 'Web & SaaS' },
+  { id: 'web', label: 'Web, SaaS & AI' },
 ];
 
 // ─── Experience & education ─────────────────────────────────────────
@@ -258,13 +323,37 @@ export const education = [
 
 // ─── Skills ─────────────────────────────────────────────────────────
 
-export const skillGroups = [
-  { title: 'Mobile', skills: ['Flutter', 'Dart', 'Play Store', 'App Store'] },
-  { title: 'Backend & Web', skills: ['Laravel', 'PHP', 'Next.js', 'JavaScript', 'MySQL', 'REST API'] },
-  { title: 'Automation & Tools', skills: ['n8n', 'Figma', 'GitHub', 'Prompt Engineering'] },
+export const skillGroups: { icon: IconName; title: string; description: string; skills: string[] }[] = [
+  {
+    icon: 'mobile',
+    title: 'Apps',
+    description: 'Cross-platform mobile apps, built and published.',
+    skills: ['Flutter', 'Dart', 'Android & iOS', 'Google Play', 'App Store'],
+  },
+  {
+    icon: 'web',
+    title: 'Web & SaaS',
+    description: 'Websites, dashboards and SaaS backends.',
+    skills: ['Laravel', 'PHP', 'Next.js', 'JavaScript', 'MySQL', 'REST API'],
+  },
+  {
+    icon: 'bot',
+    title: 'AI & Automation',
+    description: 'AI agents and workflows that do the repetitive work.',
+    skills: ['n8n', 'AI Agents', 'LLM APIs', 'Prompt Engineering', 'WhatsApp Automation', 'Webhooks'],
+  },
+  {
+    icon: 'pen',
+    title: 'Design & Delivery',
+    description: 'From design file to production.',
+    skills: ['Figma', 'GitHub', 'Store Publishing', 'Server Deployment'],
+  },
 ];
+
+// ─── Contact ────────────────────────────────────────────────────────
 
 export const contact = {
   heading: "Have a project in mind? Let's talk.",
-  subtext: 'Tell me what you want to build — an app, a web platform or an automation — and I will get back to you with next steps.',
+  subtext: 'Tell me what you want to build: an app, a website, a SaaS product, an AI agent or an automation.',
+  projectTypes: ['Mobile App', 'Website / Web Platform', 'SaaS Product', 'AI Agent / Chatbot', 'Automation (n8n)', 'Fintech / Wallet', 'Other'],
 };

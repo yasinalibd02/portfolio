@@ -1,0 +1,59 @@
+---
+interface Props {
+  eyebrow: string;
+  title: string;
+  /** Part of the title shown with the animated gradient, placed after `title`. */
+  highlight?: string;
+  lead?: string;
+}
+
+const { eyebrow, title, highlight, lead } = Astro.props;
+---
+
+<section class="page-header">
+  <div class="bg-fx" aria-hidden="true">
+    <div class="grid"></div>
+    <div class="orb orb-1"></div>
+    <div class="orb orb-3"></div>
+  </div>
+  <div class="container inner">
+    <span class="eyebrow rise">{eyebrow}</span>
+    <h1 class="rise" style="--d: 1">
+      {title}
+      {highlight && <span class="gradient-text">{highlight}</span>}
+    </h1>
+    {lead && <p class="lead rise" style="--d: 2">{lead}</p>}
+    <slot />
+  </div>
+</section>
+
+<style>
+  .page-header {
+    position: relative;
+    overflow: hidden;
+    padding: 64px 0 40px;
+  }
+  @media (min-width: 768px) {
+    .page-header {
+      padding: 104px 0 56px;
+    }
+  }
+  .inner {
+    position: relative;
+    z-index: 1;
+    max-width: 860px;
+  }
+  h1 {
+    font-size: clamp(38px, 7vw, 72px);
+    font-weight: 700;
+    letter-spacing: -0.035em;
+    line-height: 1.05;
+    text-wrap: balance;
+  }
+  .lead {
+    margin-top: 20px;
+    max-width: 620px;
+    color: var(--text-2);
+    font-size: clamp(17px, 2vw, 19px);
+  }
+</style>

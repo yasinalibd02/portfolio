@@ -1,0 +1,32 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHeader from '../components/PageHeader.astro';
+import ProjectGrid from '../components/ProjectGrid.astro';
+import CtaBand from '../components/CtaBand.astro';
+---
+
+<Base
+  title="Projects"
+  description="Fintech wallets, SaaS products, AI agents, mobile apps and business websites built and shipped by MD Yasin Ali. 50+ live apps on Google Play & App Store."
+>
+  <PageHeader
+    eyebrow="Projects"
+    title="Apps and platforms"
+    highlight="I've shipped."
+    lead="Fintech wallets, SaaS and AI products, mobile apps and business websites, all live and in use."
+  />
+
+  <section class="section work" aria-label="Project list">
+    <div class="container">
+      <ProjectGrid />
+    </div>
+  </section>
+
+  <CtaBand heading="Want something like this for your business?" />
+</Base>
+
+<style>
+  .work {
+    padding-top: 24px;
+  }
+</style>

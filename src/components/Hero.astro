@@ -2,40 +2,70 @@
 import { Image } from 'astro:assets';
 import Icon from './Icon.astro';
 import { profile, links, stats } from '../data/portfolio';
+
+const words = profile.hero.rotating;
+const chips = [
+  { icon: 'mobile', label: 'Mobile Apps', cls: 'chip-a' },
+  { icon: 'bot', label: 'AI Agents', cls: 'chip-b' },
+  { icon: 'saas', label: 'SaaS', cls: 'chip-c' },
+] as const;
 ---
 
-<section class="hero" id="top" aria-labelledby="hero-title">
-  <div class="hero-grid" aria-hidden="true"></div>
+<section class="hero" aria-labelledby="hero-title">
+  <div class="bg-fx" aria-hidden="true">
+    <div class="grid"></div>
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+  </div>
+
   <div class="container hero-inner">
     <div class="hero-copy">
       {
         profile.available && (
-          <p class="badge">
+          <p class="badge rise">
             <span class="pulse" aria-hidden="true" />
             Available for freelance projects
           </p>
         )
       }
-      <p class="hero-name">{profile.name} · {profile.title}</p>
-      <h1 id="hero-title">{profile.hero.headline}</h1>
-      <p class="hero-sub">{profile.hero.subtext}</p>
+      <p class="hero-name rise" style="--d: 1">{profile.name} · {profile.title}</p>
 
-      <div class="hero-ctas">
+      <h1 id="hero-title" class="rise" style="--d: 2">
+        <span class="sr-only">I build {words.join(', ')} {profile.hero.headlineEnd}</span>
+        <span aria-hidden="true">
+          I build
+          <span class="rotator" style={`--n: ${words.length}`}>
+            {
+              words.map((w, i) => (
+                <span class="word gradient-text" style={`--w: ${i}`}>
+                  {w}
+                </span>
+              ))
+            }
+          </span>
+          {profile.hero.headlineEnd}
+        </span>
+      </h1>
+
+      <p class="hero-sub rise" style="--d: 3">{profile.hero.subtext}</p>
+
+      <div class="hero-ctas rise" style="--d: 4">
         <a class="btn btn-primary" href={links.whatsapp} target="_blank" rel="noopener">
           <Icon name="whatsapp" />
           Hire Me
         </a>
-        <a class="btn btn-ghost" href="#projects">
+        <a class="btn btn-ghost" href="/projects">
           View Projects
           <Icon name="arrow" />
         </a>
       </div>
 
-      <ul class="stats" aria-label="Highlights">
+      <ul class="stats rise" style="--d: 5" aria-label="Highlights">
         {
           stats.map((s) => (
             <li>
-              <strong>{s.value}</strong>
+              <strong><span data-count={s.value}>{s.value}</span>{s.suffix}</strong>
               <span>{s.label}</span>
             </li>
           ))
@@ -43,17 +73,28 @@ import { profile, links, stats } from '../data/portfolio';
       </ul>
     </div>
 
-    <div class="hero-photo">
-      <Image
-        src={profile.photo}
-        alt={profile.photoAlt}
-        widths={[340, 440, 680, 880]}
-        sizes="(min-width: 960px) 440px, 340px"
-        loading="eager"
-        fetchpriority="high"
-        format="webp"
-        quality={78}
-      />
+    <div class="hero-visual rise" style="--d: 2">
+      <div class="photo-wrap">
+        <div class="photo-ring" aria-hidden="true"></div>
+        <Image
+          src={profile.photo}
+          alt={profile.photoAlt}
+          widths={[340, 440, 680, 880]}
+          sizes="(min-width: 960px) 420px, 300px"
+          loading="eager"
+          fetchpriority="high"
+          format="webp"
+          quality={78}
+        />
+      </div>
+      {
+        chips.map((c) => (
+          <span class={`chip ${c.cls}`} aria-hidden="true">
+            <Icon name={c.icon} size={16} />
+            {c.label}
+          </span>
+        ))
+      }
       <p class="photo-chip">
         <Icon name="pin" size={16} />
         {profile.location}
@@ -66,42 +107,21 @@ import { profile, links, stats } from '../data/portfolio';
   .hero {
     position: relative;
     overflow: hidden;
-    padding: 48px 0 72px;
-  }
-  .hero-grid {
-    position: absolute;
-    inset: 0;
-    background-image:
-      linear-gradient(var(--grid) 1px, transparent 1px),
-      linear-gradient(90deg, var(--grid) 1px, transparent 1px);
-    background-size: 48px 48px;
-    mask-image: radial-gradient(ellipse at 30% 30%, #000 30%, transparent 75%);
-    -webkit-mask-image: radial-gradient(ellipse at 30% 30%, #000 30%, transparent 75%);
-  }
-  .hero::after {
-    content: '';
-    position: absolute;
-    width: 520px;
-    height: 520px;
-    right: -160px;
-    top: -120px;
-    border-radius: 50%;
-    background: radial-gradient(circle, rgba(244, 121, 91, 0.22), transparent 65%);
-    pointer-events: none;
+    padding: 48px 0 80px;
   }
   .hero-inner {
     position: relative;
     z-index: 1;
     display: grid;
-    gap: 48px;
+    gap: 56px;
     align-items: center;
   }
   @media (min-width: 960px) {
     .hero {
-      padding: 80px 0 104px;
+      padding: 72px 0 112px;
     }
     .hero-inner {
-      grid-template-columns: 1.25fr 1fr;
+      grid-template-columns: 1.3fr 1fr;
       gap: 64px;
     }
   }
@@ -152,15 +172,58 @@ import { profile, links, stats } from '../data/portfolio';
   }
   h1 {
     margin-top: 12px;
-    font-size: clamp(38px, 7vw, 66px);
+    font-size: clamp(40px, 7.4vw, 76px);
     font-weight: 700;
-    letter-spacing: -0.035em;
-    line-height: 1.05;
-    text-wrap: balance;
+    letter-spacing: -0.04em;
+    line-height: 1.04;
   }
+
+  /* Words stack in one grid cell; each takes a turn sliding in. */
+  .rotator {
+    display: grid;
+    vertical-align: bottom;
+    padding-bottom: 0.08em;
+  }
+  .word {
+    grid-area: 1 / 1;
+    opacity: 0;
+    white-space: nowrap;
+    animation:
+      word-cycle calc(var(--n) * 2.6s) var(--ease) infinite,
+      gradient-pan 6s linear infinite;
+    animation-delay: calc(var(--w) * 2.6s), 0s;
+  }
+  @keyframes word-cycle {
+    0% {
+      opacity: 0;
+      transform: translateY(0.45em);
+      filter: blur(8px);
+    }
+    4%,
+    17% {
+      opacity: 1;
+      transform: none;
+      filter: none;
+    }
+    21%,
+    100% {
+      opacity: 0;
+      transform: translateY(-0.45em);
+      filter: blur(8px);
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .word {
+      animation: none;
+    }
+    .word:first-child {
+      opacity: 1;
+    }
+  }
+
   .hero-sub {
-    margin-top: 20px;
-    max-width: 560px;
+    margin-top: 22px;
+    max-width: 580px;
     color: var(--text-2);
     font-size: clamp(17px, 2vw, 19px);
   }
@@ -168,7 +231,7 @@ import { profile, links, stats } from '../data/portfolio';
     display: flex;
     flex-wrap: wrap;
     gap: 12px;
-    margin-top: 32px;
+    margin-top: 34px;
   }
   @media (max-width: 420px) {
     .hero-ctas .btn {
@@ -178,13 +241,12 @@ import { profile, links, stats } from '../data/portfolio';
 
   .stats {
     display: flex;
-    gap: 0;
-    margin-top: 40px;
+    margin-top: 44px;
   }
   .stats li {
     display: flex;
     flex-direction: column;
-    padding: 0 24px;
+    padding: 0 22px;
     border-left: 1px solid var(--border);
   }
   .stats li:first-child {
@@ -193,50 +255,132 @@ import { profile, links, stats } from '../data/portfolio';
   }
   .stats strong {
     font-family: var(--font-display);
-    font-size: clamp(26px, 4vw, 34px);
+    font-size: clamp(30px, 4.4vw, 42px);
     font-weight: 700;
     line-height: 1.1;
+    font-variant-numeric: tabular-nums;
   }
-  .stats span {
+  .stats span:not([data-count]) {
     color: var(--text-2);
     font-size: 14px;
   }
-
-  .hero-photo {
-    position: relative;
-    justify-self: center;
-    width: min(100%, 340px);
-  }
-  @media (min-width: 960px) {
-    .hero-photo {
-      width: min(100%, 440px);
+  @media (max-width: 480px) {
+    .stats li {
+      padding: 0 14px;
+    }
+    .stats span:not([data-count]) {
+      font-size: 13px;
+      line-height: 1.35;
     }
   }
-  .hero-photo :global(img) {
+
+  /* Photo with a rotating gradient ring and floating chips */
+  .hero-visual {
+    position: relative;
+    justify-self: center;
+    width: min(100%, 300px);
+  }
+  @media (min-width: 960px) {
+    .hero-visual {
+      width: min(100%, 420px);
+    }
+  }
+  .photo-wrap {
+    position: relative;
+    padding: 6px;
+    border-radius: 36px;
+    overflow: hidden;
+    isolation: isolate;
+  }
+  .photo-ring {
+    position: absolute;
+    z-index: -1;
+    inset: -40%;
+    background: conic-gradient(from 0deg, var(--accent), var(--peach), transparent 35%, transparent 60%, var(--accent-2), var(--accent));
+    animation: spin 6s linear infinite;
+  }
+  @keyframes spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+  .photo-wrap :global(img) {
     width: 100%;
     aspect-ratio: 4 / 5;
     object-fit: cover;
     object-position: 55% 30%;
-    border-radius: 28px;
-    border: 1px solid var(--border);
-    box-shadow: var(--shadow);
+    border-radius: 30px;
     background: var(--surface-2);
+  }
+
+  .chip {
+    position: absolute;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 14px;
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--surface) 88%, transparent);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow-lg);
+    font-size: 13px;
+    font-weight: 700;
+    white-space: nowrap;
+    animation: bob 5s ease-in-out infinite;
+  }
+  .chip :global(svg) {
+    color: var(--accent-text);
+  }
+  .chip-a {
+    top: 10%;
+    left: -14%;
+  }
+  .chip-b {
+    top: 42%;
+    right: -12%;
+    animation-delay: -1.6s;
+  }
+  .chip-c {
+    bottom: 22%;
+    left: -10%;
+    animation-delay: -3.2s;
+  }
+  @media (max-width: 420px) {
+    .chip-a,
+    .chip-c {
+      left: -6%;
+    }
+    .chip-b {
+      right: -6%;
+    }
+  }
+  @keyframes bob {
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-10px);
+    }
   }
   .photo-chip {
     position: absolute;
-    left: 16px;
-    bottom: 16px;
+    left: 50%;
+    bottom: -16px;
+    transform: translateX(-50%);
     display: inline-flex;
     align-items: center;
     gap: 6px;
     padding: 8px 14px;
     border-radius: 999px;
     background: var(--surface);
-    color: var(--text);
     border: 1px solid var(--border);
     box-shadow: var(--shadow);
     font-size: 13px;
     font-weight: 600;
+    white-space: nowrap;
   }
   .photo-chip :global(svg) {
     color: var(--accent-text);

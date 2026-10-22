@@ -3,6 +3,14 @@ import Icon from './Icon.astro';
 import { profile, links, site } from '../data/portfolio';
 
 const year = new Date().getFullYear();
+const pages = [
+  { href: '/', label: 'Home' },
+  { href: '/services', label: 'Services' },
+  { href: '/projects', label: 'Projects' },
+  { href: '/experience', label: 'Experience' },
+  { href: '/skills', label: 'Skills' },
+  { href: '/contact', label: 'Contact' },
+];
 const socials = [
   { name: 'whatsapp', label: 'WhatsApp', href: links.whatsapp },
   { name: 'linkedin', label: 'LinkedIn', href: links.linkedin },
@@ -12,58 +20,70 @@ const socials = [
 ---
 
 <footer class="footer">
-  <div class="container footer-inner">
-    <div>
+  <div class="container top">
+    <div class="brand">
       <p class="name">{profile.name}</p>
       <p class="title">{profile.title}</p>
+      <ul class="socials">
+        {
+          socials.map((s) => (
+            <li>
+              <a href={s.href} aria-label={s.label} {...(s.name === 'mail' ? {} : { target: '_blank', rel: 'noopener' })}>
+                <Icon name={s.name} size={18} />
+              </a>
+            </li>
+          ))
+        }
+      </ul>
     </div>
 
-    <ul class="socials">
-      {
-        socials.map((s) => (
-          <li>
-            <a
-              href={s.href}
-              aria-label={s.label}
-              {...(s.name === 'mail' ? {} : { target: '_blank', rel: 'noopener' })}
-            >
-              <Icon name={s.name} size={18} />
-            </a>
-          </li>
-        ))
-      }
-    </ul>
+    <nav aria-label="Footer">
+      <ul class="pages">
+        {pages.map((p) => <li><a href={p.href}>{p.label}</a></li>)}
+      </ul>
+    </nav>
+
+    <div class="reach">
+      <a href={`mailto:${links.email}`}>{links.email}</a>
+      <a href={`tel:${links.phone}`}>{links.phone}</a>
+      <span>{profile.location}</span>
+    </div>
   </div>
   <div class="container bottom">
     <p>© {year} {profile.name}. All rights reserved.</p>
-    <a href={site.resume} download>Resume</a>
+    <a href={site.resume} download>Download Resume</a>
   </div>
 </footer>
 
 <style>
   .footer {
     border-top: 1px solid var(--border);
-    padding: 40px 0 96px;
+    background: var(--surface);
+    padding: 56px 0 96px;
   }
-  .footer-inner {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: space-between;
-    gap: 20px;
+  .top {
+    display: grid;
+    gap: 32px;
+  }
+  @media (min-width: 768px) {
+    .top {
+      grid-template-columns: 1.4fr 1fr 1fr;
+    }
   }
   .name {
     font-family: var(--font-display);
     font-weight: 700;
-    font-size: 18px;
+    font-size: 20px;
   }
   .title {
+    margin-top: 4px;
     color: var(--text-2);
     font-size: 15px;
   }
   .socials {
     display: flex;
     gap: 8px;
+    margin-top: 18px;
   }
   .socials a {
     display: grid;
@@ -72,20 +92,50 @@ const socials = [
     height: 44px;
     border-radius: 12px;
     border: 1px solid var(--border);
-    background: var(--surface);
+    background: var(--bg);
     color: var(--text-2);
-    transition: all 0.2s ease;
+    transition: all 0.25s var(--ease);
   }
   .socials a:hover {
     color: var(--accent-text);
     border-color: var(--accent);
+    transform: translateY(-3px);
+  }
+  .pages {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2px 16px;
+  }
+  .pages a,
+  .reach a {
+    display: inline-block;
+    padding: 6px 0;
+    color: var(--text-2);
+    text-decoration: none;
+    font-size: 15px;
+    transition: color 0.2s;
+  }
+  .pages a:hover,
+  .reach a:hover {
+    color: var(--accent-text);
+  }
+  .reach {
+    display: flex;
+    flex-direction: column;
+    color: var(--text-2);
+    font-size: 15px;
+  }
+  .reach span {
+    padding: 6px 0;
   }
   .bottom {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
     gap: 8px;
-    margin-top: 28px;
+    margin-top: 40px;
+    padding-top: 24px;
+    border-top: 1px solid var(--border);
     color: var(--text-2);
     font-size: 14px;
   }

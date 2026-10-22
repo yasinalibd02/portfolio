@@ -1,0 +1,114 @@
+---
+import ProjectCard from './ProjectCard.astro';
+import { projects, projectFilters, type Project } from '../data/portfolio';
+
+interface Props {
+  /** Show only these projects and hide the filter tabs. Defaults to all projects with filters. */
+  items?: Project[];
+}
+
+// Featured projects first, then the rest in data-file order.
+const ordered = [...projects.filter((p) => p.featured), ...projects.filter((p) => !p.featured)];
+const { items } = Astro.props;
+const list = items ?? ordered;
+---
+
+{
+  !items && (
+    <div class="filters reveal" role="group" aria-label="Filter projects" data-filters>
+      {projectFilters.map((f, i) => (
+        <button type="button" class="filter" data-filter={f.id} aria-pressed={i === 0 ? 'true' : 'false'}>
+          {f.label}
+          <span class="count">{f.id === 'all' ? projects.length : projects.filter((p) => p.category === f.id).length}</span>
+        </button>
+      ))}
+    </div>
+  )
+}
+
+<ul class="grid" data-project-grid>
+  {list.map((p, i) => <ProjectCard project={p} index={i} />)}
+</ul>
+
+<script>
+  const group = document.querySelector('[data-filters]');
+  const cards = document.querySelectorAll<HTMLElement>('[data-project-grid] > li');
+  group?.addEventListener('click', (e) => {
+    const btn = (e.target as HTMLElement).closest<HTMLButtonElement>('button[data-filter]');
+    if (!btn) return;
+    const filter = btn.dataset.filter;
+    group.querySelectorAll('button').forEach((b) => b.setAttribute('aria-pressed', String(b === btn)));
+    let shown = 0;
+    cards.forEach((card) => {
+      const show = filter === 'all' || card.dataset.category === filter;
+      card.hidden = !show;
+      if (!show) return;
+      // Replay the entrance animation for cards that remain, staggered.
+      card.classList.remove('is-visible');
+      card.style.setProperty('--i', String(shown++ % 6));
+      requestAnimationFrame(() => requestAnimationFrame(() => card.classList.add('is-visible')));
+    });
+  });
+</script>
+
+<style>
+  .filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 32px;
+  }
+  .filter {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 46px;
+    padding: 8px 18px;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--text-2);
+    font: 600 15px var(--font-body);
+    cursor: pointer;
+    transition: all 0.25s var(--ease);
+  }
+  .filter:hover {
+    color: var(--text);
+    border-color: var(--accent);
+  }
+  .filter[aria-pressed='true'] {
+    background: var(--text);
+    color: var(--bg);
+    border-color: var(--text);
+  }
+  .count {
+    display: grid;
+    place-items: center;
+    min-width: 24px;
+    height: 24px;
+    padding: 0 6px;
+    border-radius: 999px;
+    background: var(--accent-soft);
+    color: var(--accent-text);
+    font-size: 12px;
+  }
+  .filter[aria-pressed='true'] .count {
+    background: var(--accent);
+    color: #0a0a0f;
+  }
+  .grid {
+    display: grid;
+    gap: 22px;
+  }
+  @media (min-width: 640px) {
+    .grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  @media (min-width: 1100px) {
+    .grid {
+      grid-template-columns: repeat(3, 1fr);
+      gap: 26px;
+    }
+  }
+</style>
