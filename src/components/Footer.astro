@@ -1,0 +1,95 @@
+---
+import Icon from './Icon.astro';
+import { profile, links, site } from '../data/portfolio';
+
+const year = new Date().getFullYear();
+const socials = [
+  { name: 'whatsapp', label: 'WhatsApp', href: links.whatsapp },
+  { name: 'linkedin', label: 'LinkedIn', href: links.linkedin },
+  { name: 'github', label: 'GitHub', href: links.github },
+  { name: 'mail', label: 'Email', href: `mailto:${links.email}` },
+] as const;
+---
+
+<footer class="footer">
+  <div class="container footer-inner">
+    <div>
+      <p class="name">{profile.name}</p>
+      <p class="title">{profile.title}</p>
+    </div>
+
+    <ul class="socials">
+      {
+        socials.map((s) => (
+          <li>
+            <a
+              href={s.href}
+              aria-label={s.label}
+              {...(s.name === 'mail' ? {} : { target: '_blank', rel: 'noopener' })}
+            >
+              <Icon name={s.name} size={18} />
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+  <div class="container bottom">
+    <p>© {year} {profile.name}. All rights reserved.</p>
+    <a href={site.resume} download>Resume</a>
+  </div>
+</footer>
+
+<style>
+  .footer {
+    border-top: 1px solid var(--border);
+    padding: 40px 0 96px;
+  }
+  .footer-inner {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+  }
+  .name {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 18px;
+  }
+  .title {
+    color: var(--text-2);
+    font-size: 15px;
+  }
+  .socials {
+    display: flex;
+    gap: 8px;
+  }
+  .socials a {
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--text-2);
+    transition: all 0.2s ease;
+  }
+  .socials a:hover {
+    color: var(--accent-text);
+    border-color: var(--accent);
+  }
+  .bottom {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 8px;
+    margin-top: 28px;
+    color: var(--text-2);
+    font-size: 14px;
+  }
+  .bottom a {
+    color: var(--text-2);
+  }
+</style>

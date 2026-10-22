@@ -1,0 +1,245 @@
+---
+import { Image } from 'astro:assets';
+import Icon from './Icon.astro';
+import { projects, projectFilters } from '../data/portfolio';
+
+// Featured (fintech) projects first, then the rest in data-file order.
+const ordered = [...projects.filter((p) => p.featured), ...projects.filter((p) => !p.featured)];
+---
+
+<section class="section projects-section" id="projects" aria-labelledby="projects-title">
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="eyebrow">Projects</span>
+      <h2 class="section-title" id="projects-title">Apps and platforms I've shipped</h2>
+      <p class="section-lead">Fintech wallets, SaaS products and business websites, all live and in use.</p>
+    </div>
+
+    <div class="filters" role="group" aria-label="Filter projects" data-filters>
+      {
+        projectFilters.map((f, i) => (
+          <button type="button" class="filter" data-filter={f.id} aria-pressed={i === 0 ? 'true' : 'false'}>
+            {f.label}
+          </button>
+        ))
+      }
+    </div>
+
+    <ul class="grid" data-project-grid>
+      {
+        ordered.map((p) => (
+          <li class="card project reveal" data-category={p.category}>
+            <div
+              class:list={['thumb', p.imageFit === 'contain' && 'thumb-contain']}
+              style={p.imageBg ? `--thumb-bg: ${p.imageBg}` : undefined}
+            >
+              {p.image ? (
+                <Image
+                  src={p.image}
+                  alt={`${p.title} screenshot`}
+                  widths={p.imageFit === 'contain' ? [160, 320] : [400, 700]}
+                  sizes={p.imageFit === 'contain' ? '160px' : '(min-width: 1100px) 360px, (min-width: 640px) 45vw, 92vw'}
+                  loading="lazy"
+                  decoding="async"
+                  format="webp"
+                  quality={75}
+                />
+              ) : (
+                <div class="placeholder" role="img" aria-label={`${p.title} placeholder image`}>
+                  <span>{p.title}</span>
+                </div>
+              )}
+              {p.featured && <span class="featured">Featured · Fintech</span>}
+            </div>
+
+            <div class="body">
+              <h3>{p.title}</h3>
+              <p class="desc">{p.description}</p>
+              <p class="role">
+                <span>Role:</span> {p.role}
+              </p>
+              <ul class="tags" aria-label="Tech stack">
+                {p.tags.map((t) => (
+                  <li class="tag">{t}</li>
+                ))}
+              </ul>
+              <a
+                class="btn btn-ghost live"
+                href={p.link.url}
+                target="_blank"
+                rel="noopener"
+                aria-label={`${p.link.label}: ${p.title} (opens in new tab)`}
+              >
+                {p.link.label}
+                <Icon name="external" size={16} />
+              </a>
+            </div>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</section>
+
+<script>
+  const group = document.querySelector('[data-filters]');
+  const cards = document.querySelectorAll<HTMLElement>('[data-project-grid] > li');
+  group?.addEventListener('click', (e) => {
+    const btn = (e.target as HTMLElement).closest<HTMLButtonElement>('button[data-filter]');
+    if (!btn) return;
+    const filter = btn.dataset.filter;
+    group.querySelectorAll('button').forEach((b) => b.setAttribute('aria-pressed', String(b === btn)));
+    cards.forEach((card) => {
+      card.hidden = filter !== 'all' && card.dataset.category !== filter;
+      // Cards revealed by a filter change should not wait for the scroll observer.
+      card.classList.add('is-visible');
+    });
+  });
+</script>
+
+<style>
+  .projects-section {
+    background: var(--surface-2);
+    border-block: 1px solid var(--border);
+  }
+  .filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 28px;
+  }
+  .filter {
+    min-height: 44px;
+    padding: 8px 18px;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--text-2);
+    font: 600 15px var(--font-body);
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  .filter:hover {
+    color: var(--text);
+    border-color: var(--accent);
+  }
+  .filter[aria-pressed='true'] {
+    background: var(--text);
+    color: var(--bg);
+    border-color: var(--text);
+  }
+
+  .grid {
+    display: grid;
+    gap: 20px;
+  }
+  @media (min-width: 640px) {
+    .grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  @media (min-width: 1100px) {
+    .grid {
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+  }
+  .project {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    transition:
+      transform 0.25s ease,
+      border-color 0.25s ease;
+  }
+  .project[hidden] {
+    display: none;
+  }
+  .project:hover {
+    transform: translateY(-4px);
+    border-color: color-mix(in srgb, var(--accent) 50%, transparent);
+  }
+
+  .thumb {
+    position: relative;
+    aspect-ratio: 16 / 10;
+    background: var(--thumb-bg, var(--surface-2));
+    border-bottom: 1px solid var(--border);
+    overflow: hidden;
+  }
+  .thumb :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: top center;
+  }
+  .thumb-contain :global(img) {
+    object-fit: contain;
+    padding-top: 14px;
+    object-position: bottom center;
+  }
+  .placeholder {
+    display: grid;
+    place-items: center;
+    height: 100%;
+    padding: 24px;
+    background:
+      radial-gradient(circle at 80% 10%, rgba(255, 255, 255, 0.25), transparent 50%),
+      linear-gradient(135deg, var(--accent), var(--accent-2));
+  }
+  .placeholder span {
+    font-family: var(--font-display);
+    font-size: 30px;
+    font-weight: 700;
+    color: #0a0a0f;
+    letter-spacing: -0.02em;
+  }
+  .featured {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    padding: 5px 12px;
+    border-radius: 999px;
+    background: #0a0a0f;
+    color: #ffffff;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+  }
+
+  .body {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    padding: 22px 22px 24px;
+  }
+  h3 {
+    font-size: 21px;
+    font-weight: 700;
+  }
+  .desc {
+    margin-top: 8px;
+    color: var(--text-2);
+    font-size: 15px;
+  }
+  .role {
+    margin-top: 12px;
+    font-size: 14px;
+  }
+  .role span {
+    font-weight: 700;
+  }
+  .tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin: 14px 0 20px;
+  }
+  .live {
+    margin-top: auto;
+    align-self: flex-start;
+    min-height: 44px;
+    padding: 8px 18px;
+    font-size: 15px;
+  }
+</style>

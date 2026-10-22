@@ -1,0 +1,65 @@
+---
+import { skillGroups } from '../data/portfolio';
+---
+
+<section class="section skills-section" id="skills" aria-labelledby="skills-title">
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="eyebrow">Skills</span>
+      <h2 class="section-title" id="skills-title">Tools I ship with</h2>
+    </div>
+
+    <div class="groups">
+      {
+        skillGroups.map((g) => (
+          <div class="card group reveal">
+            <h3>{g.title}</h3>
+            <ul>
+              {g.skills.map((s) => (
+                <li>{s}</li>
+              ))}
+            </ul>
+          </div>
+        ))
+      }
+    </div>
+  </div>
+</section>
+
+<style>
+  .skills-section {
+    background: var(--surface-2);
+    border-block: 1px solid var(--border);
+  }
+  .groups {
+    display: grid;
+    gap: 16px;
+  }
+  @media (min-width: 900px) {
+    .groups {
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+  }
+  .group {
+    padding: 24px;
+  }
+  h3 {
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 16px;
+  }
+  ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  li {
+    padding: 8px 14px;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    background: var(--bg);
+    font-size: 15px;
+    font-weight: 500;
+  }
+</style>

@@ -1,0 +1,154 @@
+---
+import { Image } from 'astro:assets';
+import Icon from './Icon.astro';
+import { links } from '../data/portfolio';
+import avatar from '../assets/avatar.png';
+
+const navLinks = [
+  { href: '#services', label: 'Services' },
+  { href: '#projects', label: 'Projects' },
+  { href: '#experience', label: 'Experience' },
+  { href: '#skills', label: 'Skills' },
+  { href: '#contact', label: 'Contact' },
+];
+---
+
+<header class="nav">
+  <div class="container nav-inner">
+    <a class="logo" href="#top">
+      <Image class="logo-avatar" src={avatar} alt="" widths={[40, 80, 120]} sizes="40px" format="webp" loading="eager" />
+      <span class="logo-text">Yasin Ali</span>
+    </a>
+
+    <nav aria-label="Main">
+      <ul class="nav-links">
+        {navLinks.map((l) => <li><a href={l.href}>{l.label}</a></li>)}
+      </ul>
+    </nav>
+
+    <div class="nav-actions">
+      <button class="theme-toggle" type="button" aria-label="Toggle dark mode" data-theme-toggle>
+        <Icon name="moon" class="icon-moon" />
+        <Icon name="sun" class="icon-sun" />
+      </button>
+      <a class="btn btn-primary nav-cta" href={links.whatsapp} target="_blank" rel="noopener">
+        Hire Me
+      </a>
+    </div>
+  </div>
+</header>
+
+<script>
+  const btn = document.querySelector<HTMLButtonElement>('[data-theme-toggle]');
+  const root = document.documentElement;
+  const sync = () => btn?.setAttribute('aria-pressed', String(root.dataset.theme === 'dark'));
+  sync();
+  btn?.addEventListener('click', () => {
+    const next = root.dataset.theme === 'dark' ? 'light' : 'dark';
+    root.dataset.theme = next;
+    try {
+      localStorage.setItem('theme', next);
+    } catch {}
+    sync();
+  });
+</script>
+
+<style>
+  .nav {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: color-mix(in srgb, var(--bg) 82%, transparent);
+    backdrop-filter: saturate(160%) blur(14px);
+    -webkit-backdrop-filter: saturate(160%) blur(14px);
+    border-bottom: 1px solid var(--border);
+  }
+  .nav-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    height: 68px;
+  }
+  .logo {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 18px;
+  }
+  .logo :global(.logo-avatar) {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    background: var(--surface-2);
+    box-shadow: 0 0 0 2px var(--accent);
+  }
+  .nav-links {
+    display: none;
+    gap: 4px;
+  }
+  .nav-links a {
+    display: block;
+    padding: 8px 14px;
+    border-radius: 999px;
+    color: var(--text-2);
+    font-weight: 500;
+    font-size: 15px;
+    text-decoration: none;
+    transition: color 0.2s, background-color 0.2s;
+  }
+  .nav-links a:hover {
+    color: var(--text);
+    background: var(--accent-soft);
+  }
+  @media (min-width: 900px) {
+    .nav-links {
+      display: flex;
+    }
+  }
+  .nav-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .theme-toggle {
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--text);
+    cursor: pointer;
+  }
+  .theme-toggle :global(.icon-sun) {
+    display: none;
+  }
+  :global([data-theme='dark']) .theme-toggle :global(.icon-sun) {
+    display: block;
+  }
+  :global([data-theme='dark']) .theme-toggle :global(.icon-moon) {
+    display: none;
+  }
+  .nav-cta {
+    min-height: 44px;
+    padding: 8px 20px;
+    font-size: 15px;
+  }
+  @media (max-width: 380px) {
+    /* Keep the name for screen readers, hide it visually */
+    .logo-text {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+    }
+  }
+</style>
