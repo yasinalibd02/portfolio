@@ -12,7 +12,7 @@ import poisaShot from '../assets/projects/poisa.webp';
 import shopgrowShot from '../assets/projects/shopgrow.webp';
 import luxoraShot from '../assets/projects/luxora.webp';
 import happyVacationShot from '../assets/projects/happy_vacation.webp';
-import profilePhoto from '../assets/profile.jpeg';
+import profilePhoto from '../assets/profile-hero.png';
 
 // ─── Profile & links ────────────────────────────────────────────────
 
